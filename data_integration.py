@@ -29,61 +29,123 @@ class DataIntegration:
         self._build_indexes()
     
     def _load_executive_quotes(self):
-        """Load all executive quote files from Task 1A"""
+        """Load all executive quote files from Task 1A with validation and error handling"""
         if not self.quotes_dir.exists():
             print(f"Warning: Quotes directory not found: {self.quotes_dir}")
             return
-        
+
+        loaded_count = 0
+        error_count = 0
+
         for quote_file in self.quotes_dir.glob("*.json"):
-            try:
-                with open(quote_file, 'r') as f:
-                    data = json.load(f)
-                
-                exec_name = data.get('name') or data.get('executive_name', '')
-                if not exec_name:
-                    continue
-                
-                # Store executive data
-                self.executives[exec_name.lower()] = {
-                    'name': exec_name,
-                    'title': data.get('title', ''),
-                    'org': data.get('org', 'Netflix'),
-                    'mandate_summary': data.get('mandate_summary', ''),
-                    'key_projects': data.get('key_projects', []),
-                    'what_works': data.get('what_works', []),
-                    'what_doesnt_work': data.get('what_doesnt_work', []),
-                    'pitch_approach': data.get('pitch_approach', ''),
-                }
-                
-                # Store quotes (handle both 'quotes' and 'direct_quotes' keys)
-                quotes_list = data.get('direct_quotes') or data.get('quotes', [])
-                self.quotes[exec_name.lower()] = quotes_list
-                
-            except Exception as e:
-                print(f"Error loading {quote_file}: {e}")
+            retry_count = 0
+            max_retries = 3
+
+            while retry_count < max_retries:
+                try:
+                    with open(quote_file, 'r', encoding='utf-8') as f:
+                        data = json.load(f)
+
+                    # Validate required fields
+                    exec_name = data.get('name') or data.get('executive_name', '')
+                    if not exec_name:
+                        print(f"Warning: No executive name in {quote_file}")
+                        break
+
+                    # Validate data types
+                    if not isinstance(data, dict):
+                        print(f"Warning: Invalid data format in {quote_file}")
+                        break
+
+                    # Store executive data with safe defaults
+                    self.executives[exec_name.lower()] = {
+                        'name': exec_name,
+                        'title': str(data.get('title', '')),
+                        'org': str(data.get('org', 'Netflix')),
+                        'mandate_summary': str(data.get('mandate_summary', '')),
+                        'key_projects': list(data.get('key_projects', [])),
+                        'what_works': list(data.get('what_works', [])),
+                        'what_doesnt_work': list(data.get('what_doesnt_work', [])),
+                        'pitch_approach': str(data.get('pitch_approach', '')),
+                    }
+
+                    # Store quotes (handle both 'quotes' and 'direct_quotes' keys)
+                    quotes_list = data.get('direct_quotes') or data.get('quotes', [])
+                    if not isinstance(quotes_list, list):
+                        quotes_list = []
+                    self.quotes[exec_name.lower()] = quotes_list
+
+                    loaded_count += 1
+                    break  # Success, exit retry loop
+
+                except json.JSONDecodeError as e:
+                    print(f"Error: Invalid JSON in {quote_file}: {e}")
+                    error_count += 1
+                    break  # Don't retry JSON errors
+
+                except Exception as e:
+                    retry_count += 1
+                    if retry_count >= max_retries:
+                        print(f"Error loading {quote_file} after {max_retries} attempts: {e}")
+                        error_count += 1
+                    else:
+                        print(f"Retry {retry_count}/{max_retries} for {quote_file}: {e}")
+
+        print(f"✓ Loaded {loaded_count} executive profiles, {error_count} errors")
     
     def _load_projects(self):
-        """Load all project data from Task 1B"""
+        """Load all project data from Task 1B with validation and retry logic"""
         if not self.projects_file.exists():
             print(f"Warning: Projects file not found: {self.projects_file}")
             return
-        
-        try:
-            with open(self.projects_file, 'r') as f:
-                data = json.load(f)
-            
-            # Load projects from all year-based keys (projects_2018, projects_2020, etc.)
-            self.projects = []
-            for key, value in data.items():
-                if key.startswith('projects_') and isinstance(value, list):
-                    self.projects.extend(value)
-            
-            # Also check for a direct 'projects' key (fallback)
-            if 'projects' in data and isinstance(data['projects'], list):
-                self.projects.extend(data['projects'])
-            
-        except Exception as e:
-            print(f"Error loading projects: {e}")
+
+        max_retries = 3
+        retry_count = 0
+
+        while retry_count < max_retries:
+            try:
+                with open(self.projects_file, 'r', encoding='utf-8') as f:
+                    data = json.load(f)
+
+                # Validate data structure
+                if not isinstance(data, dict):
+                    print(f"Error: Projects file contains invalid data structure")
+                    return
+
+                # Load projects from all year-based keys (projects_2018, projects_2020, etc.)
+                self.projects = []
+                loaded_by_year = {}
+
+                for key, value in data.items():
+                    if key.startswith('projects_') and isinstance(value, list):
+                        # Validate each project entry
+                        valid_projects = []
+                        for proj in value:
+                            if isinstance(proj, dict) and proj.get('title'):
+                                valid_projects.append(proj)
+                        self.projects.extend(valid_projects)
+                        year = key.replace('projects_', '')
+                        loaded_by_year[year] = len(valid_projects)
+
+                # Also check for a direct 'projects' key (fallback)
+                if 'projects' in data and isinstance(data['projects'], list):
+                    valid_projects = [p for p in data['projects'] if isinstance(p, dict) and p.get('title')]
+                    self.projects.extend(valid_projects)
+                    loaded_by_year['direct'] = len(valid_projects)
+
+                print(f"✓ Loaded {len(self.projects)} projects from {len(loaded_by_year)} sources")
+                return  # Success
+
+            except json.JSONDecodeError as e:
+                print(f"Error: Invalid JSON in projects file: {e}")
+                return  # Don't retry JSON errors
+
+            except Exception as e:
+                retry_count += 1
+                if retry_count >= max_retries:
+                    print(f"Error loading projects after {max_retries} attempts: {e}")
+                else:
+                    print(f"Retry {retry_count}/{max_retries} loading projects: {e}")
     
     def _build_indexes(self):
         """Build lookup indexes for fast access"""

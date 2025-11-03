@@ -20,6 +20,7 @@ from answer_templates import (ROUTING_TEMPLATE_CONVERSATIONAL, STRATEGIC_TEMPLAT
                                PROCEDURAL_TEMPLATE_GUIDE, TEMPLATE_TEMPERATURES, REASONING_EFFORTS)
 from local_reranker import get_reranker
 from cache_manager import get_cache, RESPONSE_TTL, VECTOR_TTL
+from source_tracker import get_source_tracker
 
 class HybridRAGEnginePinecone:
     """Hybrid RAG engine using Pinecone vector database and Neo4j graph database"""
@@ -30,8 +31,8 @@ class HybridRAGEnginePinecone:
         
         # Initialize Pinecone with timeout
         import socket
-        socket.setdefaulttimeout(10)  # 10 second timeout for all socket operations
-        
+        socket.setdefaulttimeout(30)  # 30 second timeout for socket operations (increased from 10)
+
         try:
             self.pc = Pinecone(api_key=pinecone_api_key)
             self.index = self.pc.Index(pinecone_index_name)
@@ -39,21 +40,24 @@ class HybridRAGEnginePinecone:
         except Exception as e:
             print(f"⚠ Pinecone connection failed: {e}")
             raise RuntimeError(f"Failed to connect to Pinecone: {e}")
-        
-        # Initialize Neo4j (optional) with timeout
+
+        # Initialize Neo4j (optional) with connection pooling
         self.neo4j_driver = None
         if neo4j_uri and neo4j_user and neo4j_password:
             try:
                 self.neo4j_driver = GraphDatabase.driver(
                     neo4j_uri,
                     auth=(neo4j_user, neo4j_password),
-                    connection_timeout=10,  # 10 second connection timeout
-                    max_connection_lifetime=30  # 30 second max lifetime
+                    max_connection_lifetime=3600,  # 1 hour (increased from 30s)
+                    max_connection_pool_size=50,   # Connection pool size
+                    connection_acquisition_timeout=30,  # 30 second timeout
+                    encrypted=True,
+                    trust="TRUST_SYSTEM_CA_SIGNED_CERTIFICATES"
                 )
                 # Test connection
                 with self.neo4j_driver.session() as session:
                     session.run("RETURN 1")
-                print("✓ Connected to Neo4j")
+                print("✓ Connected to Neo4j with connection pooling")
             except Exception as e:
                 print(f"⚠ Neo4j connection failed: {e}")
                 print("  Continuing with Pinecone only...")
@@ -100,7 +104,11 @@ class HybridRAGEnginePinecone:
         self.persons_by_region = {}
         self.persons_by_genre = {}
         self.persons_by_format = {}
-        
+
+        # Cache for embeddings (question -> embedding vector)
+        self.embedding_cache = {}
+        self.embedding_cache_max_size = 1000  # Limit cache size
+
         # Load persons from Neo4j if available
         if self.neo4j_driver:
             self._load_persons_from_neo4j()
@@ -361,100 +369,139 @@ class HybridRAGEnginePinecone:
         }
     
     def graph_search(self, question: str, attributes: Dict[str, Any], intent: str = 'ROUTING') -> List[Dict]:
-        """Search Neo4j graph database for matching persons"""
-        if not self.neo4j_driver:
+        """Search Neo4j graph database for matching persons with error handling"""
+        try:
+            if not self.neo4j_driver:
+                print("[WARNING] Neo4j driver not available, using cached data only")
+                # Fall back to cached data if Neo4j is unavailable
+                return self._fallback_graph_search(attributes, intent)
+
+            # For MARKET_INFO queries, return representatives from each region
+            if intent == 'MARKET_INFO':
+                # Get one executive from each region to show which regions have teams
+                region_representatives = []
+                seen_regions = set()
+                for person in self.persons_cache:
+                    region = person.get('region', 'US')
+                    if region and region not in seen_regions:
+                        region_representatives.append(person)
+                        seen_regions.add(region)
+                return region_representatives
+
+            region = attributes.get('region')
+            genre = attributes.get('genre')
+            fmt = attributes.get('format')
+            referenced_person = attributes.get('referenced_person')
+
+            # If we have a referenced person, filter to just that person
+            if referenced_person:
+                matches = [p for p in self.persons_cache if referenced_person.lower() in p.get('name', '').lower()]
+                if matches:
+                    return matches[:1]  # Return just the referenced person
+
+            # Find matching persons from cache
+            matches = []
+
+            # Match by region (highest priority)
+            if region and region in self.persons_by_region:
+                matches = self.persons_by_region[region].copy()
+            else:
+                # Default to US if no region specified
+                if 'us' in self.persons_by_region:
+                    matches = self.persons_by_region['us'].copy()
+                else:
+                    matches = self.persons_cache.copy()
+
+            # Sort by seniority level
+            def get_seniority_score(person):
+                title = (person.get('current_title') or '').lower()
+
+                # Base score by seniority
+                if intent == 'STRATEGIC':
+                    # For strategic queries, prioritize VPs who set mandates
+                    if 'vp' in title or 'vice president' in title or 'head' in title:
+                        base_score = 10
+                    elif 'director' in title or 'manager' in title:
+                        base_score = 20
+                    else:
+                        base_score = 30
+                else:
+                    # For routing queries, prioritize Directors/Managers who take pitches
+                    if 'director' in title or 'manager' in title:
+                        base_score = 10
+                    elif 'vp' in title or 'vice president' in title or 'head' in title:
+                        base_score = 20
+                    else:
+                        base_score = 30
+
+                return base_score
+
+            matches.sort(key=get_seniority_score)
+
+            # For top matches, include their boss for context
+            enriched_matches = []
+            for person in matches[:5]:
+                enriched_matches.append(person)
+
+                # If they report to someone, include their boss too
+                if person.get('reports_to'):
+                    boss_name = person['reports_to']
+                    boss = next((p for p in self.persons_cache if p.get('name') == boss_name), None)
+                    if boss and boss not in enriched_matches:
+                        enriched_matches.append(boss)
+
+            return enriched_matches[:7]
+
+        except Exception as e:
+            print(f"[ERROR] Graph search failed: {e}, using fallback")
+            return self._fallback_graph_search(attributes, intent)
+
+    def _fallback_graph_search(self, attributes: Dict[str, Any], intent: str) -> List[Dict]:
+        """Fallback search using cached data when Neo4j is unavailable"""
+        try:
+            region = attributes.get('region')
+            if region and region in self.persons_by_region:
+                return self.persons_by_region[region][:7]
+            return self.persons_cache[:7]
+        except Exception as e:
+            print(f"[ERROR] Fallback search failed: {e}")
             return []
-        
-        # For MARKET_INFO queries, return representatives from each region
-        if intent == 'MARKET_INFO':
-            # Get one executive from each region to show which regions have teams
-            region_representatives = []
-            seen_regions = set()
-            for person in self.persons_cache:
-                region = person.get('region', 'US')
-                if region and region not in seen_regions:
-                    region_representatives.append(person)
-                    seen_regions.add(region)
-            return region_representatives
-        
-        region = attributes.get('region')
-        genre = attributes.get('genre')
-        fmt = attributes.get('format')
-        referenced_person = attributes.get('referenced_person')
-        
-        # If we have a referenced person, filter to just that person
-        if referenced_person:
-            matches = [p for p in self.persons_cache if referenced_person.lower() in p.get('name', '').lower()]
-            if matches:
-                return matches[:1]  # Return just the referenced person
-        
-        # Find matching persons from cache
-        matches = []
-        
-        # Match by region (highest priority)
-        if region and region in self.persons_by_region:
-            matches = self.persons_by_region[region].copy()
-        else:
-            # Default to US if no region specified
-            if 'us' in self.persons_by_region:
-                matches = self.persons_by_region['us'].copy()
-            else:
-                matches = self.persons_cache.copy()
-        
-        # Sort by seniority level
-        def get_seniority_score(person):
-            title = (person.get('current_title') or '').lower()
-            
-            # Base score by seniority
-            if intent == 'STRATEGIC':
-                # For strategic queries, prioritize VPs who set mandates
-                if 'vp' in title or 'vice president' in title or 'head' in title:
-                    base_score = 10
-                elif 'director' in title or 'manager' in title:
-                    base_score = 20
-                else:
-                    base_score = 30
-            else:
-                # For routing queries, prioritize Directors/Managers who take pitches
-                if 'director' in title or 'manager' in title:
-                    base_score = 10
-                elif 'vp' in title or 'vice president' in title or 'head' in title:
-                    base_score = 20
-                else:
-                    base_score = 30
-            
-            return base_score
-        
-        matches.sort(key=get_seniority_score)
-        
-        # For top matches, include their boss for context
-        enriched_matches = []
-        for person in matches[:5]:
-            enriched_matches.append(person)
-            
-            # If they report to someone, include their boss too
-            if person.get('reports_to'):
-                boss_name = person['reports_to']
-                boss = next((p for p in self.persons_cache if p.get('name') == boss_name), None)
-                if boss and boss not in enriched_matches:
-                    enriched_matches.append(boss)
-        
-        return enriched_matches[:7]
     
     def vector_search(self, question: str, top_k: int = 10, use_reranking: bool = False) -> Dict:
-        """Search Pinecone vector database with optional reranking"""
-        # Fetch more results initially for reranking (50 instead of 10)
-        initial_top_k = 50 if use_reranking else top_k
-        
-        # Generate embedding for the question
-        query_embedding = self.embedding_model.encode(question).tolist()
-        
-        # Query Pinecone
-        results = self.index.query(
-            vector=query_embedding,
-            top_k=initial_top_k,
-            include_metadata=True
-        )
+        """Search Pinecone vector database with optional reranking, embedding cache, and error handling"""
+        try:
+            # Fetch more results initially for reranking (50 instead of 10)
+            initial_top_k = 50 if use_reranking else top_k
+
+            # Check embedding cache first
+            cache_key = question.lower().strip()
+            if cache_key in self.embedding_cache:
+                query_embedding = self.embedding_cache[cache_key]
+            else:
+                # Generate embedding for the question
+                query_embedding = self.embedding_model.encode(question).tolist()
+
+                # Cache the embedding (with size limit)
+                if len(self.embedding_cache) >= self.embedding_cache_max_size:
+                    # Remove oldest entry (simple FIFO)
+                    oldest_key = next(iter(self.embedding_cache))
+                    del self.embedding_cache[oldest_key]
+                self.embedding_cache[cache_key] = query_embedding
+
+            # Query Pinecone
+            results = self.index.query(
+                vector=query_embedding,
+                top_k=initial_top_k,
+                include_metadata=True
+            )
+        except Exception as e:
+            print(f"[ERROR] Vector search failed: {e}, returning empty results")
+            return {
+                'ids': [],
+                'distances': [],
+                'metadatas': [],
+                'documents': []
+            }
         
         # Extract documents and metadata
         documents = [match['metadata'].get('text', '') for match in results['matches']]
@@ -499,24 +546,60 @@ class HybridRAGEnginePinecone:
         
         return formatted_results
     
+    def _deduplicate_text(self, texts: List[str], threshold: float = 0.85) -> List[int]:
+        """
+        Deduplicate similar text snippets using cosine similarity
+        Returns indices of unique texts to keep
+        """
+        if len(texts) <= 1:
+            return list(range(len(texts)))
+
+        # Generate embeddings for all texts
+        embeddings = self.embedding_model.encode(texts)
+
+        # Calculate cosine similarity matrix
+        from numpy import dot
+        from numpy.linalg import norm
+
+        unique_indices = [0]  # Always keep first one
+        for i in range(1, len(texts)):
+            is_unique = True
+            for j in unique_indices:
+                # Calculate cosine similarity
+                similarity = dot(embeddings[i], embeddings[j]) / (norm(embeddings[i]) * norm(embeddings[j]))
+                if similarity > threshold:
+                    is_unique = False
+                    break
+            if is_unique:
+                unique_indices.append(i)
+
+        return unique_indices
+
     def fuse_context(self, graph_results: List[Dict], vector_results: Dict, intent: str, neo4j_greenlights: List[Dict] = None, source_tracker=None) -> str:
-        """Fuse graph, vector, and Neo4j greenlight results into context for LLM"""
+        """Fuse graph, vector, and Neo4j greenlight results into context for LLM with deduplication"""
         context_parts = []
-        
+
         # Track sources if tracker is provided
         if source_tracker:
             source_tracker.reset()
-        
+
         # Include Neo4j greenlights first (highest priority for factual queries)
         if neo4j_greenlights:
             context_parts.append("=== RECENT NETFLIX GREENLIGHTS ===")
+            # Deduplicate greenlights by title
+            seen_titles = set()
             for gl in neo4j_greenlights:
+                title = gl.get('title', 'Untitled')
+                if title.lower() in seen_titles:
+                    continue
+                seen_titles.add(title.lower())
+
                 # Track source
                 if source_tracker:
                     citation_num = source_tracker.add_greenlight_source(gl)
-                    context_parts.append(f"\n**{gl.get('title', 'Untitled')}** [Source {citation_num}]")
+                    context_parts.append(f"\n**{title}** [Source {citation_num}]")
                 else:
-                    context_parts.append(f"\n**{gl.get('title', 'Untitled')}**")
+                    context_parts.append(f"\n**{title}**")
                 if gl.get('genre'):
                     context_parts.append(f"Genre: {gl['genre']}")
                 if gl.get('format'):
@@ -556,13 +639,26 @@ class HybridRAGEnginePinecone:
                     context_parts.append(f"Mandate: {person['mandate'][:500]}")
                 context_parts.append("")
         
-        # Always include vector results for rich context
+        # Always include vector results for rich context (with deduplication)
         if vector_results['documents']:
             context_parts.append("\n=== RELEVANT INFORMATION FROM KNOWLEDGE BASE ===\n")
-            for i, (meta, doc, distance) in enumerate(zip(vector_results['metadatas'][:5], vector_results['documents'][:5], vector_results['distances'][:5])):
+
+            # Deduplicate vector documents
+            documents = vector_results['documents'][:10]  # Consider top 10
+            metadatas = vector_results['metadatas'][:10]
+            distances = vector_results['distances'][:10]
+
+            if len(documents) > 1:
+                unique_indices = self._deduplicate_text(documents, threshold=0.85)
+                documents = [documents[i] for i in unique_indices]
+                metadatas = [metadatas[i] for i in unique_indices]
+                distances = [distances[i] for i in unique_indices]
+
+            # Include top 5 deduplicated results
+            for i, (meta, doc, distance) in enumerate(zip(metadatas[:5], documents[:5], distances[:5])):
                 entity_type = meta.get('entity_type', 'unknown')
                 name = meta.get('name', 'unknown')
-                
+
                 # Track source
                 if source_tracker:
                     score = 1 - distance  # Convert distance to similarity score
@@ -570,10 +666,10 @@ class HybridRAGEnginePinecone:
                     context_parts.append(f"\n[Source {citation_num}: {entity_type} - {name}]")
                 else:
                     context_parts.append(f"\n[Source {i+1}: {entity_type} - {name}]")
-                
+
                 context_parts.append(doc[:1500])
                 context_parts.append("")
-        
+
         return '\n'.join(context_parts)
     
     def generate_answer(self, question: str, context: str, intent: str, session_id: str = "default") -> str:
@@ -845,15 +941,21 @@ Keep it factual and scannable."""
         # If we have a referenced person from context, filter graph results
         if context_from_history.get('referenced_person'):
             attributes['referenced_person'] = context_from_history['referenced_person']
-        
+
         # Check timeout before expensive operation
         if time.time() - start_time > query_timeout:
             raise TimeoutError("Query exceeded time limit before graph search")
-        
-        graph_results = self.graph_search(resolved_question, attributes, intent=intent)
-        
-        # Step 4: Vector search (Pinecone)
-        vector_results = self.vector_search(question, top_k=10)
+
+        # Step 3 & 4: Run graph and vector searches IN PARALLEL for better performance
+        import concurrent.futures
+        with concurrent.futures.ThreadPoolExecutor(max_workers=2) as executor:
+            # Submit both searches concurrently
+            graph_future = executor.submit(self.graph_search, resolved_question, attributes, intent)
+            vector_future = executor.submit(self.vector_search, question, 10)
+
+            # Wait for both to complete
+            graph_results = graph_future.result(timeout=query_timeout - (time.time() - start_time))
+            vector_results = vector_future.result(timeout=query_timeout - (time.time() - start_time))
         
         # Step 4.5: For factual queries about greenlights, add Neo4j greenlight data
         neo4j_greenlights = []
@@ -1242,4 +1344,28 @@ Keep it factual and scannable."""
         
         # Final signal
         yield {'type': 'done'}
+
+    def cleanup(self):
+        """Clean up resources and close connections"""
+        try:
+            # Close Neo4j driver
+            if self.neo4j_driver:
+                self.neo4j_driver.close()
+                print("✓ Neo4j driver closed")
+
+            # Clear caches to free memory
+            self.embedding_cache.clear()
+            self.persons_cache.clear()
+            self.persons_by_region.clear()
+
+            print("✓ Resources cleaned up")
+        except Exception as e:
+            print(f"[ERROR] Cleanup failed: {e}")
+
+    def __del__(self):
+        """Destructor to ensure cleanup on object deletion"""
+        try:
+            self.cleanup()
+        except:
+            pass  # Silently ignore errors in destructor
 
