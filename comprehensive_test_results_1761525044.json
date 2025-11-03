@@ -1,0 +1,112 @@
+{
+  "test_suite": "Comprehensive Persona Testing - Post-Enhancement",
+  "date": "2025-10-26T20:30:44.139757",
+  "summary": {
+    "total_tests": 8,
+    "successful_tests": 1,
+    "avg_success_rate": 15.625,
+    "avg_response_time": 7.974485903978348,
+    "competitive_intel_coverage": 12.5,
+    "packaging_intel_coverage": 25.0,
+    "timeline_intel_coverage": 25.0,
+    "prodco_intel_coverage": 12.5
+  },
+  "results": [
+    {
+      "persona_id": 1,
+      "persona": "Showrunner considering overall deal",
+      "query": "I'm considering overall deals from Netflix, Apple, and Amazon. Why should I choose Netflix? What's the process and timeline?",
+      "answer": "",
+      "success_count": 0,
+      "total_criteria": 4,
+      "success_rate": 0.0,
+      "response_time": 0.005991220474243164,
+      "followups": []
+    },
+    {
+      "persona_id": 2,
+      "persona": "First-time creator with breakout podcast",
+      "query": "I have a breakout true crime podcast and want to adapt it for Netflix. I don't have any industry connections. What's the realistic path forward?",
+      "answer": "",
+      "success_count": 0,
+      "total_criteria": 4,
+      "success_rate": 0.0,
+      "response_time": 0.004660129547119141,
+      "followups": []
+    },
+    {
+      "persona_id": 3,
+      "persona": "UK showrunner with climate drama",
+      "query": "I'm a UK showrunner with a climate sci-fi drama. Should I pitch to Netflix UK or US? And how does Netflix compare to Apple for this type of project?",
+      "answer": "Start by taking it to Netflix UK\u2014Anne Mensah\u2019s scripted team\u2014via a UK production company with a Netflix track record; they\u2019ll escalate to US/global if it plays big.\n\nPackage hard: pilot + tight series bible, global hook (survival/hope, not lectures), VFX plan and budget, lookbook, science advisor, and an albert sustainability plan. Attach an EP/director with scale cred and targets for two A\u2011list leads. For partners, go to Sister, Bad Wolf, Left Bank, Urban Myth Films, Wild Mercury, or Moonage; if you need co-finance/scale, loop in Legendary TV or Skydance.\n\nNetflix moves faster (6\u201312 months) and buys broader; Apple pays more and is slower (12\u201318 months), prefers A-list prestige and will development\u2011heavy notes.\n\nDon\u2019t cold\u2011pitch US execs or lead with \u201cissue-first\u201d climate messaging over character/genre.\n\nExpect a handful of VFX-heavy UK dramas bought yearly; A\u2011list + proven showrunner + tight pilot = best shot at greenlight. Success: UK greenlight and global rollout.",
+      "success_count": 3,
+      "total_criteria": 4,
+      "success_rate": 75.0,
+      "response_time": 28.94452738761902,
+      "followups": [
+        "What materials do I need for a pitch?",
+        "How long does the pitch process typically take?",
+        "What are common reasons pitches get rejected?"
+      ]
+    },
+    {
+      "persona_id": 4,
+      "persona": "A-list actor pivoting to producing",
+      "query": "I'm an A-list actor who wants to produce a prestige limited series. What do I need to package, who do I pitch to, and how long will it take?",
+      "answer": "",
+      "success_count": 0,
+      "total_criteria": 4,
+      "success_rate": 0.0,
+      "response_time": 0.004578351974487305,
+      "followups": []
+    },
+    {
+      "persona_id": 5,
+      "persona": "International producer with local hit",
+      "query": "I'm a Korean producer with a hit local series. How do I get Netflix interested, and what's different about pitching to Netflix vs local Korean broadcasters?",
+      "answer": "The most reliable path is to package through a Korean company with an active Netflix track record and get a warm intro to Don Kang\u2019s team.\n\nStart by building a deck around global hook, binge-ability, and event potential; attach a hit PD/showrunner, 1\u20132 locked scripts, a tight season bible (8\u201310 eps), early casting targets, and a 60\u201390s sizzle. Use partners by genre: \n- Prestige/genre drama: Studio Dragon, AStory, Climax Studio \n- Rom-com/YA: Playlist, Kakao Entertainment, Studio Dragon (Romance) \n- Unscripted/dating/competition: TEO, JTBC Studio/SLL, CJ ENM \n- True crime/doc: co-package with Raw TV or Campfire for global doc chops.\n\nNetflix vs local broadcasters: Netflix pre-finances full seasons, drops all-at-once, needs locked scripts and global upside; broadcasters favor weekly, live-shoot, star-first, tighter S&P and PPL.\n\nTimeline: Netflix Korea reads in 2\u20134 weeks; strong packages hit paid development in 6\u201310 weeks; greenlight can take 3\u20136 months. \n\nAvoid cold submissions or \u201cwe\u2019ll figure it out in post.\u201d\n\nSuccess = Don Kang\u2019s team requests materials, moves to paid dev, and you secure a global series order.",
+      "success_count": 2,
+      "total_criteria": 4,
+      "success_rate": 50.0,
+      "response_time": 34.82294249534607,
+      "followups": [
+        "What materials do I need for a pitch?",
+        "How long does the pitch process typically take?",
+        "What are common reasons pitches get rejected?"
+      ]
+    },
+    {
+      "persona_id": 6,
+      "persona": "Bestselling author with book series",
+      "query": "I have a bestselling thriller book series. How do I maintain creative control in the adaptation, and what's the typical timeline from pitch to production?",
+      "answer": "",
+      "success_count": 0,
+      "total_criteria": 4,
+      "success_rate": 0.0,
+      "response_time": 0.003961801528930664,
+      "followups": []
+    },
+    {
+      "persona_id": 7,
+      "persona": "Documentary filmmaker with exclusive access",
+      "query": "I have exclusive access to a major political figure for a documentary series. Who handles political docs at Netflix, and what's the competitive landscape vs HBO?",
+      "answer": "",
+      "success_count": 0,
+      "total_criteria": 4,
+      "success_rate": 0.0,
+      "response_time": 0.004813432693481445,
+      "followups": []
+    },
+    {
+      "persona_id": 8,
+      "persona": "Prodco executive with overall deal expiring",
+      "query": "Our Netflix overall deal is expiring. We're considering renewal vs moving to Apple. What are the key differences, and what does Netflix value in overall deal renewals?",
+      "answer": "",
+      "success_count": 0,
+      "total_criteria": 4,
+      "success_rate": 0.0,
+      "response_time": 0.004412412643432617,
+      "followups": []
+    }
+  ]
+}

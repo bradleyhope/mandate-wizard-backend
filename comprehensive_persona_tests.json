@@ -1,0 +1,166 @@
+{
+  "test_suite": "Comprehensive Persona Testing - Post-Enhancement",
+  "version": "2.0",
+  "date": "2025-10-27",
+  "focus_areas": [
+    "Competitive intelligence surfacing",
+    "Packaging best practices",
+    "Timeline expectations",
+    "Production company recommendations"
+  ],
+  "personas": [
+    {
+      "id": 1,
+      "persona": "Showrunner considering overall deal",
+      "background": "Established showrunner with 2 hit shows, fielding offers from Netflix, Apple, and Amazon",
+      "query": "I'm considering overall deals from Netflix, Apple, and Amazon. Why should I choose Netflix? What's the process and timeline?",
+      "expected_intelligence": [
+        "Competitive positioning (Netflix vs Apple vs Amazon)",
+        "Overall deal process and timeline (12-24 weeks)",
+        "Decision-maker identification (Bela Bajaria for $50M+ deals)",
+        "Netflix advantages (global reach, faster decisions, data-driven marketing)",
+        "Deal structure guidance"
+      ],
+      "success_criteria": [
+        "Mentions at least 2 Netflix advantages vs competitors",
+        "Provides realistic timeline (12-24 weeks)",
+        "Identifies correct decision-maker",
+        "Mentions deal value thresholds"
+      ]
+    },
+    {
+      "id": 2,
+      "persona": "First-time creator with breakout podcast",
+      "background": "Podcast creator with viral true crime series, no industry connections",
+      "query": "I have a breakout true crime podcast and want to adapt it for Netflix. I don't have any industry connections. What's the realistic path forward?",
+      "expected_intelligence": [
+        "Packaging requirements (production company, showrunner)",
+        "Production company recommendations (Raw, Campfire Studios for true crime)",
+        "Timeline expectations (6-12 months to package, 3-6 months for decision)",
+        "Common mistakes to avoid (cold pitching)",
+        "Success rate reality check (1-2 true crime buys per year)"
+      ],
+      "success_criteria": [
+        "Mentions need for production company partner",
+        "Recommends specific true crime prodcos",
+        "Provides realistic timeline",
+        "Sets honest expectations about difficulty"
+      ]
+    },
+    {
+      "id": 3,
+      "persona": "UK showrunner with climate drama",
+      "background": "UK-based showrunner with BBC track record, pitching climate sci-fi drama",
+      "query": "I'm a UK showrunner with a climate sci-fi drama. Should I pitch to Netflix UK or US? And how does Netflix compare to Apple for this type of project?",
+      "expected_intelligence": [
+        "Regional routing (Anne Mensah, Netflix UK)",
+        "Competitive positioning (Netflix vs Apple for sci-fi)",
+        "Production company recommendations (21 Laps, Plan B for sci-fi)",
+        "Netflix advantages for UK drama (Baby Reindeer, The Gentlemen track record)",
+        "Packaging requirements (UK showrunner, science adviser)"
+      ],
+      "success_criteria": [
+        "Identifies Anne Mensah (Netflix UK)",
+        "Compares Netflix vs Apple for sci-fi",
+        "Mentions UK production company partnerships",
+        "Provides packaging guidance"
+      ]
+    },
+    {
+      "id": 4,
+      "persona": "A-list actor pivoting to producing",
+      "background": "A-list film actor wanting to produce prestige limited series",
+      "query": "I'm an A-list actor who wants to produce a prestige limited series. What do I need to package, who do I pitch to, and how long will it take?",
+      "expected_intelligence": [
+        "Executive identification (Peter Friedlander for prestige limited)",
+        "Packaging requirements (showrunner, script, 6-8 episode plan)",
+        "Timeline (8-12 weeks pitch to greenlight with full package)",
+        "Production company recommendations (Clerkenwell Films, Wiip for limited series)",
+        "Success formula (A-list + proven showrunner + tight script = 70% greenlight rate)"
+      ],
+      "success_criteria": [
+        "Identifies Peter Friedlander",
+        "Lists specific packaging requirements",
+        "Provides realistic timeline (8-12 weeks)",
+        "Mentions success rate or formula"
+      ]
+    },
+    {
+      "id": 5,
+      "persona": "International producer with local hit",
+      "background": "Korean producer with local hit series, wants to expand to Netflix",
+      "query": "I'm a Korean producer with a hit local series. How do I get Netflix interested, and what's different about pitching to Netflix vs local Korean broadcasters?",
+      "expected_intelligence": [
+        "Executive identification (Don Kang for Korea content)",
+        "Netflix's Korea strategy ($2.5B investment)",
+        "Global appeal requirements (vs local-only content)",
+        "Timeline for international co-productions (12-20 weeks)",
+        "Success examples (Squid Game, Physical: 100)"
+      ],
+      "success_criteria": [
+        "Identifies Don Kang",
+        "Mentions Netflix's Korea investment",
+        "Explains global vs local positioning",
+        "Provides timeline expectations"
+      ]
+    },
+    {
+      "id": 6,
+      "persona": "Bestselling author with book series",
+      "background": "NYT bestselling author with 5-book thriller series, wants creative control",
+      "query": "I have a bestselling thriller book series. How do I maintain creative control in the adaptation, and what's the typical timeline from pitch to production?",
+      "expected_intelligence": [
+        "Rights and control mechanisms (EP approval in shopping agreement)",
+        "Production company recommendations (Tomorrow Studios, Picturestart for book adaptations)",
+        "Timeline (6-12 months to package, 10-16 weeks pitch to greenlight)",
+        "Packaging requirements (showrunner, 3-season plan)",
+        "Legal pathway (Robert Roy for rights acquisition)"
+      ],
+      "success_criteria": [
+        "Mentions EP/creative approval mechanisms",
+        "Recommends book adaptation prodcos",
+        "Provides complete timeline (packaging + greenlight)",
+        "Mentions legal/rights pathway"
+      ]
+    },
+    {
+      "id": 7,
+      "persona": "Documentary filmmaker with exclusive access",
+      "background": "Award-winning doc filmmaker with exclusive access to major political figure",
+      "query": "I have exclusive access to a major political figure for a documentary series. Who handles political docs at Netflix, and what's the competitive landscape vs HBO?",
+      "expected_intelligence": [
+        "Executive identification (Documentary Series team)",
+        "Competitive positioning (Netflix vs HBO for prestige docs)",
+        "Netflix advantages (global reach, binge-release model)",
+        "Packaging requirements (exclusive access, filmmaker-led)",
+        "Timeline expectations"
+      ],
+      "success_criteria": [
+        "Identifies correct documentary executive",
+        "Compares Netflix vs HBO for docs",
+        "Mentions value of exclusive access",
+        "Provides timeline"
+      ]
+    },
+    {
+      "id": 8,
+      "persona": "Prodco executive with overall deal expiring",
+      "background": "Production company with expiring Netflix overall deal, considering renewal vs moving to Apple",
+      "query": "Our Netflix overall deal is expiring. We're considering renewal vs moving to Apple. What are the key differences, and what does Netflix value in overall deal renewals?",
+      "expected_intelligence": [
+        "Competitive positioning (Netflix vs Apple for overall deals)",
+        "Renewal criteria (output, hit rate, strategic fit)",
+        "Apple advantages (higher budgets, prestige positioning)",
+        "Netflix advantages (volume, global reach, faster decisions)",
+        "Timeline for renewal negotiations"
+      ],
+      "success_criteria": [
+        "Compares Netflix vs Apple overall deals",
+        "Mentions renewal criteria",
+        "Provides strategic guidance on choice",
+        "Mentions timeline for negotiations"
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>API Connection Test</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; }
+        .card { border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 8px; }
+        .success { background: #d4edda; }
+        .error { background: #f8d7da; }
+        pre { background: #f5f5f5; padding: 10px; overflow-x: auto; }
+    </style>
+</head>
+<body>
+    <h1>Mandate Wizard API Connection Test</h1>
+    
+    <div id="status">Testing connection...</div>
+    
+    <h2>API Response:</h2>
+    <pre id="response"></pre>
+    
+    <h2>Intelligence Cards:</h2>
+    <div id="cards"></div>
+    
+    <script>
+        const API_URL = 'https://5000-iy1gh94d7s437eutwzpcu-aa64bff1.manusvm.computer/api/recent-mandates';
+        
+        async function testAPI() {
+            const statusDiv = document.getElementById('status');
+            const responseDiv = document.getElementById('response');
+            const cardsDiv = document.getElementById('cards');
+            
+            try {
+                statusDiv.innerHTML = '🔄 Fetching from: ' + API_URL;
+                
+                const response = await fetch(API_URL, {
+                    method: 'GET',
+                    mode: 'cors',
+                    credentials: 'include',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+                const data = await response.json();
+                
+                statusDiv.innerHTML = '✅ <div class="card success">Connection successful!</div>';
+                responseDiv.textContent = JSON.stringify(data, null, 2);
+                
+                if (data.success && data.data && data.data.cards) {
+                    cardsDiv.innerHTML = data.data.cards.map(card => `
+                        <div class="card">
+                            <h3>${card.icon} ${card.title}</h3>
+                            <p>${card.description}</p>
+                            <small>Type: ${card.type} | Date: ${card.date}</small>
+                        </div>
+                    `).join('');
+                } else {
+                    cardsDiv.innerHTML = '<div class="card error">No cards found in response</div>';
+                }
+                
+            } catch (error) {
+                statusDiv.innerHTML = '❌ <div class="card error">Connection failed: ' + error.message + '</div>';
+                responseDiv.textContent = 'Error: ' + error.stack;
+                console.error('API Test Error:', error);
+            }
+        }
+        
+        // Run test on page load
+        testAPI();
+    </script>
+</body>
+</html>
+

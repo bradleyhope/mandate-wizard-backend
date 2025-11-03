@@ -1,0 +1,91 @@
+{
+  "persona": "Amy Thompson - Showrunner",
+  "email": "amy.thompson@test.com",
+  "timestamp": "2025-10-28T17:14:24.498439",
+  "queries": [
+    {
+      "query": "Which streamer is the best fit for a dark comedy about grief?",
+      "answer": null,
+      "response_time": 0.004578590393066406,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "Who are the top drama executives at HBO?",
+      "answer": null,
+      "response_time": 0.0045337677001953125,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "What shows like mine are currently in development?",
+      "answer": null,
+      "response_time": 0.005059242248535156,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "What kind of overall deals is Apple TV+ making with showrunners?",
+      "answer": null,
+      "response_time": 0.004820585250854492,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "Is now a good time to pitch a limited series to Netflix?",
+      "answer": null,
+      "response_time": 0.005301713943481445,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "Which executives have a track record of championing female showrunners?",
+      "answer": null,
+      "response_time": 0.004354953765869141,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "What are the key mandates I should know before pitching to Hulu?",
+      "answer": null,
+      "response_time": 0.004159688949584961,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "Give me examples of successful pitches for dark comedies",
+      "answer": null,
+      "response_time": 0.004648685455322266,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "What production companies should I partner with for my next show?",
+      "answer": null,
+      "response_time": 0.004273414611816406,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "How competitive is the market for limited series right now?",
+      "answer": null,
+      "response_time": 0.004503488540649414,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "What are the typical deal terms for showrunner overall deals?",
+      "answer": null,
+      "response_time": 0.004186868667602539,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    },
+    {
+      "query": "Which buyers are looking for elevated genre content?",
+      "answer": null,
+      "response_time": 0.003818511962890625,
+      "success": false,
+      "error": "<!doctype html>\n<html lang=en>\n<title>500 Internal Server Error</title>\n<h1>Internal Server Error</h1>\n<p>The server encountered an internal error and was unable to complete your request. Either the server is overloaded or there is an error in the application.</p>\n"
+    }
+  ]
+}

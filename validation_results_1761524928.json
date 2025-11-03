@@ -1,0 +1,53 @@
+{
+  "test_suite": "Prompt Enhancement Validation",
+  "date": "2025-10-26 20:28:48",
+  "summary": {
+    "total_tests": 4,
+    "successful": 3,
+    "success_rate": 75.0
+  },
+  "results": [
+    {
+      "test_id": 1,
+      "focus": "Production company recommendations (ROUTING)",
+      "query": "I'm a showrunner with a political thriller limited series. Who should I pitch to at Netflix?",
+      "answer": "James Flannery is your pitch target. He\u2019s the Drama director who loves the \u201cgourmet cheeseburger\u201d \u2014 broad-hook thrillers with premium execution \u2014 and he\u2019s been leaning into limiteds that travel, especially political intrigue. Go in packaged: attach an A-list lead or marquee director and partner with a thriller-savvy shop like Anonymous Content, The Ink Factory, or Left Bank Pictures; those banners help Netflix move faster. With a strong package, expect a read and temperature check in about 6\u201310 weeks. After The Diplomat\u2019s surge, they\u2019re bullish on sharp geopolitics. Have your rep route to Flannery\u2019s team (cc Kennedy Corrin) with a pilot, tight 2\u20133 page bible, and an anthology-friendly close-ended plan.",
+      "found_keywords": [
+        "partner with"
+      ],
+      "success": true,
+      "response_time": 21.909174919128418
+    },
+    {
+      "test_id": 2,
+      "focus": "Senior executive intelligence (STRATEGIC)",
+      "query": "I have a $50M overall deal offer from Netflix and Apple. Who makes the final decision at Netflix for deals this size?",
+      "answer": "Bela Bajaria is your decision-maker here. As CCO, she personally signs off on eight-figure overalls; for $50M she\u2019ll confer with Dan Lin on film and Peter Friedlander on series while Business Affairs papers the deal. In a Netflix-vs-Apple bakeoff, expect 3\u20136 weeks to yes if your package is tight. Bring a 12\u201318-month slate, first two projects dated, a showrunner and lead talent attached, and align with partners\u201421 Laps for sci-fi, Aggregate Films for grounded thrillers, Raw TV or Campfire for true crime. Recent tell: after Baby Reindeer\u2019s breakout, Bela\u2019s leaning into creator-led, globally scalable IP. Insider move: ask for view-hours bonuses, marketing commitments, and a carve-out for brand-funded docs; Netflix will move faster globally, Apple pays rich but paces slower.",
+      "found_keywords": [
+        "bela bajaria"
+      ],
+      "success": true,
+      "response_time": 29.246283769607544
+    },
+    {
+      "test_id": 3,
+      "focus": "Production company recommendations (PROCEDURAL)",
+      "query": "I want to adapt my bestselling thriller novel for Netflix. What's the process?",
+      "answer": "Good news: Netflix loves binge-worthy thrillers\u2014crime, psychological, and political\u2014especially from proven IP.\n\nHere\u2019s the path:\n- Lock adaptation rights and boil your book into a killer series pitch: logline, season arc, 8\u201310 episode beats, comps (think Squid Game, Mindhunter).\n- Attach a showrunner or experienced EP; packaging helps.\n- Get a rep (agent/manager) to shop or partner with a producer with a Netflix deal.\n- Target Drama Series execs like Kennedy Corrin (scripted drama) via producers, not cold emails.\n- Consider a pilot script and lookbook; optional sizzle.\n\nFocus now: build the package (showrunner + deck + pilot) and go in through a producer or agency.",
+      "found_keywords": [
+        "partner with"
+      ],
+      "success": true,
+      "response_time": 12.469339370727539
+    },
+    {
+      "test_id": 4,
+      "focus": "Success formulas (PROCEDURAL)",
+      "query": "I'm an A-list actor who wants to produce a prestige limited series. What are my chances of getting it greenlit?",
+      "answer": "Jinny Howe is your best bet here. She\u2019s been driving Netflix\u2019s prestige limited push\u2014fresh off the House of Guinness greenlight\u2014and leans into A-list, awards-forward packages. As an A-list actor, your odds are strong if you bring a complete 6\u20138 episode story, an auteur showrunner/director, and a top prestige shop: partner with Plan B, Anonymous Content, or A24 TV. Attachments first; script next. With that package, expect 8\u201312 weeks for a read-to-greenlight path; without it, the odds drop fast. Michael Azzolino often tags in on awards-savvy projects, so aim the pitch to both. Netflix over rivals because Limited is their Emmy play and star\u2011friendly. Insider tip: walk in with talent availabilities and festival/awards timeline baked into your schedule.",
+      "found_keywords": [],
+      "success": false,
+      "response_time": 30.108824491500854
+    }
+  ]
+}

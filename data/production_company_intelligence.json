@@ -1,0 +1,231 @@
+{
+  "production_companies_by_genre": {
+    "political_thriller": [
+      {
+        "name": "The Littlefield Company",
+        "principal": "Warren Littlefield",
+        "netflix_relationship": "First-look deal",
+        "track_record": ["The Handmaid's Tale (Hulu)", "Fargo (FX)"],
+        "netflix_greenlights": ["The Diplomat"],
+        "why_strong": "Prestige political drama expertise, showrunner relationships, awards track record"
+      },
+      {
+        "name": "Aggregate Films",
+        "principal": "Jason Bateman",
+        "netflix_relationship": "Overall deal",
+        "track_record": ["Ozark", "The Outsider"],
+        "netflix_greenlights": ["Ozark Seasons 1-4"],
+        "why_strong": "Political thriller DNA, actor-producer credibility, Netflix relationship"
+      }
+    ],
+    "true_crime": [
+      {
+        "name": "Raw",
+        "principal": "Dimitri Doganis",
+        "netflix_relationship": "Preferred partner",
+        "track_record": ["Making a Murderer", "The Staircase"],
+        "netflix_greenlights": ["Making a Murderer Seasons 1-2"],
+        "why_strong": "True crime pioneers, investigative journalism approach, Emmy wins"
+      },
+      {
+        "name": "Campfire Studios",
+        "principal": "Josh Braun, Ross M. Dinerstein",
+        "netflix_relationship": "Active partner",
+        "track_record": ["The Keepers", "Crime Scene series"],
+        "netflix_greenlights": ["Crime Scene: The Vanishing at the Cecil Hotel"],
+        "why_strong": "Serialized true crime expertise, access to exclusive stories"
+      }
+    ],
+    "sci_fi_drama": [
+      {
+        "name": "21 Laps Entertainment",
+        "principal": "Shawn Levy",
+        "netflix_relationship": "Overall deal ($300M, 5 years)",
+        "track_record": ["Stranger Things", "Shadow and Bone"],
+        "netflix_greenlights": ["Stranger Things Seasons 1-5", "Shadow and Bone"],
+        "why_strong": "Sci-fi/fantasy expertise, global hits, VFX production capability"
+      },
+      {
+        "name": "Plan B Entertainment",
+        "principal": "Brad Pitt, Dede Gardner",
+        "netflix_relationship": "First-look deal",
+        "track_record": ["Okja", "The OA"],
+        "netflix_greenlights": ["Okja", "The OA Seasons 1-2"],
+        "why_strong": "High-concept sci-fi, A-list talent access, prestige positioning"
+      }
+    ],
+    "book_adaptations": [
+      {
+        "name": "Tomorrow Studios",
+        "principal": "Marty Adelstein",
+        "netflix_relationship": "Overall deal",
+        "track_record": ["One Piece", "Cowboy Bebop", "The Last of Us (HBO)"],
+        "netflix_greenlights": ["One Piece Season 1-2", "Cowboy Bebop"],
+        "why_strong": "IP adaptation expertise, international properties, fan community management"
+      },
+      {
+        "name": "Picturestart",
+        "principal": "Erik Feig",
+        "netflix_relationship": "First-look deal",
+        "track_record": ["A Simple Favor", "Me Before You"],
+        "netflix_greenlights": ["Do Revenge", "Persuasion"],
+        "why_strong": "Book-to-screen track record, commercial instincts, talent relationships"
+      }
+    ],
+    "international_drama": [
+      {
+        "name": "Left Bank Pictures",
+        "principal": "Andy Harries",
+        "netflix_relationship": "Preferred UK partner",
+        "track_record": ["The Crown", "The Diplomat"],
+        "netflix_greenlights": ["The Crown Seasons 1-6"],
+        "why_strong": "UK prestige drama, royal/political expertise, awards magnet"
+      },
+      {
+        "name": "Gaumont",
+        "principal": "Christophe Riandee",
+        "netflix_relationship": "International co-production partner",
+        "track_record": ["Lupin", "Narcos"],
+        "netflix_greenlights": ["Lupin Seasons 1-3", "Narcos Mexico"],
+        "why_strong": "European production, multilingual capability, international distribution"
+      }
+    ],
+    "limited_series_prestige": [
+      {
+        "name": "Clerkenwell Films",
+        "principal": "Murray Ferguson",
+        "netflix_relationship": "Active partner",
+        "track_record": ["Maid", "The End of the F***ing World"],
+        "netflix_greenlights": ["Maid", "The End of the F***ing World"],
+        "why_strong": "Limited series expertise, character-driven storytelling, awards success"
+      },
+      {
+        "name": "Wiip",
+        "principal": "Paul Lee",
+        "netflix_relationship": "First-look deal",
+        "track_record": ["Mare of Easttown (HBO)", "Dickinson (Apple)"],
+        "netflix_greenlights": ["The Woman in the House Across the Street"],
+        "why_strong": "Prestige limited series, showrunner relationships, awards track record"
+      }
+    ]
+  },
+  "overall_deal_holders": {
+    "mega_deals_100m_plus": [
+      {
+        "name": "Shonda Rhimes / Shondaland",
+        "deal_value": "$300M+ (8 years)",
+        "signed": "2017",
+        "output": ["Bridgerton", "Inventing Anna", "Queen Charlotte"],
+        "renewal_status": "Extended through 2025",
+        "why_successful": "Proven hit-maker, binge-worthy storytelling, global appeal, diverse casting"
+      },
+      {
+        "name": "Ryan Murphy / Ryan Murphy Productions",
+        "deal_value": "$300M (5 years)",
+        "signed": "2018",
+        "output": ["The Politician", "Hollywood", "Monster: The Jeffrey Dahmer Story"],
+        "renewal_status": "Active",
+        "why_successful": "Prolific output, awards magnet, LGBTQ+ representation, true crime expertise"
+      },
+      {
+        "name": "Shawn Levy / 21 Laps",
+        "deal_value": "$300M (5 years)",
+        "signed": "2020",
+        "output": ["Stranger Things", "Shadow and Bone"],
+        "renewal_status": "Active",
+        "why_successful": "Sci-fi/fantasy expertise, global franchises, VFX capability"
+      }
+    ],
+    "mid_tier_deals_20m_100m": [
+      {
+        "name": "Kenya Barris / Khalabo Ink Society",
+        "deal_value": "$100M (3 years)",
+        "signed": "2018",
+        "output": ["Black AF", "#blackexcellence"],
+        "renewal_status": "Completed, moved to BET",
+        "why_mixed": "Strong voice, but output didn't match deal size"
+      },
+      {
+        "name": "David Benioff & D.B. Weiss",
+        "deal_value": "$200M (5 years)",
+        "signed": "2019",
+        "output": ["3 Body Problem"],
+        "renewal_status": "Active",
+        "why_slow": "High ambition projects with long development cycles"
+      }
+    ]
+  },
+  "packaging_best_practices": {
+    "essential_elements": [
+      {
+        "element": "Showrunner",
+        "importance": "Critical",
+        "guidance": "Must have track record in genre. Netflix prefers proven showrunners over first-timers. For prestige plays, Emmy/Golden Globe credentials matter."
+      },
+      {
+        "element": "Production Company",
+        "importance": "Critical",
+        "guidance": "Must have Netflix relationship (overall deal, first-look, or proven track record). Cold pitches from unknown prodcos rarely succeed."
+      },
+      {
+        "element": "Talent Attachment",
+        "importance": "High for limited series, Medium for ongoing",
+        "guidance": "A-list talent critical for limited series and prestige plays. For ongoing series, can cast after greenlight if showrunner is strong."
+      },
+      {
+        "element": "Script/Bible",
+        "importance": "Critical",
+        "guidance": "Pilot script required for drama series. Full scripts for limited series preferred. Bible must show 3-season arc for ongoing series."
+      },
+      {
+        "element": "Budget Estimate",
+        "importance": "High",
+        "guidance": "Must be realistic and competitive. Netflix compares cost-per-hour vs projected viewing. Prestige plays can justify higher budgets with awards potential."
+      }
+    ],
+    "common_mistakes": [
+      "Pitching without showrunner attached",
+      "Cold outreach to executives without prodco partner",
+      "Vague 'we'll figure it out in development' approach",
+      "Unrealistic budgets (too high or suspiciously low)",
+      "No clear global hook or international appeal",
+      "Pitching to wrong executive (film vs series, US vs international)",
+      "No comp titles or market positioning",
+      "Unclear IP rights or life rights status"
+    ],
+    "success_formula": {
+      "for_limited_series": "A-list talent + proven showrunner + tight script (6-8 eps) + awards positioning + production company with Netflix deal = 70% greenlight rate",
+      "for_drama_series": "Showrunner with track record + production company with Netflix deal + pilot + bible with 3-season arc + global hook = 50% greenlight rate",
+      "for_overall_deal": "Proven track record (2+ hits) + multiple project ideas + strategic fit with Netflix priorities + competitive offer from rival streamer = negotiating leverage"
+    }
+  },
+  "pitch_materials_checklist": {
+    "tier_1_essential": [
+      "Logline (1-2 sentences)",
+      "Synopsis (1 page)",
+      "Pilot script or treatment",
+      "Series bible (for ongoing series)",
+      "Showrunner bio and track record",
+      "Production company partnership confirmation",
+      "Budget estimate (high-level)",
+      "Comp titles (2-3 similar successful shows)"
+    ],
+    "tier_2_helpful": [
+      "Talent attachments (if secured)",
+      "Sizzle reel or mood reel",
+      "Episode breakdown (for limited series)",
+      "3-season arc (for ongoing series)",
+      "International appeal analysis",
+      "Awards positioning",
+      "Social media/fandom potential"
+    ],
+    "tier_3_optional": [
+      "Director attachment",
+      "Production timeline",
+      "Marketing hooks",
+      "Franchise potential",
+      "Merchandising opportunities"
+    ]
+  }
+}
+

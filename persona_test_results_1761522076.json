@@ -1,0 +1,192 @@
+{
+  "1": {
+    "persona": "Established Showrunner with Limited Series",
+    "results": [
+      {
+        "question": "I have a political thriller limited series with an A-list lead attached. Who's the right Netflix executive to pitch this to, and what do they actually care about right now?",
+        "answer": "Michael Azzolino is your person here. He\u2019s co-driving Netflix\u2019s prestige-limited push and is leaning hard into star-led, awards-aimed thrillers that feel urgent and globally resonant. Your political thriller, finite and A-list attached, fits that lane\u2014he\u2019ll zero in on a crisp 6\u20138 episode spine, an auteur plan (who\u2019s directing all eps?), and a trailer-ready hook tied to today\u2019s headlines. Proof point: the recent House of Guinness greenlight signals the bar\u2014premium, buzzy, Emmy-minded. Have your rep lead with \u201cLimited Series \u2022 A\u2011list attached \u2022 Awards play\u201d and include a one-pager with episode map and talent window.",
+        "followups": [
+          "What are examples of successful thriller projects at Netflix?",
+          "What production companies work with Netflix?",
+          "What's the typical pitch process?"
+        ],
+        "elapsed_time": 88.44701075553894,
+        "evaluation": {
+          "score": 5,
+          "max_score": 5,
+          "percentage": 100.0,
+          "matched_criteria": [
+            "Identifies correct executive (likely Peter Friedlander for US scripted)",
+            "Provides recent mandate/taste intelligence",
+            "Explains production company pathway vs direct pitch",
+            "References recent greenlights in genre",
+            "Suggests strategic positioning based on current Netflix priorities"
+          ]
+        },
+        "success": true
+      },
+      {
+        "question": "What's Netflix's current appetite for political content? Should I position this as prestige limited series or something else?",
+        "error": "Error calling GPT-5: GPT-5 request timed out",
+        "elapsed_time": 96.24789834022522,
+        "success": false
+      },
+      {
+        "question": "I need to understand the pitch process - do I go through a production company first, or can I pitch directly? What's the actual pathway?",
+        "answer": "Kennedy Corrin is your north star for drama at Netflix\u2014she champions character-first series that travel. You won\u2019t pitch her cold. The path is via a producer with a Netflix overall/first\u2011look or through your agent/manager; unsolicited submissions don\u2019t get read. If it\u2019s international, start regionally\u2014UK docs, for example, route through Kate Townsend\u2019s team before LA. In the UK doc lane, tight 2\u20133 minute sizzles with a sharp logline have been winning quick reads. Position this by securing a Netflix\u2011friendly producer to host the first meeting and bring it inside.",
+        "followups": [],
+        "elapsed_time": 88.60703802108765,
+        "evaluation": {
+          "score": 4,
+          "max_score": 5,
+          "percentage": 80.0,
+          "matched_criteria": [
+            "Identifies correct executive (likely Peter Friedlander for US scripted)",
+            "Explains production company pathway vs direct pitch",
+            "References recent greenlights in genre",
+            "Suggests strategic positioning based on current Netflix priorities"
+          ]
+        },
+        "success": true
+      }
+    ]
+  },
+  "2": {
+    "persona": "A-List Actor with Production Company",
+    "results": [
+      {
+        "question": "My overall deal is expiring and I'm considering Netflix. Who should I be talking to about a high-end true crime anthology series?",
+        "answer": "The most reliable path is through a production company with an active Netflix deal\u2014aim Scripted Drama (Kennedy Corrin\u2019s team) if it\u2019s a scripted anthology, or the Unscripted/Doc Series group if it\u2019s docu. Package it: lock life rights/source IP, attach a marquee showrunner/director, and build a deck around global appeal, binge-ability, and franchise legs. Lead with a killer S1 case and a clear seasons roadmap; cite Monster as a comp but differentiate your POV/access. Don\u2019t cold pitch without rights. Expect a high bar\u2014Netflix buys ~1\u20132 true-crime series/year and deliberations can take 8\u201312+ weeks. Success = a pre-packaged, rights-secured, franchise-ready pitch via a trusted Netflix partner.",
+        "followups": [
+          "What materials do I need for a pitch?",
+          "How long does the pitch process typically take?",
+          "What are common reasons pitches get rejected?"
+        ],
+        "elapsed_time": 46.31968331336975,
+        "evaluation": {
+          "score": 1,
+          "max_score": 5,
+          "percentage": 20.0,
+          "matched_criteria": [
+            "Explains Netflix's true crime strategy evolution"
+          ]
+        },
+        "success": true
+      },
+      {
+        "question": "What's the competitive landscape? I know I can get this set up elsewhere, but what makes Netflix the right home for this specific project?",
+        "answer": "Brandon Riegg is your edge here. He\u2019s been driving Netflix\u2019s big-format wave\u2014think Squid Game: The Challenge and Physical: 100\u2014chasing concepts that spark worldwide, day-and-date conversation. Competitors can mount a season; Netflix can turn your format into a franchise with simultaneous global rollout, social heat, and local versions that feed back into the mothership. They\u2019re making fewer, bigger bets, so when they commit, you feel it. Tip: open with your international spin-off plan and social mechanics; flag any rights you want to retain\u2014worldwide exclusivity is the norm but negotiable.",
+        "followups": [],
+        "elapsed_time": 48.02847981452942,
+        "evaluation": {
+          "score": 2,
+          "max_score": 5,
+          "percentage": 40.0,
+          "matched_criteria": [
+            "Provides strategic positioning vs competitors",
+            "Maps internal approval process for big-budget projects"
+          ]
+        },
+        "success": true
+      },
+      {
+        "question": "I need to understand Netflix's current true crime strategy - are they still investing in premium scripted true crime or have they shifted to unscripted?",
+        "error": "Response ended prematurely",
+        "elapsed_time": 46.54706382751465,
+        "success": false
+      }
+    ]
+  },
+  "3": {
+    "persona": "International Producer with Format",
+    "results": [
+      {
+        "question": "I'm a UK producer with a climate sci-fi drama. Do I pitch to Netflix UK or Netflix US? Who's the right executive for international sci-fi with social themes?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2610d90>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.001547098159790039,
+        "success": false
+      },
+      {
+        "question": "What's Netflix's current appetite for international English-language drama that isn't British period pieces?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2612a50>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.001898050308227539,
+        "success": false
+      },
+      {
+        "question": "Should I position this as a UK production or try to make it more global? What's the strategic play here?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f261ce50>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.0019350051879882812,
+        "success": false
+      }
+    ]
+  },
+  "4": {
+    "persona": "Documentary Filmmaker with Investigative Series",
+    "results": [
+      {
+        "question": "I have an investigative docuseries about social media algorithms with incredible access. Who at Netflix handles hard-hitting investigative docs?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f26126d0>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.0010416507720947266,
+        "success": false
+      },
+      {
+        "question": "Netflix has done The Social Dilemma - are they still interested in tech critique content or is that space saturated?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f25d7890>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.0017249584197998047,
+        "success": false
+      },
+      {
+        "question": "What's the difference between pitching to Netflix Documentary vs Netflix Series? Should this be positioned as documentary or limited series?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f261f510>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.0017445087432861328,
+        "success": false
+      }
+    ]
+  },
+  "5": {
+    "persona": "Novelist with Book-to-Series Adaptation",
+    "results": [
+      {
+        "question": "I'm a bestselling author and want to control the adaptation of my thriller series. Who at Netflix should I be talking to about this, and should I come in with a showrunner already attached?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2621a50>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.0010743141174316406,
+        "success": false
+      },
+      {
+        "question": "My book is being compared to Jack Ryan and Killing Eve. What's Netflix's current appetite for international crime thrillers with female leads?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2623ed0>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.0016582012176513672,
+        "success": false
+      },
+      {
+        "question": "I have interest from several production companies who want to option the rights. Which ones have the best track record getting book adaptations greenlit at Netflix?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2623b90>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.001631021499633789,
+        "success": false
+      }
+    ]
+  },
+  "6": {
+    "persona": "Veteran Showrunner with Franchise Potential",
+    "results": [
+      {
+        "question": "I have a techno-thriller with built-in franchise potential - multiple spinoffs, films, the works. Who at Netflix thinks about content as franchises, not just individual shows?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2621b90>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.00095367431640625,
+        "success": false
+      },
+      {
+        "question": "I'm pitching this as a universe, not just a series. Does Netflix have an appetite for that kind of long-term IP building, or should I focus on selling the core show first?",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f261ec10>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.0016376972198486328,
+        "success": false
+      },
+      {
+        "question": "What's the competitive advantage of bringing a franchise to Netflix vs Apple or Amazon? I need to understand their franchise strategy to position this correctly.",
+        "error": "HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f25d7790>: Failed to establish a new connection: [Errno 111] Connection refused'))",
+        "elapsed_time": 0.0014846324920654297,
+        "success": false
+      }
+    ]
+  }
+}

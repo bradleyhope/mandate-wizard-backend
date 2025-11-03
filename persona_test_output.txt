@@ -1,0 +1,291 @@
+
+================================================================================
+MANDATE WIZARD - SOPHISTICATED PERSONA TESTING
+================================================================================
+Started: 2025-10-26 19:33:57
+
+Loaded 6 persona test scenarios
+Testing first 3 questions per persona for speed
+
+
+================================================================================
+PERSONA 1: Established Showrunner with Limited Series
+================================================================================
+Background: Emmy-nominated showrunner with 2 successful cable dramas, now developing first Netflix project
+Project: The Fixer - A political thriller limited series about a crisis management consultant navigating Washington DC scandals
+Sophistication: advanced
+
+
+
+--------------------------------------------------------------------------------
+QUESTION 1/3:
+I have a political thriller limited series with an A-list lead attached. Who's the right Netflix executive to pitch this to, and what do they actually care about right now?
+--------------------------------------------------------------------------------
+
+✅ SUCCESS (88.4s)
+
+ANSWER:
+Michael Azzolino is your person here. He’s co-driving Netflix’s prestige-limited push and is leaning hard into star-led, awards-aimed thrillers that feel urgent and globally resonant. Your political thriller, finite and A-list attached, fits that lane—he’ll zero in on a crisp 6–8 episode spine, an auteur plan (who’s directing all eps?), and a trailer-ready hook tied to today’s headlines. Proof point: the recent House of Guinness greenlight signals the bar—premium, buzzy, Emmy-minded. Have your rep lead with “Limited Series • A‑list attached • Awards play” and include a one-pager with episode map and talent window.
+
+FOLLOW-UPS:
+  • What are examples of successful thriller projects at Netflix?
+  • What production companies work with Netflix?
+  • What's the typical pitch process?
+
+EVALUATION:
+  Score: 5/5 (100%)
+  Matched criteria:
+    ✓ Identifies correct executive (likely Peter Friedlander for US scripted)
+    ✓ Provides recent mandate/taste intelligence
+    ✓ Explains production company pathway vs direct pitch
+    ✓ References recent greenlights in genre
+    ✓ Suggests strategic positioning based on current Netflix priorities
+
+
+--------------------------------------------------------------------------------
+QUESTION 2/3:
+What's Netflix's current appetite for political content? Should I position this as prestige limited series or something else?
+--------------------------------------------------------------------------------
+
+❌ FAILED (96.2s)
+ERROR: Error calling GPT-5: GPT-5 request timed out
+
+
+--------------------------------------------------------------------------------
+QUESTION 3/3:
+I need to understand the pitch process - do I go through a production company first, or can I pitch directly? What's the actual pathway?
+--------------------------------------------------------------------------------
+
+✅ SUCCESS (88.6s)
+
+ANSWER:
+Kennedy Corrin is your north star for drama at Netflix—she champions character-first series that travel. You won’t pitch her cold. The path is via a producer with a Netflix overall/first‑look or through your agent/manager; unsolicited submissions don’t get read. If it’s international, start regionally—UK docs, for example, route through Kate Townsend’s team before LA. In the UK doc lane, tight 2–3 minute sizzles with a sharp logline have been winning quick reads. Position this by securing a Netflix‑friendly producer to host the first meeting and bring it inside.
+
+EVALUATION:
+  Score: 4/5 (80%)
+  Matched criteria:
+    ✓ Identifies correct executive (likely Peter Friedlander for US scripted)
+    ✓ Explains production company pathway vs direct pitch
+    ✓ References recent greenlights in genre
+    ✓ Suggests strategic positioning based on current Netflix priorities
+
+
+================================================================================
+PERSONA 2: A-List Actor with Production Company
+================================================================================
+Background: Oscar-nominated actor with established production company, has overall deal at another streamer expiring soon
+Project: Untitled True Crime Anthology - Each season explores a different unsolved American mystery with A-list talent rotating as leads
+Sophistication: advanced
+
+
+
+--------------------------------------------------------------------------------
+QUESTION 1/3:
+My overall deal is expiring and I'm considering Netflix. Who should I be talking to about a high-end true crime anthology series?
+--------------------------------------------------------------------------------
+
+✅ SUCCESS (46.3s)
+
+ANSWER:
+The most reliable path is through a production company with an active Netflix deal—aim Scripted Drama (Kennedy Corrin’s team) if it’s a scripted anthology, or the Unscripted/Doc Series group if it’s docu. Package it: lock life rights/source IP, attach a marquee showrunner/director, and build a deck around global appeal, binge-ability, and franchise legs. Lead with a killer S1 case and a clear seasons roadmap; cite Monster as a comp but differentiate your POV/access. Don’t cold pitch without rights. Expect a high bar—Netflix buys ~1–2 true-crime series/year and deliberations can take 8–12+ weeks. Success = a pre-packaged, rights-secured, franchise-ready pitch via a trusted Netflix partner.
+
+FOLLOW-UPS:
+  • What materials do I need for a pitch?
+  • How long does the pitch process typically take?
+  • What are common reasons pitches get rejected?
+
+EVALUATION:
+  Score: 1/5 (20%)
+  Matched criteria:
+    ✓ Explains Netflix's true crime strategy evolution
+
+
+--------------------------------------------------------------------------------
+QUESTION 2/3:
+What's the competitive landscape? I know I can get this set up elsewhere, but what makes Netflix the right home for this specific project?
+--------------------------------------------------------------------------------
+
+✅ SUCCESS (48.0s)
+
+ANSWER:
+Brandon Riegg is your edge here. He’s been driving Netflix’s big-format wave—think Squid Game: The Challenge and Physical: 100—chasing concepts that spark worldwide, day-and-date conversation. Competitors can mount a season; Netflix can turn your format into a franchise with simultaneous global rollout, social heat, and local versions that feed back into the mothership. They’re making fewer, bigger bets, so when they commit, you feel it. Tip: open with your international spin-off plan and social mechanics; flag any rights you want to retain—worldwide exclusivity is the norm but negotiable.
+
+EVALUATION:
+  Score: 2/5 (40%)
+  Matched criteria:
+    ✓ Provides strategic positioning vs competitors
+    ✓ Maps internal approval process for big-budget projects
+
+
+--------------------------------------------------------------------------------
+QUESTION 3/3:
+I need to understand Netflix's current true crime strategy - are they still investing in premium scripted true crime or have they shifted to unscripted?
+--------------------------------------------------------------------------------
+
+❌ FAILED (46.5s)
+ERROR: Response ended prematurely
+
+
+================================================================================
+PERSONA 3: International Producer with Format
+================================================================================
+Background: UK-based producer with successful Channel 4/BBC formats, looking to break into Netflix
+Project: The Last Generation - Sci-fi drama set in 2050 where climate refugees reshape European society
+Sophistication: advanced
+
+
+
+--------------------------------------------------------------------------------
+QUESTION 1/3:
+I'm a UK producer with a climate sci-fi drama. Do I pitch to Netflix UK or Netflix US? Who's the right executive for international sci-fi with social themes?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2610d90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+--------------------------------------------------------------------------------
+QUESTION 2/3:
+What's Netflix's current appetite for international English-language drama that isn't British period pieces?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2612a50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+--------------------------------------------------------------------------------
+QUESTION 3/3:
+Should I position this as a UK production or try to make it more global? What's the strategic play here?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f261ce50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+================================================================================
+PERSONA 4: Documentary Filmmaker with Investigative Series
+================================================================================
+Background: Award-winning documentary filmmaker, previous work on HBO and theatrical, first Netflix pitch
+Project: The Algorithm - 4-part investigative docuseries exposing how social media algorithms radicalize users
+Sophistication: advanced
+
+
+
+--------------------------------------------------------------------------------
+QUESTION 1/3:
+I have an investigative docuseries about social media algorithms with incredible access. Who at Netflix handles hard-hitting investigative docs?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f26126d0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+--------------------------------------------------------------------------------
+QUESTION 2/3:
+Netflix has done The Social Dilemma - are they still interested in tech critique content or is that space saturated?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f25d7890>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+--------------------------------------------------------------------------------
+QUESTION 3/3:
+What's the difference between pitching to Netflix Documentary vs Netflix Series? Should this be positioned as documentary or limited series?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f261f510>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+================================================================================
+PERSONA 5: Novelist with Book-to-Series Adaptation
+================================================================================
+Background: Bestselling thriller novelist with 5M+ books sold, multiple publishers bidding on next book, wants to control TV adaptation
+Project: The Syndicate (book series) - International crime thriller following a female Interpol agent hunting a global crime syndicate across 6 continents
+Sophistication: advanced
+
+
+
+--------------------------------------------------------------------------------
+QUESTION 1/3:
+I'm a bestselling author and want to control the adaptation of my thriller series. Who at Netflix should I be talking to about this, and should I come in with a showrunner already attached?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2621a50>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+--------------------------------------------------------------------------------
+QUESTION 2/3:
+My book is being compared to Jack Ryan and Killing Eve. What's Netflix's current appetite for international crime thrillers with female leads?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2623ed0>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+--------------------------------------------------------------------------------
+QUESTION 3/3:
+I have interest from several production companies who want to option the rights. Which ones have the best track record getting book adaptations greenlit at Netflix?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2623b90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+================================================================================
+PERSONA 6: Veteran Showrunner with Franchise Potential
+================================================================================
+Background: Created 2 network procedurals that ran 5+ seasons each, now developing streaming-first franchise
+Project: Blackout - When a global cyberattack takes down the internet, a team of hackers must rebuild civilization's digital infrastructure while uncovering who orchestrated the attack
+Sophistication: advanced
+
+
+
+--------------------------------------------------------------------------------
+QUESTION 1/3:
+I have a techno-thriller with built-in franchise potential - multiple spinoffs, films, the works. Who at Netflix thinks about content as franchises, not just individual shows?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f2621b90>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+--------------------------------------------------------------------------------
+QUESTION 2/3:
+I'm pitching this as a universe, not just a series. Does Netflix have an appetite for that kind of long-term IP building, or should I focus on selling the core show first?
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f261ec10>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+--------------------------------------------------------------------------------
+QUESTION 3/3:
+What's the competitive advantage of bringing a franchise to Netflix vs Apple or Amazon? I need to understand their franchise strategy to position this correctly.
+--------------------------------------------------------------------------------
+
+❌ FAILED (0.0s)
+ERROR: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_stream (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7fc8f25d7790>: Failed to establish a new connection: [Errno 111] Connection refused'))
+
+
+================================================================================
+SUMMARY
+================================================================================
+
+Persona 1 (Established Showrunner with Limited Series):
+  Questions: 2/3 successful
+  Avg Score: 4.5/5.0 (90%)
+
+Persona 2 (A-List Actor with Production Company):
+  Questions: 2/3 successful
+  Avg Score: 1.5/5.0 (30%)
+
+OVERALL:
+  Total Questions: 4/18 successful (22%)
+  Overall Score: 12/20 (60%)
+
+Results saved to: persona_test_results_1761522076.json
+
+Completed: 2025-10-26 19:41:16

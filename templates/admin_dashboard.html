@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandate Wizard - Admin Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            color: #333;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: #2563eb;
+            color: white;
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+        
+        .header p {
+            opacity: 0.9;
+            font-size: 0.9rem;
+            margin-top: 0.25rem;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .stat-card h3 {
+            font-size: 0.875rem;
+            color: #666;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-card .value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #2563eb;
+        }
+        
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+        
+        .filters h2 {
+            font-size: 1.125rem;
+            margin-bottom: 1rem;
+        }
+        
+        .filter-row {
+            display: flex;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+        
+        .filter-row input, .filter-row select {
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.875rem;
+        }
+        
+        .filter-row button {
+            padding: 0.5rem 1.5rem;
+            background: #2563eb;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+        
+        .filter-row button:hover {
+            background: #1d4ed8;
+        }
+        
+        .sessions {
+            display: flex;
+            flex-direction: column;
+            gap: 1.5rem;
+        }
+        
+        .session-card {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+        
+        .session-header {
+            background: #f9fafb;
+            padding: 1rem 1.5rem;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .session-info {
+            display: flex;
+            gap: 2rem;
+            font-size: 0.875rem;
+        }
+        
+        .session-info span {
+            color: #666;
+        }
+        
+        .session-info strong {
+            color: #333;
+            font-weight: 600;
+        }
+        
+        .conversation {
+            padding: 1.5rem;
+        }
+        
+        .message {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+        }
+        
+        .message:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .message-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0.75rem;
+        }
+        
+        .message-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.75rem;
+            color: #666;
+        }
+        
+        .question {
+            background: #eff6ff;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 3px solid #2563eb;
+            margin-bottom: 1rem;
+        }
+        
+        .question-label {
+            font-size: 0.75rem;
+            color: #2563eb;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .question-text {
+            font-size: 1rem;
+            color: #1e40af;
+            font-weight: 500;
+        }
+        
+        .answer {
+            background: #f9fafb;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 3px solid #10b981;
+        }
+        
+        .answer-label {
+            font-size: 0.75rem;
+            color: #10b981;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .answer-text {
+            color: #374151;
+            line-height: 1.7;
+        }
+        
+        .answer-text h3 {
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .answer-text ul, .answer-text ol {
+            margin-left: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .answer-text li {
+            margin-bottom: 0.25rem;
+        }
+        
+        .answer-text strong {
+            color: #1f2937;
+        }
+        
+        .followups {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 1px solid #e5e7eb;
+        }
+        
+        .followups-label {
+            font-size: 0.75rem;
+            color: #6b7280;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+        
+        .followups-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .followup-tag {
+            background: #e0e7ff;
+            color: #3730a3;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+        }
+        
+        .intent-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        
+        .intent-ROUTING { background: #fef3c7; color: #92400e; }
+        .intent-HYBRID { background: #dbeafe; color: #1e40af; }
+        .intent-FACTUAL_QUERY { background: #d1fae5; color: #065f46; }
+        .intent-STRATEGIC { background: #e9d5ff; color: #6b21a8; }
+        
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: #666;
+        }
+        
+        .empty {
+            text-align: center;
+            padding: 3rem;
+            color: #999;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🔮 Mandate Wizard - Admin Dashboard</h1>
+        <p>Beta User Query Monitoring & Analytics</p>
+    </div>
+    
+    <div class="container">
+        <div class="stats" id="stats">
+            <div class="stat-card">
+                <h3>Total Queries</h3>
+                <div class="value" id="total-queries">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Unique Users</h3>
+                <div class="value" id="unique-users">-</div>
+            </div>
+            <div class="stat-card">
+                <h3>Avg Response Time</h3>
+                <div class="value" id="avg-time">-</div>
+            </div>
+        </div>
+        
+        <div class="filters">
+            <h2>Filters</h2>
+            <div class="filter-row">
+                <input type="email" id="filter-email" placeholder="Filter by email">
+                <select id="filter-intent">
+                    <option value="">All Intents</option>
+                    <option value="ROUTING">ROUTING</option>
+                    <option value="HYBRID">HYBRID</option>
+                    <option value="FACTUAL_QUERY">FACTUAL_QUERY</option>
+                    <option value="STRATEGIC">STRATEGIC</option>
+                </select>
+                <input type="number" id="filter-limit" placeholder="Limit" value="20" min="1" max="1000">
+                <button onclick="loadLogs()">Apply Filters</button>
+                <button onclick="exportLogs()">Export JSON</button>
+            </div>
+        </div>
+        
+        <div class="sessions" id="sessions">
+            <div class="loading">Loading query logs...</div>
+        </div>
+    </div>
+    
+    <script>
+        async function loadStats() {
+            try {
+                const response = await fetch('/admin/logs/stats');
+                const data = await response.json();
+                const stats = data.stats;
+                
+                document.getElementById('total-queries').textContent = stats.total_queries;
+                document.getElementById('unique-users').textContent = stats.unique_users;
+                document.getElementById('avg-time').textContent = 
+                    (stats.avg_response_time_ms / 1000).toFixed(1) + 's';
+            } catch (error) {
+                console.error('Error loading stats:', error);
+            }
+        }
+        
+        async function loadLogs() {
+            const email = document.getElementById('filter-email').value;
+            const intent = document.getElementById('filter-intent').value;
+            const limit = document.getElementById('filter-limit').value;
+            
+            let url = `/admin/logs?limit=${limit}`;
+            if (email) url += `&user_email=${email}`;
+            if (intent) url += `&intent=${intent}`;
+            
+            try {
+                const response = await fetch(url);
+                const data = await response.json();
+                const logs = data.logs;
+                
+                const sessionsDiv = document.getElementById('sessions');
+                
+                if (logs.length === 0) {
+                    sessionsDiv.innerHTML = '<div class="empty">No queries found</div>';
+                    return;
+                }
+                
+                // Group by session
+                const sessions = {};
+                logs.forEach(log => {
+                    const sessionId = log.session_id || 'default';
+                    if (!sessions[sessionId]) {
+                        sessions[sessionId] = [];
+                    }
+                    sessions[sessionId].push(log);
+                });
+                
+                // Render sessions
+                sessionsDiv.innerHTML = Object.entries(sessions).map(([sessionId, queries]) => {
+                    const firstQuery = queries[0];
+                    const lastQuery = queries[queries.length - 1];
+                    
+                    return `
+                        <div class="session-card">
+                            <div class="session-header">
+                                <div class="session-info">
+                                    <span><strong>Session:</strong> ${sessionId}</span>
+                                    <span><strong>User:</strong> ${firstQuery.user_email}</span>
+                                    <span><strong>Queries:</strong> ${queries.length}</span>
+                                    <span><strong>Started:</strong> ${new Date(firstQuery.timestamp).toLocaleString()}</span>
+                                </div>
+                            </div>
+                            <div class="conversation">
+                                ${queries.map(query => renderMessage(query)).join('')}
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            } catch (error) {
+                console.error('Error loading logs:', error);
+                document.getElementById('sessions').innerHTML = 
+                    '<div class="empty">Error loading logs</div>';
+            }
+        }
+        
+        function renderMessage(query) {
+            const followups = JSON.parse(query.followups || '[]');
+            const timestamp = new Date(query.timestamp).toLocaleString();
+            const responseTime = (query.response_time_ms / 1000).toFixed(2);
+            
+            return `
+                <div class="message">
+                    <div class="message-header">
+                        <div class="message-meta">
+                            <span>${timestamp}</span>
+                            <span class="intent-badge intent-${query.intent}">${query.intent}</span>
+                            <span>${responseTime}s</span>
+                        </div>
+                    </div>
+                    
+                    <div class="question">
+                        <div class="question-label">Question</div>
+                        <div class="question-text">${query.question}</div>
+                    </div>
+                    
+                    <div class="answer">
+                        <div class="answer-label">Mandate Wizard Answer</div>
+                        <div class="answer-text">${marked.parse(query.answer)}</div>
+                    </div>
+                    
+                    ${followups.length > 0 ? `
+                        <div class="followups">
+                            <div class="followups-label">Suggested Follow-ups</div>
+                            <div class="followups-list">
+                                ${followups.map(f => `<span class="followup-tag">${f}</span>`).join('')}
+                            </div>
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+        
+        async function exportLogs() {
+            const email = document.getElementById('filter-email').value;
+            const intent = document.getElementById('filter-intent').value;
+            const limit = document.getElementById('filter-limit').value;
+            
+            let url = `/admin/logs/export?limit=${limit}`;
+            if (email) url += `&user_email=${email}`;
+            if (intent) url += `&intent=${intent}`;
+            
+            window.open(url, '_blank');
+        }
+        
+        // Load data on page load
+        loadStats();
+        loadLogs();
+        
+        // Auto-refresh every 30 seconds
+        setInterval(() => {
+            loadStats();
+            loadLogs();
+        }, 30000);
+    </script>
+</body>
+</html>
+

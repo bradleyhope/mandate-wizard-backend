@@ -1,0 +1,107 @@
+{
+  "production_companies": [
+    {
+      "company_name": "Studio Dragon",
+      "country": "South Korea",
+      "specializations": ["Drama", "Thriller", "Romance"],
+      "netflix_relationship": {
+        "has_deal": true,
+        "deal_type": "First-look deal",
+        "deal_year": 2021,
+        "primary_executive": "Don Kang",
+        "secondary_executives": []
+      },
+      "notable_projects": [
+        {
+          "title": "Squid Game",
+          "year": 2021,
+          "genre": "Thriller",
+          "success_level": "Massive hit"
+        },
+        {
+          "title": "Kingdom",
+          "year": 2019,
+          "genre": "Horror",
+          "success_level": "Critical acclaim"
+        }
+      ],
+      "submission_info": {
+        "accepts_unsolicited": false,
+        "submission_method": "Through agent/manager only",
+        "contact_email": "",
+        "contact_phone": "",
+        "website": "https://www.studiodragon.net"
+      },
+      "notes": "Major Korean production company with exclusive Netflix partnership. Focus on high-concept, genre-defining content."
+    },
+    {
+      "company_name": "21 Laps Entertainment",
+      "country": "United States",
+      "specializations": ["Sci-Fi", "Horror", "Thriller", "Young Adult"],
+      "netflix_relationship": {
+        "has_deal": true,
+        "deal_type": "Overall deal",
+        "deal_year": 2019,
+        "primary_executive": "Peter Friedlander",
+        "secondary_executives": ["Bela Bajaria"]
+      },
+      "notable_projects": [
+        {
+          "title": "Stranger Things",
+          "year": 2016,
+          "genre": "Sci-Fi Horror",
+          "success_level": "Massive hit"
+        },
+        {
+          "title": "Shadow and Bone",
+          "year": 2021,
+          "genre": "Fantasy",
+          "success_level": "Hit"
+        }
+      ],
+      "submission_info": {
+        "accepts_unsolicited": false,
+        "submission_method": "Through agent/manager only",
+        "contact_email": "",
+        "contact_phone": "",
+        "website": "https://www.21laps.com"
+      },
+      "notes": "Shawn Levy's company. Focus on high-concept genre content with broad appeal. Strong track record with Netflix originals."
+    },
+    {
+      "company_name": "Tomorrow Studios",
+      "country": "United States",
+      "specializations": ["Drama", "Adaptation", "International Co-Production"],
+      "netflix_relationship": {
+        "has_deal": true,
+        "deal_type": "Overall deal",
+        "deal_year": 2020,
+        "primary_executive": "Peter Friedlander",
+        "secondary_executives": []
+      },
+      "notable_projects": [
+        {
+          "title": "Physical: 100",
+          "year": 2023,
+          "genre": "Unscripted Competition",
+          "success_level": "Massive hit"
+        },
+        {
+          "title": "Cowboy Bebop",
+          "year": 2021,
+          "genre": "Sci-Fi",
+          "success_level": "Moderate success"
+        }
+      ],
+      "submission_info": {
+        "accepts_unsolicited": false,
+        "submission_method": "Through agent/manager only",
+        "contact_email": "",
+        "contact_phone": "",
+        "website": "https://www.tomorrowstudios.net"
+      },
+      "notes": "Specializes in international co-productions and adaptations. Strong relationships with Asian content creators."
+    }
+  ]
+}
+

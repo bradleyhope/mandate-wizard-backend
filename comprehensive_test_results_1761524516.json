@@ -1,0 +1,135 @@
+{
+  "test_suite": "Comprehensive Persona Testing - Post-Enhancement",
+  "date": "2025-10-26T20:21:56.844724",
+  "summary": {
+    "total_tests": 8,
+    "successful_tests": 1,
+    "avg_success_rate": 43.75,
+    "avg_response_time": 23.797126978635788,
+    "competitive_intel_coverage": 62.5,
+    "packaging_intel_coverage": 87.5,
+    "timeline_intel_coverage": 87.5,
+    "prodco_intel_coverage": 12.5
+  },
+  "results": [
+    {
+      "persona_id": 1,
+      "persona": "Showrunner considering overall deal",
+      "query": "I'm considering overall deals from Netflix, Apple, and Amazon. Why should I choose Netflix? What's the process and timeline?",
+      "answer": "Netflix puts you global on day one\u2014190+ countries, massive marketing, and a track record of turning originals into zeitgeist (from House of Cards to Squid Game). \nHow they play: fast decisions, data-informed but creator-led; comedy with Amanda Barclay\u2019s team, drama with Kennedy Corrin\u2014execs who champion distinct voices. \nWhy Netflix: bigger worldwide footprint than Apple/Amazon, stronger dubbing/launch muscle, and proven franchise building. \nProcess/timeline: intro via reps or aligned prodcos; creative meetings; deal terms with Biz Affairs; paper and exclusivity. Typical close: 6\u201310 weeks; hot packages: 2\u20134. \nFocus now: globally scalable, character-first IP and event series.",
+      "success_count": 2,
+      "total_criteria": 4,
+      "success_rate": 50.0,
+      "response_time": 16.566999673843384,
+      "followups": [
+        "Who makes greenlight decisions?",
+        "What's the typical development timeline?",
+        "What are the budget ranges for different formats?"
+      ]
+    },
+    {
+      "persona_id": 2,
+      "persona": "First-time creator with breakout podcast",
+      "query": "I have a breakout true crime podcast and want to adapt it for Netflix. I don't have any industry connections. What's the realistic path forward?",
+      "answer": "Brandon Riegg is your target. He\u2019s the VP behind Netflix\u2019s nonfiction hits and perks up when proven IP can binge worldwide. Your breakout podcast is the hook, but you\u2019ll need a seasoned doc producer to walk it in\u2014think Raw TV or Campfire\u2014plus a director with locked access to principals and archives. Package a 6-episode arc, signed life rights, a 3\u20135 minute sizzle, hard podcast metrics, and a clearance/legal memo. With a top shingle making the intro, expect 8\u201312 weeks for a read; Netflix only pushes 1\u20132 true-crime series a year. They moved fast on The Tinder Swindler once access was airtight. Position it as a global, cliffhanger-driven investigation\u2014never just a \u201cpodcast adaptation\u201d\u2014and lead with your exclusive materials in the first five slides.",
+      "success_count": 1,
+      "total_criteria": 4,
+      "success_rate": 25.0,
+      "response_time": 39.943623542785645,
+      "followups": [
+        "What are examples of successful crime projects at Netflix?",
+        "What production companies work with Netflix?",
+        "What's the typical pitch process?"
+      ]
+    },
+    {
+      "persona_id": 3,
+      "persona": "UK showrunner with climate drama",
+      "query": "I'm a UK showrunner with a climate sci-fi drama. Should I pitch to Netflix UK or US? And how does Netflix compare to Apple for this type of project?",
+      "answer": "Pitch Netflix UK first via a UK production company with a Netflix track record\u2014Anne Mensah\u2019s scripted team is your gateway, then they\u2019ll escalate to US/global.\n\nPackage tight: pilot + 6\u20138 episode arc, series bible with world rules, clear season engine, VFX scope with realistic budget tiers, sustainability plan (it\u2019s climate), initial cast/director targets, and a UK prodco attached (Left Bank Pictures, Broke & Bones, Eleven Film, Quay Street, Moonage).\n\nPositioning: Netflix beats Apple on speed and volume (roughly 3\u20136 months to decision vs Apple\u2019s 9\u201318), but expects a bingeable premise with global stakes and a UK POV. Apple is great for \u201cevent\u201d limiteds\u2014fewer slots, pricier, slower, and wants A\u2011list attachments/director upfront.\n\nAvoid going to US Netflix first or walking in without a VFX/scale budget.\n\nExpect 2\u20134 weeks for first read, 1\u20132 notes rounds, then escalate. Success = UK team champions it to global, securing series order or paid writers\u2019 room with US co-positioning.",
+      "success_count": 3,
+      "total_criteria": 4,
+      "success_rate": 75.0,
+      "response_time": 37.99691867828369,
+      "followups": [
+        "What materials do I need for a pitch?",
+        "How long does the pitch process typically take?",
+        "What are common reasons pitches get rejected?"
+      ]
+    },
+    {
+      "persona_id": 4,
+      "persona": "A-list actor pivoting to producing",
+      "query": "I'm an A-list actor who wants to produce a prestige limited series. What do I need to package, who do I pitch to, and how long will it take?",
+      "answer": "Jinny Howe is your champion here. She\u2019s driving Netflix\u2019s prestige-limited push and just helped steer House of Guinness\u2014big, auteur, awards-ready and star-led. For your package, bring a pilot and tight 6\u20138 episode bible, an A-list showrunner with limited-series heat, an auteur director or EP, underlying rights, a reputable producer, and your availability window. Fully packaged, expect 8\u201312 weeks for a decision; if they want a rewrite or polish, add a couple months. Netflix\u2019s global day-and-date and awards muscle suit your lane better than most rivals. Have your reps take it to Jinny Howe or Michael Azzolino in parallel, and include a sharp lookbook, budget band, and target start date\u2014those specifics signal you\u2019re truly ready.",
+      "success_count": 1,
+      "total_criteria": 4,
+      "success_rate": 25.0,
+      "response_time": 17.892335414886475,
+      "followups": [
+        "What production companies work with Netflix?",
+        "What's the typical pitch process?"
+      ]
+    },
+    {
+      "persona_id": 5,
+      "persona": "International producer with local hit",
+      "query": "I'm a Korean producer with a hit local series. How do I get Netflix interested, and what's different about pitching to Netflix vs local Korean broadcasters?",
+      "answer": "The most reliable path is through a Korean prodco with an active Netflix track record (Studio Dragon, Climax Studio, Siren Pictures, WOW Point) or your rep to Don Kang\u2019s team.\n\nPackage for global scale: build a deck in Korean and English with a 2\u2011sentence hook, 6\u20138 episode season arc/bible, sizzle (or pilot scene), franchise plan, and hard data from your hit (completion, social lift, export interest). Attach a proven PD/showrunner and at least one globally recognizable talent; clear worldwide rights (music, likeness, format) and include delivery plan (dubs/subs, QC) and budget. Ask for a general first; tailor to \u201cevent, genre-defining, bingeable.\u201d\n\nNetflix vs local broadcasters: Netflix moves faster (6\u201312 months vs Apple\u2019s 12\u201318), wants fewer episodes, tighter serialization, cost\u2011plus with global exclusivity; broadcasters optimize for timeslot, 12\u201316 eps, PPL, domestic ratings.\n\nDon\u2019t approach without global rights or a clear international hook.\n\nWith a warm intro and A-list package: meeting in weeks; real shot at series order in 3\u20139 months. Success = global launch and franchise potential.",
+      "success_count": 2,
+      "total_criteria": 4,
+      "success_rate": 50.0,
+      "response_time": 22.007249355316162,
+      "followups": [
+        "What materials do I need for a pitch?",
+        "How long does the pitch process typically take?",
+        "What are common reasons pitches get rejected?"
+      ]
+    },
+    {
+      "persona_id": 6,
+      "persona": "Bestselling author with book series",
+      "query": "I have a bestselling thriller book series. How do I maintain creative control in the adaptation, and what's the typical timeline from pitch to production?",
+      "answer": "You keep the steering wheel by baking it into the deal, not hoping for it later.\n\n- Rights: Option your books but retain sequel/ancillary publishing; secure meaningful consultation or approval on bible, pilot script, lead cast, showrunner, and director. Add reversion if no greenlight in 18\u201324 months.\n- Attachment: Executive Producer credit, guaranteed writers\u2019 room slot (or screenplay draft for film), and the right to pick from a pre-approved showrunner list.\n- Process control: Two script passes, set-visit access, post \u201cview-and-comment,\u201d and tie creative approvals to staying on schedule/budget.\n- Oversight: Keep production close (LA if possible) to stay involved.\n\nTimeline (typical):\n- Pitch to deal: 4\u201312 weeks\n- Development to greenlight: 6\u201312 months\n- Prep: 3\u20135 months\n- Production: Series 4\u20137 months; Film 2\u20134 months\n- Post and launch: 4\u20138 months\n\nTotal: 12\u201324 months to premiere.",
+      "success_count": 2,
+      "total_criteria": 4,
+      "success_rate": 50.0,
+      "response_time": 17.78980851173401,
+      "followups": [
+        "Who makes greenlight decisions?",
+        "What's the typical development timeline?",
+        "What are recent thriller greenlights?",
+        "What are the budget ranges for different formats?"
+      ]
+    },
+    {
+      "persona_id": 7,
+      "persona": "Documentary filmmaker with exclusive access",
+      "query": "I have exclusive access to a major political figure for a documentary series. Who handles political docs at Netflix, and what's the competitive landscape vs HBO?",
+      "answer": "Molly Harrington is your go-to here. She shepherds original doc series and gravitates to access-driven, high-impact stories\u2014exactly what your exclusive political figure provides. Package with a veteran investigative showrunner and a reputable doc prodco, plus a 3\u20135 minute sizzle and an editorial/standards plan; with that, you can see a read and decision window in roughly 6\u201310 weeks. Netflix wins when the subject can travel globally and drop as a binge, as seen with Turning Point: The Bomb and the Cold War. HBO/Max leans auteur, awards-first, often slower and feature-forward; great for prestige, less for fast global reach. If it skews feature, loop Kate Townsend. Insider move: time your teaser to an election milestone and lock exclusivity in writing.",
+      "success_count": 2,
+      "total_criteria": 4,
+      "success_rate": 50.0,
+      "response_time": 23.714807748794556,
+      "followups": [
+        "What production companies work with Netflix?",
+        "What's the typical pitch process?"
+      ]
+    },
+    {
+      "persona_id": 8,
+      "persona": "Prodco executive with overall deal expiring",
+      "query": "Our Netflix overall deal is expiring. We're considering renewal vs moving to Apple. What are the key differences, and what does Netflix value in overall deal renewals?",
+      "answer": "Here\u2019s the short, practical breakdown you can use in a renewal meeting.\n\nNetflix vs Apple \u2013 key differences\n- Scale and volume: Netflix favors fast decisions and multiple bites at bat; Apple is more boutique\u2014fewer slots, higher-touch.\n- Greenlight path: Netflix is data-led and decisive; Apple is notes-heavy and prestige-minded, often slower.\n- Global reach: Netflix\u2019s international machine (dubs/subs/placement) is unmatched; Apple offers a premium halo but fewer overall titles to spotlight against.\n- Budgets/ownership: Both pay top-tier; Netflix pushes cost discipline and repeatability, Apple often spends up for marquee talent/packaging.\n- Marketing: Netflix has massive in-product marketing; Apple invests deeply in craft-forward campaigns for select titles.\n- Deal flexibility: Netflix prefers exclusive overalls; Apple is open to bespoke carve\u2011outs, especially film vs series or genre lanes.\n\nWhat Netflix values in an overall renewal\n- Recent wins on-platform (completion rate, hours viewed, retention) and proof you can deliver consistently.\n- A forward pipeline with 2\u20133 near-greenlight projects and clear casting/packaging.\n- Global upside (concepts that travel, adaptable formats, diverse voices).\n- Budget discipline and speed to production.\n- A collaborative track record with their Creative and Production teams.\n\nNegotiation levers to consider\n- Hybrid structure: overall for series + first-look or carve\u2011outs (features, animation, unscripted).\n- Volume or put commitments with timeline SLAs.\n- Overhead and staffing guarantees (key execs locked).\n- Performance step-ups (bonuses, term extensions).\n- Marketing and launch positioning commitments (global day-and-date, promo windows).",
+      "success_count": 1,
+      "total_criteria": 4,
+      "success_rate": 25.0,
+      "response_time": 14.465272903442383,
+      "followups": [
+        "Who makes greenlight decisions?",
+        "What's the typical development timeline?",
+        "What are the budget ranges for different formats?"
+      ]
+    }
+  ]
+}

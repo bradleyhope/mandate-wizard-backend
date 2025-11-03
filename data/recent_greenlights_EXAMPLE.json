@@ -1,0 +1,56 @@
+{
+  "greenlights": [
+    {
+      "project_title": "The Diplomat Season 2",
+      "executive_name": "Peter Friedlander",
+      "greenlight_date": "2023-05-01",
+      "announcement_date": "2023-05-15",
+      "genre": "Political Drama",
+      "format": "Series",
+      "season_number": 2,
+      "episode_count": 8,
+      "production_company": "Debora Cahn Productions",
+      "showrunner": "Debora Cahn",
+      "cast": ["Keri Russell", "Rufus Sewell"],
+      "budget_range": "$5-8M per episode",
+      "target_release": "Q2 2024",
+      "source_url": "https://deadline.com/the-diplomat-season-2-renewal",
+      "notes": "Renewal after strong Season 1 performance. Focus on political intrigue and international relations."
+    },
+    {
+      "project_title": "Physical: 100 Season 2",
+      "executive_name": "Don Kang",
+      "greenlight_date": "2023-03-15",
+      "announcement_date": "2023-03-20",
+      "genre": "Unscripted Competition",
+      "format": "Unscripted Series",
+      "season_number": 2,
+      "episode_count": 9,
+      "production_company": "The Mediaplex",
+      "showrunner": "Jang Ho-gi",
+      "cast": [],
+      "budget_range": "$2-3M per episode",
+      "target_release": "Q1 2024",
+      "source_url": "https://deadline.com/physical-100-season-2-renewal",
+      "notes": "Renewal after massive global success of Season 1. Focus on physical competition format with high production value."
+    },
+    {
+      "project_title": "3 Body Problem",
+      "executive_name": "Peter Friedlander",
+      "greenlight_date": "2022-09-01",
+      "announcement_date": "2022-09-15",
+      "genre": "Sci-Fi",
+      "format": "Limited Series",
+      "season_number": 1,
+      "episode_count": 8,
+      "production_company": "Plan B Entertainment",
+      "showrunner": "David Benioff & D.B. Weiss",
+      "cast": ["Benedict Wong", "Eiza González", "Jovan Adepo"],
+      "budget_range": "$15-20M per episode",
+      "target_release": "Q1 2024",
+      "source_url": "https://variety.com/3-body-problem-netflix-greenlight",
+      "notes": "Adaptation of Liu Cixin's acclaimed sci-fi trilogy. Massive budget for prestige sci-fi."
+    }
+  ]
+}
+

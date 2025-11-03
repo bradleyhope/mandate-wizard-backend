@@ -1,0 +1,224 @@
+{
+  "summary": {
+    "total_tests": 6,
+    "total_issues": 35,
+    "avg_time": 59.01122506459554,
+    "avg_confidence": 0.85
+  },
+  "results": [
+    {
+      "test": "1. Basic Routing",
+      "elapsed": 29.83086085319519,
+      "executive": "Don Kang",
+      "persona": "producer",
+      "sophistication": "mid-level",
+      "confidence": 0.85,
+      "answer_length": 1124,
+      "followups_count": 2,
+      "sources_count": 0,
+      "issues_count": 1
+    },
+    {
+      "test": "7. Multi-Region Query",
+      "elapsed": 41.00324988365173,
+      "executive": "Unknown",
+      "persona": "producer",
+      "sophistication": "mid-level",
+      "confidence": 0.85,
+      "answer_length": 1132,
+      "followups_count": 2,
+      "sources_count": 0,
+      "issues_count": 3
+    },
+    {
+      "test": "8. Genre-Specific Query (documentaries)",
+      "elapsed": 78.21814274787903,
+      "executive": "Unknown",
+      "persona": "documentary",
+      "sophistication": "mid-level",
+      "confidence": 0.85,
+      "answer_length": 564,
+      "followups_count": 2,
+      "sources_count": 0,
+      "issues_count": 4
+    },
+    {
+      "test": "9. Production Company Query",
+      "elapsed": 104.320965051651,
+      "executive": "Unknown",
+      "persona": "producer",
+      "sophistication": "mid-level",
+      "confidence": 0.85,
+      "answer_length": 543,
+      "followups_count": 2,
+      "sources_count": 0,
+      "issues_count": 5
+    },
+    {
+      "test": "11. Edge Case (misspelled name)",
+      "elapsed": 48.59748196601868,
+      "executive": "Unknown",
+      "persona": "producer",
+      "sophistication": "mid-level",
+      "confidence": 0.85,
+      "answer_length": 575,
+      "followups_count": 2,
+      "sources_count": 0,
+      "issues_count": 4
+    },
+    {
+      "test": "12. Edge Case (one-word query)",
+      "elapsed": 52.09664988517761,
+      "executive": "Unknown",
+      "persona": "producer",
+      "sophistication": "mid-level",
+      "confidence": 0.85,
+      "answer_length": 616,
+      "followups_count": 2,
+      "sources_count": 0,
+      "issues_count": 4
+    }
+  ],
+  "issues": [
+    {
+      "test": "1. Basic Routing",
+      "issue": "NO SOURCES PROVIDED"
+    },
+    {
+      "test": "2. Ambiguous Query (no region specified)",
+      "issue": "\u274c HTTP 500: {\"error\":\"'layer5'\",\"success\":false}\n"
+    },
+    {
+      "test": "3. Very Specific Query",
+      "issue": "\u274c HTTP 500: {\"error\":\"'layer2'\",\"success\":false}\n"
+    },
+    {
+      "test": "4. Crisis Mode (48-hour deadline)",
+      "issue": "\u274c HTTP 500: {\"error\":\"'layer5'\",\"success\":false}\n"
+    },
+    {
+      "test": "5. Novice Query (needs education)",
+      "issue": "\u274c HTTP 500: {\"error\":\"'layer2'\",\"success\":false}\n"
+    },
+    {
+      "test": "6. Advanced Query (recent greenlights)",
+      "issue": "\u274c HTTP 500: {\"error\":\"'layer4'\",\"success\":false}\n"
+    },
+    {
+      "test": "7. Multi-Region Query",
+      "issue": "SLOW: 41.00s (target: <30s)"
+    },
+    {
+      "test": "7. Multi-Region Query",
+      "issue": "FAILED TO EXTRACT EXECUTIVE NAME"
+    },
+    {
+      "test": "7. Multi-Region Query",
+      "issue": "NO SOURCES PROVIDED"
+    },
+    {
+      "test": "8. Genre-Specific Query (documentaries)",
+      "issue": "SLOW: 78.22s (target: <30s)"
+    },
+    {
+      "test": "8. Genre-Specific Query (documentaries)",
+      "issue": "VERY SLOW: 78.22s (target: <30s)"
+    },
+    {
+      "test": "8. Genre-Specific Query (documentaries)",
+      "issue": "FAILED TO EXTRACT EXECUTIVE NAME"
+    },
+    {
+      "test": "8. Genre-Specific Query (documentaries)",
+      "issue": "NO SOURCES PROVIDED"
+    },
+    {
+      "test": "9. Production Company Query",
+      "issue": "SLOW: 104.32s (target: <30s)"
+    },
+    {
+      "test": "9. Production Company Query",
+      "issue": "VERY SLOW: 104.32s (target: <30s)"
+    },
+    {
+      "test": "9. Production Company Query",
+      "issue": "WRONG EXECUTIVE: Got 'Unknown', expected 'Don Kang'"
+    },
+    {
+      "test": "9. Production Company Query",
+      "issue": "FAILED TO EXTRACT EXECUTIVE NAME"
+    },
+    {
+      "test": "9. Production Company Query",
+      "issue": "NO SOURCES PROVIDED"
+    },
+    {
+      "test": "10. Pitch Process Query",
+      "issue": "\u274c HTTP 500: {\"error\":\"'layer5'\",\"success\":false}\n"
+    },
+    {
+      "test": "11. Edge Case (misspelled name)",
+      "issue": "SLOW: 48.60s (target: <30s)"
+    },
+    {
+      "test": "11. Edge Case (misspelled name)",
+      "issue": "WRONG EXECUTIVE: Got 'Unknown', expected 'Don Kang'"
+    },
+    {
+      "test": "11. Edge Case (misspelled name)",
+      "issue": "FAILED TO EXTRACT EXECUTIVE NAME"
+    },
+    {
+      "test": "11. Edge Case (misspelled name)",
+      "issue": "NO SOURCES PROVIDED"
+    },
+    {
+      "test": "12. Edge Case (one-word query)",
+      "issue": "SLOW: 52.10s (target: <30s)"
+    },
+    {
+      "test": "12. Edge Case (one-word query)",
+      "issue": "WRONG EXECUTIVE: Got 'Unknown', expected 'Don Kang'"
+    },
+    {
+      "test": "12. Edge Case (one-word query)",
+      "issue": "FAILED TO EXTRACT EXECUTIVE NAME"
+    },
+    {
+      "test": "12. Edge Case (one-word query)",
+      "issue": "NO SOURCES PROVIDED"
+    },
+    {
+      "test": "13. Edge Case (very long query)",
+      "issue": "\u274c EXCEPTION: ('Connection aborted.', RemoteDisconnected('Remote end closed connection without response'))"
+    },
+    {
+      "test": "14. Follow-up (tests memory)",
+      "issue": "\u274c EXCEPTION: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_pathway (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7efe26ba5310>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    },
+    {
+      "test": "15. Comparative Query",
+      "issue": "\u274c EXCEPTION: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_pathway (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7efe26ba7690>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    },
+    {
+      "test": "16. Timing/Strategy Query",
+      "issue": "\u274c EXCEPTION: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_pathway (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7efe26ba74d0>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    },
+    {
+      "test": "17. Budget/Financial Query",
+      "issue": "\u274c EXCEPTION: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_pathway (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7efe26ba54d0>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    },
+    {
+      "test": "18. Competitive Intelligence Query",
+      "issue": "\u274c EXCEPTION: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_pathway (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7efe26b9be50>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    },
+    {
+      "test": "19. Organizational Structure Query",
+      "issue": "\u274c EXCEPTION: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_pathway (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7efe26badd50>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    },
+    {
+      "test": "20. Strategic Overview Query",
+      "issue": "\u274c EXCEPTION: HTTPConnectionPool(host='localhost', port=5000): Max retries exceeded with url: /ask_pathway (Caused by NewConnectionError('<urllib3.connection.HTTPConnection object at 0x7efe26bb0110>: Failed to establish a new connection: [Errno 111] Connection refused'))"
+    }
+  ]
+}

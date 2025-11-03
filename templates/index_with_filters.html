@@ -1,0 +1,713 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandate Wizard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            padding: 24px;
+            text-align: center;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            font-weight: 300;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+        }
+        
+        /* FILTERS SECTION */
+        .filters-container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 20px 24px;
+            border-bottom: 1px solid #f0f0f0;
+            background: #fafafa;
+        }
+        
+        .filters-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            padding: 8px 0;
+        }
+        
+        .filters-toggle-label {
+            font-size: 13px;
+            font-weight: 500;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .filters-toggle-icon {
+            font-size: 18px;
+            color: #999;
+            transition: transform 0.3s;
+        }
+        
+        .filters-toggle-icon.expanded {
+            transform: rotate(180deg);
+        }
+        
+        .filters-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease-out;
+        }
+        
+        .filters-content.expanded {
+            max-height: 500px;
+            margin-top: 16px;
+        }
+        
+        .filter-group {
+            margin-bottom: 20px;
+        }
+        
+        .filter-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 10px;
+            display: block;
+        }
+        
+        .filter-buttons {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+        
+        .filter-button {
+            padding: 6px 14px;
+            background: white;
+            border: 1px solid #d0d0d0;
+            border-radius: 16px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            user-select: none;
+        }
+        
+        .filter-button:hover {
+            border-color: #999;
+            background: #f5f5f5;
+        }
+        
+        .filter-button.active {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+        
+        .filter-button.active:hover {
+            background: #333;
+            border-color: #333;
+        }
+        
+        .clear-filters {
+            margin-top: 12px;
+            font-size: 12px;
+            color: #0066cc;
+            cursor: pointer;
+            display: inline-block;
+        }
+        
+        .clear-filters:hover {
+            text-decoration: underline;
+        }
+        
+        .active-filters-summary {
+            margin-top: 12px;
+            padding: 10px 14px;
+            background: #e8f4ff;
+            border-radius: 8px;
+            font-size: 12px;
+            color: #0066cc;
+            display: none;
+        }
+        
+        .active-filters-summary.visible {
+            display: block;
+        }
+        
+        /* CHAT SECTION */
+        .chat-container {
+            flex: 1;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 24px;
+            overflow-y: auto;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .example-question {
+            padding: 10px 18px;
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .example-question:hover {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+        
+        .message {
+            margin-bottom: 32px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user .message-content {
+            background: #f8f8f8;
+            color: #1a1a1a;
+            padding: 16px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            max-width: 80%;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .message.user {
+            text-align: right;
+        }
+        
+        .message.assistant .message-content {
+            background: white;
+            color: #1a1a1a;
+            padding: 20px 24px;
+            border-radius: 20px;
+            max-width: 90%;
+            font-size: 15px;
+            line-height: 1.7;
+            border: 1px solid #e5e5e5;
+        }
+        
+        .message.assistant .message-content p {
+            margin-bottom: 12px;
+        }
+        
+        .message.assistant .message-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .message.assistant .message-content ul,
+        .message.assistant .message-content ol {
+            margin: 12px 0;
+            padding-left: 24px;
+        }
+        
+        .message.assistant .message-content li {
+            margin-bottom: 8px;
+        }
+        
+        .message.assistant .message-content strong {
+            font-weight: 600;
+            color: #1a1a1a;
+        }
+        
+        /* INPUT SECTION */
+        .input-container {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            border-top: 1px solid #e5e5e5;
+            padding: 20px 24px;
+        }
+        
+        .input-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+        }
+        
+        #questionInput {
+            flex: 1;
+            padding: 14px 20px;
+            border: 1px solid #e5e5e5;
+            border-radius: 24px;
+            font-size: 15px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        
+        #questionInput:focus {
+            border-color: #1a1a1a;
+        }
+        
+        #askButton {
+            padding: 14px 32px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        
+        #askButton:hover {
+            background: #333;
+        }
+        
+        #askButton:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            color: #999;
+            font-size: 14px;
+            padding: 20px;
+        }
+        
+        .loading.visible {
+            display: block;
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f0f0f0;
+            border-top: 2px solid #1a1a1a;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .followups {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .followup-card {
+            padding: 10px 16px;
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 18px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .followup-card:before {
+            content: '→';
+            font-size: 14px;
+        }
+        
+        .followup-card:hover {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+            transform: translateX(2px);
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #e5e5e5;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ccc;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Mandate Wizard</h1>
+    </div>
+    
+    <!-- FILTERS SECTION -->
+    <div class="filters-container">
+        <div class="filters-toggle" onclick="toggleFilters()">
+            <span class="filters-toggle-label">🎯 Advanced Filters</span>
+            <span class="filters-toggle-icon" id="filtersIcon">▼</span>
+        </div>
+        
+        <div class="filters-content" id="filtersContent">
+            <!-- Region Filter -->
+            <div class="filter-group">
+                <label class="filter-label">Region</label>
+                <div class="filter-buttons" id="regionFilters">
+                    <button class="filter-button" data-filter="region" data-value="us">US</button>
+                    <button class="filter-button" data-filter="region" data-value="uk">UK</button>
+                    <button class="filter-button" data-filter="region" data-value="korea">Korea</button>
+                    <button class="filter-button" data-filter="region" data-value="japan">Japan</button>
+                    <button class="filter-button" data-filter="region" data-value="india">India</button>
+                    <button class="filter-button" data-filter="region" data-value="france">France</button>
+                    <button class="filter-button" data-filter="region" data-value="germany">Germany</button>
+                    <button class="filter-button" data-filter="region" data-value="spain">Spain</button>
+                    <button class="filter-button" data-filter="region" data-value="italy">Italy</button>
+                    <button class="filter-button" data-filter="region" data-value="nordics">Nordics</button>
+                    <button class="filter-button" data-filter="region" data-value="latam">Latin America</button>
+                    <button class="filter-button" data-filter="region" data-value="mena">MENA</button>
+                    <button class="filter-button" data-filter="region" data-value="africa">Africa</button>
+                </div>
+            </div>
+            
+            <!-- Format Filter -->
+            <div class="filter-group">
+                <label class="filter-label">Format</label>
+                <div class="filter-buttons" id="formatFilters">
+                    <button class="filter-button" data-filter="format" data-value="series">Series</button>
+                    <button class="filter-button" data-filter="format" data-value="film">Film</button>
+                    <button class="filter-button" data-filter="format" data-value="documentary">Documentary</button>
+                    <button class="filter-button" data-filter="format" data-value="unscripted">Unscripted</button>
+                </div>
+            </div>
+            
+            <!-- Genre Filter -->
+            <div class="filter-group">
+                <label class="filter-label">Genre</label>
+                <div class="filter-buttons" id="genreFilters">
+                    <button class="filter-button" data-filter="genre" data-value="comedy">Comedy</button>
+                    <button class="filter-button" data-filter="genre" data-value="drama">Drama</button>
+                    <button class="filter-button" data-filter="genre" data-value="thriller">Thriller</button>
+                    <button class="filter-button" data-filter="genre" data-value="action">Action</button>
+                    <button class="filter-button" data-filter="genre" data-value="sci-fi">Sci-Fi</button>
+                    <button class="filter-button" data-filter="genre" data-value="horror">Horror</button>
+                    <button class="filter-button" data-filter="genre" data-value="romance">Romance</button>
+                    <button class="filter-button" data-filter="genre" data-value="crime">Crime</button>
+                    <button class="filter-button" data-filter="genre" data-value="family">Family</button>
+                    <button class="filter-button" data-filter="genre" data-value="dating">Dating</button>
+                </div>
+            </div>
+            
+            <!-- Seniority Filter -->
+            <div class="filter-group">
+                <label class="filter-label">Seniority Level</label>
+                <div class="filter-buttons" id="seniorityFilters">
+                    <button class="filter-button" data-filter="seniority" data-value="vp">VP / Head</button>
+                    <button class="filter-button" data-filter="seniority" data-value="director">Director</button>
+                    <button class="filter-button" data-filter="seniority" data-value="manager">Manager</button>
+                </div>
+            </div>
+            
+            <span class="clear-filters" onclick="clearAllFilters()">Clear all filters</span>
+            
+            <div class="active-filters-summary" id="activeFiltersSummary"></div>
+        </div>
+    </div>
+    
+    <!-- CHAT SECTION -->
+    <div class="chat-container" id="chatContainer">
+        <div class="welcome-message">
+            <p>Your expert guide to pitching film & TV projects at Netflix</p>
+        </div>
+        
+        <div class="examples" id="examples">
+            <span class="example-question" onclick="askExample(this)">Who do I pitch my dating show to?</span>
+            <span class="example-question" onclick="askExample(this)">What kind of procedural dramas does Netflix want?</span>
+            <span class="example-question" onclick="askExample(this)">What are some recent mandates from Netflix?</span>
+            <span class="example-question" onclick="askExample(this)">Who handles Korean content?</span>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <span>Thinking...</span>
+        </div>
+    </div>
+    
+    <!-- INPUT SECTION -->
+    <div class="input-container">
+        <div class="input-wrapper">
+            <input 
+                type="text" 
+                id="questionInput" 
+                placeholder="Ask me anything about pitching to Netflix..."
+                onkeypress="handleKeyPress(event)"
+            >
+            <button id="askButton" onclick="askQuestion()">Ask</button>
+        </div>
+    </div>
+    
+    <script>
+        // Generate session ID for conversation memory
+        const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
+        // Active filters state
+        const activeFilters = {
+            region: null,
+            format: null,
+            genre: null,
+            seniority: null
+        };
+        
+        // Toggle filters panel
+        function toggleFilters() {
+            const content = document.getElementById('filtersContent');
+            const icon = document.getElementById('filtersIcon');
+            
+            if (content.classList.contains('expanded')) {
+                content.classList.remove('expanded');
+                icon.classList.remove('expanded');
+            } else {
+                content.classList.add('expanded');
+                icon.classList.add('expanded');
+            }
+        }
+        
+        // Handle filter button clicks
+        document.querySelectorAll('.filter-button').forEach(button => {
+            button.addEventListener('click', function() {
+                const filterType = this.dataset.filter;
+                const filterValue = this.dataset.value;
+                
+                // Toggle active state
+                if (this.classList.contains('active')) {
+                    this.classList.remove('active');
+                    activeFilters[filterType] = null;
+                } else {
+                    // Remove active from siblings (single select per category)
+                    this.parentElement.querySelectorAll('.filter-button').forEach(btn => {
+                        btn.classList.remove('active');
+                    });
+                    this.classList.add('active');
+                    activeFilters[filterType] = filterValue;
+                }
+                
+                updateActiveFiltersSummary();
+            });
+        });
+        
+        // Clear all filters
+        function clearAllFilters() {
+            document.querySelectorAll('.filter-button.active').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            
+            activeFilters.region = null;
+            activeFilters.format = null;
+            activeFilters.genre = null;
+            activeFilters.seniority = null;
+            
+            updateActiveFiltersSummary();
+        }
+        
+        // Update active filters summary
+        function updateActiveFiltersSummary() {
+            const summary = document.getElementById('activeFiltersSummary');
+            const activeCount = Object.values(activeFilters).filter(v => v !== null).length;
+            
+            if (activeCount > 0) {
+                const parts = [];
+                if (activeFilters.region) parts.push(`Region: ${activeFilters.region.toUpperCase()}`);
+                if (activeFilters.format) parts.push(`Format: ${activeFilters.format}`);
+                if (activeFilters.genre) parts.push(`Genre: ${activeFilters.genre}`);
+                if (activeFilters.seniority) parts.push(`Level: ${activeFilters.seniority}`);
+                
+                summary.textContent = `Active filters: ${parts.join(' • ')}`;
+                summary.classList.add('visible');
+            } else {
+                summary.classList.remove('visible');
+            }
+        }
+        
+        // Build filter query string
+        function buildFilterQueryString() {
+            const parts = [];
+            
+            if (activeFilters.region) {
+                parts.push(activeFilters.region);
+            }
+            if (activeFilters.format) {
+                parts.push(activeFilters.format);
+            }
+            if (activeFilters.genre) {
+                parts.push(activeFilters.genre);
+            }
+            
+            return parts.join(' ');
+        }
+        
+        function addMessage(content, role, followups = [], resources = []) {
+            const chatContainer = document.getElementById('chatContainer');
+            const examples = document.getElementById('examples');
+            
+            // Hide examples after first question
+            if (examples) {
+                examples.style.display = 'none';
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            // Convert markdown-style formatting to HTML
+            let formattedContent = content
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/\n\n/g, '</p><p>')
+                .replace(/\n/g, '<br>');
+            
+            contentDiv.innerHTML = '<p>' + formattedContent + '</p>';
+            messageDiv.appendChild(contentDiv);
+            
+            // Add follow-ups if present
+            if (role === 'assistant' && followups && followups.length > 0) {
+                const followupsDiv = document.createElement('div');
+                followupsDiv.className = 'followups';
+                
+                followups.forEach(followup => {
+                    const followupCard = document.createElement('div');
+                    followupCard.className = 'followup-card';
+                    followupCard.textContent = followup;
+                    followupCard.onclick = () => askFollowup(followup);
+                    followupsDiv.appendChild(followupCard);
+                });
+                
+                messageDiv.appendChild(followupsDiv);
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+        
+        async function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const question = input.value.trim();
+            
+            if (!question) return;
+            
+            // Add filter context to question if filters are active
+            const filterContext = buildFilterQueryString();
+            const fullQuestion = filterContext ? `${question} (${filterContext})` : question;
+            
+            // Show user message
+            addMessage(question, 'user');
+            input.value = '';
+            
+            // Show loading
+            const loading = document.getElementById('loading');
+            const askButton = document.getElementById('askButton');
+            loading.classList.add('visible');
+            askButton.disabled = true;
+            
+            try {
+                const response = await fetch('/ask', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        question: fullQuestion,
+                        session_id: sessionId,
+                        filters: activeFilters  // Send filters separately
+                    })
+                });
+                
+                const data = await response.json();
+                
+                // Hide loading
+                loading.classList.remove('visible');
+                askButton.disabled = false;
+                
+                // Show assistant response
+                addMessage(data.answer, 'assistant', data.followups || [], data.resources || []);
+                
+            } catch (error) {
+                console.error('Error:', error);
+                loading.classList.remove('visible');
+                askButton.disabled = false;
+                addMessage('Sorry, I encountered an error. Please try again.', 'assistant');
+            }
+        }
+        
+        function askExample(element) {
+            document.getElementById('questionInput').value = element.textContent;
+            askQuestion();
+        }
+        
+        function askFollowup(question) {
+            document.getElementById('questionInput').value = question;
+            askQuestion();
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                askQuestion();
+            }
+        }
+        
+        // Focus input on load
+        document.getElementById('questionInput').focus();
+    </script>
+</body>
+</html>
+

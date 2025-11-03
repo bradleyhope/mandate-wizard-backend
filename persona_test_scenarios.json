@@ -1,0 +1,185 @@
+{
+  "test_scenarios": [
+    {
+      "persona_id": 1,
+      "name": "Established Showrunner with Limited Series",
+      "sophistication": "advanced",
+      "background": "Emmy-nominated showrunner with 2 successful cable dramas, now developing first Netflix project",
+      "project": {
+        "title": "The Fixer",
+        "logline": "A political thriller limited series about a crisis management consultant navigating Washington DC scandals",
+        "format": "Limited Series (8 episodes)",
+        "genre": "Political Thriller",
+        "comparable": "House of Cards meets Scandal",
+        "status": "Script + pitch deck ready",
+        "talent_attached": "A-list lead attached (verbally)",
+        "budget_range": "$60-80M total"
+      },
+      "questions": [
+        "I have a political thriller limited series with an A-list lead attached. Who's the right Netflix executive to pitch this to, and what do they actually care about right now?",
+        "What's Netflix's current appetite for political content? Should I position this as prestige limited series or something else?",
+        "I need to understand the pitch process - do I go through a production company first, or can I pitch directly? What's the actual pathway?",
+        "What recent political thrillers has Netflix greenlit, and who championed them internally?",
+        "If I package this with a specific production company, which ones have the best track record getting political content greenlit at Netflix?"
+      ],
+      "success_criteria": [
+        "Identifies correct executive (likely Peter Friedlander for US scripted)",
+        "Provides recent mandate/taste intelligence",
+        "Explains production company pathway vs direct pitch",
+        "References recent greenlights in genre",
+        "Suggests strategic positioning based on current Netflix priorities"
+      ]
+    },
+    {
+      "persona_id": 2,
+      "name": "A-List Actor with Production Company",
+      "sophistication": "advanced",
+      "background": "Oscar-nominated actor with established production company, has overall deal at another streamer expiring soon",
+      "project": {
+        "title": "Untitled True Crime Anthology",
+        "logline": "Each season explores a different unsolved American mystery with A-list talent rotating as leads",
+        "format": "Anthology Series",
+        "genre": "True Crime / Drama",
+        "comparable": "True Detective meets Unsolved Mysteries",
+        "status": "Concept + first season story identified",
+        "talent_attached": "Creator attached, can attract A-list per season",
+        "budget_range": "$100M+ per season"
+      },
+      "questions": [
+        "My overall deal is expiring and I'm considering Netflix. Who should I be talking to about a high-end true crime anthology series?",
+        "What's the competitive landscape? I know I can get this set up elsewhere, but what makes Netflix the right home for this specific project?",
+        "I need to understand Netflix's current true crime strategy - are they still investing in premium scripted true crime or have they shifted to unscripted?",
+        "If I bring this in, what's the typical development timeline from pitch to greenlight for a project of this scale?",
+        "Who are the internal champions I need to win over beyond the initial executive? How does decision-making actually work for $100M+ bets?"
+      ],
+      "success_criteria": [
+        "Identifies senior decision-makers (Bela Bajaria, Peter Friedlander)",
+        "Provides strategic positioning vs competitors",
+        "Explains Netflix's true crime strategy evolution",
+        "Outlines realistic development timeline",
+        "Maps internal approval process for big-budget projects"
+      ]
+    },
+    {
+      "persona_id": 3,
+      "name": "International Producer with Format",
+      "sophistication": "advanced",
+      "background": "UK-based producer with successful Channel 4/BBC formats, looking to break into Netflix",
+      "project": {
+        "title": "The Last Generation",
+        "logline": "Sci-fi drama set in 2050 where climate refugees reshape European society",
+        "format": "Drama Series (10 episodes)",
+        "genre": "Sci-Fi / Social Drama",
+        "comparable": "Years and Years meets The Handmaid's Tale",
+        "status": "Pilot script + series bible",
+        "talent_attached": "UK showrunner attached",
+        "budget_range": "$40M season 1"
+      },
+      "questions": [
+        "I'm a UK producer with a climate sci-fi drama. Do I pitch to Netflix UK or Netflix US? Who's the right executive for international sci-fi with social themes?",
+        "What's Netflix's current appetite for international English-language drama that isn't British period pieces?",
+        "Should I position this as a UK production or try to make it more global? What's the strategic play here?",
+        "What production companies does Netflix work with for UK-originated sci-fi content?",
+        "I've had success at BBC and Channel 4 but never pitched Netflix. What do they look for that's different from traditional broadcasters?"
+      ],
+      "success_criteria": [
+        "Identifies correct regional executive (likely Anne Mensah for UK or international scripted lead)",
+        "Explains UK vs US positioning strategy",
+        "Provides Netflix's international content priorities",
+        "Suggests UK production company partners",
+        "Highlights key differences in Netflix pitch approach vs traditional broadcasters"
+      ]
+    },
+    {
+      "persona_id": 4,
+      "name": "Documentary Filmmaker with Investigative Series",
+      "sophistication": "advanced",
+      "background": "Award-winning documentary filmmaker, previous work on HBO and theatrical, first Netflix pitch",
+      "project": {
+        "title": "The Algorithm",
+        "logline": "4-part investigative docuseries exposing how social media algorithms radicalize users",
+        "format": "Limited Docuseries (4 episodes)",
+        "genre": "Investigative Documentary",
+        "comparable": "The Social Dilemma meets Dirty Money",
+        "status": "Extensive research completed, access secured to key sources",
+        "talent_attached": "Director attached, executive producer interest",
+        "budget_range": "$8-12M total"
+      },
+      "questions": [
+        "I have an investigative docuseries about social media algorithms with incredible access. Who at Netflix handles hard-hitting investigative docs?",
+        "Netflix has done The Social Dilemma - are they still interested in tech critique content or is that space saturated?",
+        "What's the difference between pitching to Netflix Documentary vs Netflix Series? Should this be positioned as documentary or limited series?",
+        "I have interest from a major production company to executive produce. Does that help or hurt my chances? Should I go in with them or solo?",
+        "What's Netflix's current documentary strategy - are they prioritizing feature docs or series? How does that affect my positioning?"
+      ],
+      "success_criteria": [
+        "Identifies documentary executive (likely Lisa Nishimura or Adam Del Deo)",
+        "Provides context on Netflix's tech/social issue documentary appetite",
+        "Explains documentary vs series positioning",
+        "Advises on production company partnership strategy",
+        "Clarifies current documentary format priorities"
+      ]
+    },
+    {
+      "persona_id": 5,
+      "name": "Novelist with Book-to-Series Adaptation",
+      "sophistication": "advanced",
+      "background": "Bestselling thriller novelist with 5M+ books sold, multiple publishers bidding on next book, wants to control TV adaptation",
+      "project": {
+        "title": "The Syndicate (book series)",
+        "logline": "International crime thriller following a female Interpol agent hunting a global crime syndicate across 6 continents",
+        "format": "Drama Series (multi-season potential)",
+        "genre": "Crime Thriller / Action",
+        "comparable": "Jack Ryan meets Killing Eve",
+        "status": "Book 1 published (bestseller), Book 2 in progress, IP rights available",
+        "talent_attached": "Author wants EP credit, A-list showrunner interest",
+        "budget_range": "$60-80M per season"
+      },
+      "questions": [
+        "I'm a bestselling author and want to control the adaptation of my thriller series. Who at Netflix should I be talking to about this, and should I come in with a showrunner already attached?",
+        "My book is being compared to Jack Ryan and Killing Eve. What's Netflix's current appetite for international crime thrillers with female leads?",
+        "I have interest from several production companies who want to option the rights. Which ones have the best track record getting book adaptations greenlit at Netflix?",
+        "What's the typical deal structure for author involvement? I want EP credit and creative control - is that realistic at Netflix?",
+        "Should I wait until Book 2 is published to pitch, or is one bestselling book enough to get Netflix interested in a multi-season series?"
+      ],
+      "success_criteria": [
+        "Identifies correct executive for international thriller content",
+        "Provides intelligence on Netflix's female-led action/thriller appetite",
+        "Suggests production companies with book adaptation track record",
+        "Explains realistic author involvement in Netflix adaptations",
+        "Advises on timing strategy for IP-based pitches"
+      ]
+    },
+    {
+      "persona_id": 6,
+      "name": "Veteran Showrunner with Franchise Potential",
+      "sophistication": "advanced",
+      "background": "Created 2 network procedurals that ran 5+ seasons each, now developing streaming-first franchise",
+      "project": {
+        "title": "Blackout",
+        "logline": "When a global cyberattack takes down the internet, a team of hackers must rebuild civilization's digital infrastructure while uncovering who orchestrated the attack",
+        "format": "Drama Series with franchise potential (spinoffs, films)",
+        "genre": "Techno-thriller / Action",
+        "comparable": "24 meets Mr. Robot with Marvel-style universe building",
+        "status": "Pilot + season 1 outline + franchise roadmap (3 spinoff concepts)",
+        "talent_attached": "Showrunner + 2 co-EPs from previous successful shows",
+        "budget_range": "$80-100M season 1, scalable franchise"
+      },
+      "questions": [
+        "I have a techno-thriller with built-in franchise potential - multiple spinoffs, films, the works. Who at Netflix thinks about content as franchises, not just individual shows?",
+        "I'm pitching this as a universe, not just a series. Does Netflix have an appetite for that kind of long-term IP building, or should I focus on selling the core show first?",
+        "What's the competitive advantage of bringing a franchise to Netflix vs Apple or Amazon? I need to understand their franchise strategy to position this correctly.",
+        "I have a track record in broadcast but this is my first streaming pitch. What do I need to know about how Netflix evaluates franchise potential differently?",
+        "If this gets greenlit, what's the typical path from season 1 to expanding the universe? Do I need to prove the core show first or can I pitch the franchise upfront?"
+      ],
+      "success_criteria": [
+        "Identifies executives who think strategically about franchises (Bela Bajaria level)",
+        "Explains Netflix's franchise/universe building philosophy",
+        "Provides competitive positioning vs other streamers",
+        "Highlights differences in streaming vs broadcast evaluation",
+        "Outlines realistic franchise development pathway"
+      ]
+    }
+  ]
+}
+

@@ -1,0 +1,270 @@
+{
+  "senior_executives": [
+    {
+      "name": "Bela Bajaria",
+      "title": "Chief Content Officer",
+      "level": "C-Suite",
+      "scope": "Global",
+      "mandate": {
+        "overview": "Oversees all global content strategy, greenlighting decisions for $17B+ annual content budget. Final decision-maker for tentpole series, overall deals with A-list talent, and strategic franchise bets.",
+        "decision_authority": [
+          "Overall deals $50M+",
+          "Tentpole series budgets $100M+",
+          "Multi-season franchise commitments",
+          "Strategic talent partnerships",
+          "Global content strategy shifts"
+        ],
+        "current_priorities": [
+          "Fewer, bigger bets on proven IP and talent",
+          "Global franchises that travel across all regions",
+          "Prestige limited series for awards momentum",
+          "Retention-driving tentpoles (Stranger Things, Bridgerton scale)",
+          "Cost discipline while maintaining quality bar"
+        ],
+        "recent_greenlights": [
+          "Stranger Things Season 5 ($300M+ budget)",
+          "Bridgerton Seasons 3-4 renewal",
+          "Wednesday Season 2",
+          "The Witcher franchise expansion",
+          "Avatar: The Last Airbender"
+        ],
+        "pitch_pathway": "Never direct. Must come through head of genre (Peter Friedlander for US Scripted, Anne Mensah for UK, etc.) with full package and business case. Bela reviews only projects that have cleared genre head approval and require C-level sign-off due to budget/strategic importance.",
+        "decision_timeline": "2-4 weeks after genre head approval for tentpoles, 4-8 weeks for overall deals",
+        "success_factors": [
+          "Proven talent with track record",
+          "Clear global appeal and franchise potential",
+          "Strong business case (cost per hour vs projected viewing)",
+          "Strategic fit with Netflix brand and retention goals",
+          "Awards potential for prestige plays"
+        ]
+      },
+      "background": "Former President of Universal Television, joined Netflix 2016. Promoted to Chief Content Officer 2020. Known for data-driven decisions balanced with creative instincts. Champions diverse voices and global storytelling.",
+      "public_statements": [
+        "We're making fewer shows, but they're bigger and better.",
+        "The goal is to have something for everyone, but not everything for someone.",
+        "We're focused on shows that can break through globally, not just in one market."
+      ]
+    },
+    {
+      "name": "Peter Friedlander",
+      "title": "Head of US Scripted Series",
+      "level": "VP",
+      "scope": "US Scripted Television",
+      "mandate": {
+        "overview": "Oversees all US scripted series development and production. Greenlights drama, limited series, and comedy originating from US market. Reports to Bela Bajaria.",
+        "decision_authority": [
+          "US scripted series budgets up to $50M total",
+          "Limited series 6-10 episodes",
+          "Drama series season orders",
+          "Comedy series development",
+          "US-based overall deals under $20M"
+        ],
+        "current_priorities": [
+          "Prestige limited series for awards (Emmy, Golden Globe)",
+          "High-concept drama with binge appeal",
+          "Star-led projects with A-list attachment",
+          "Genre-defining shows (next Stranger Things, Ozark)",
+          "Cost-efficient storytelling without sacrificing quality"
+        ],
+        "recent_greenlights": [
+          "House of Guinness (prestige limited)",
+          "The Diplomat Season 2",
+          "Dead Boy Detectives",
+          "A Man in Full (limited series)",
+          "3 Body Problem"
+        ],
+        "pitch_pathway": "Through production company with Netflix overall/first-look deal, or via top-tier agency packaging. Requires: pilot script or bible, showrunner attachment, talent package, budget estimate, comp titles.",
+        "decision_timeline": "4-8 weeks for initial read, 8-12 weeks for greenlight decision after pitch",
+        "success_factors": [
+          "Showrunner with proven track record",
+          "Clear 3-season arc (for ongoing series)",
+          "Tight episode count (6-10 for limited, 8-10 for season 1)",
+          "Global hook that travels beyond US",
+          "Awards potential or franchise scalability"
+        ]
+      },
+      "background": "Former EVP Warner Bros. Television, joined Netflix 2017. Oversees hits like Ozark, The Crown, Stranger Things (US production). Known for supporting auteur showrunners and prestige storytelling.",
+      "public_statements": [
+        "We're looking for shows that feel like events, not just episodes.",
+        "The bar is high because the competition is fierce.",
+        "Limited series are our secret weapon for awards and prestige."
+      ]
+    },
+    {
+      "name": "Jinny Howe",
+      "title": "VP, Drama Series",
+      "level": "VP",
+      "scope": "Global Drama Series",
+      "mandate": {
+        "overview": "Oversees drama series development globally, working across regions to identify and greenlight ongoing drama series with multi-season potential.",
+        "decision_authority": [
+          "Drama series development",
+          "Multi-season renewals",
+          "International co-productions",
+          "Genre drama (crime, thriller, sci-fi)"
+        ],
+        "current_priorities": [
+          "Character-driven drama with global appeal",
+          "Crime and thriller series",
+          "International co-productions",
+          "Franchise-ready IP",
+          "Diverse voices and perspectives"
+        ],
+        "recent_greenlights": [
+          "The Diplomat",
+          "The Night Agent Season 2",
+          "Beef",
+          "The Watcher",
+          "Partner Track"
+        ],
+        "pitch_pathway": "Through production partners or international studios. Prefers projects with international elements or co-production potential.",
+        "decision_timeline": "6-10 weeks for development decision",
+        "success_factors": [
+          "Strong pilot and series bible",
+          "International appeal",
+          "Showrunner with drama credentials",
+          "Clear multi-season potential",
+          "Binge-worthy storytelling"
+        ]
+      },
+      "background": "Former ABC Studios executive, joined Netflix 2018. Champions character-driven storytelling and international collaborations."
+    }
+  ],
+  "decision_hierarchy": {
+    "description": "Netflix content decision-making flows through a tiered system based on project scale and budget",
+    "tiers": [
+      {
+        "tier": "C-Suite (Bela Bajaria)",
+        "triggers": [
+          "Total budget $100M+",
+          "Overall deals $50M+",
+          "Multi-season franchise commitments",
+          "Strategic talent partnerships",
+          "Brand-defining tentpoles"
+        ],
+        "typical_projects": "Stranger Things, Bridgerton, Wednesday, Avatar: The Last Airbender"
+      },
+      {
+        "tier": "Head of Genre (Peter Friedlander, Anne Mensah, etc.)",
+        "triggers": [
+          "Series budgets $10M-$100M",
+          "Limited series with A-list talent",
+          "New overall deals under $50M",
+          "Prestige awards plays",
+          "Genre-defining shows"
+        ],
+        "typical_projects": "House of Guinness, The Diplomat, Baby Reindeer, 3 Body Problem"
+      },
+      {
+        "tier": "VP Level (Jinny Howe, Kennedy Corrin, etc.)",
+        "triggers": [
+          "Standard series development",
+          "Season renewals",
+          "Mid-budget projects",
+          "International co-productions"
+        ],
+        "typical_projects": "The Night Agent, Partner Track, The Watcher"
+      }
+    ]
+  },
+  "competitive_positioning": {
+    "netflix_vs_competitors": {
+      "vs_apple_tv_plus": {
+        "netflix_advantages": [
+          "Global reach: 260M+ subscribers vs Apple's 25M+",
+          "Proven hit-making machine with data-driven greenlighting",
+          "Faster time-to-market (6-12 months vs Apple's 12-18 months)",
+          "Binge-release model drives immediate cultural impact",
+          "Larger content budget ($17B vs Apple's $6-7B)"
+        ],
+        "apple_advantages": [
+          "Higher per-project budgets (willing to spend $20M+ per episode)",
+          "Prestige positioning (awards-first strategy)",
+          "More creator-friendly terms (better backend, more control)",
+          "Theatrical releases for select films"
+        ],
+        "when_to_choose_netflix": "Global reach, franchise potential, binge appeal, faster greenlight-to-release, data-driven marketing"
+      },
+      "vs_amazon_prime": {
+        "netflix_advantages": [
+          "Pure streaming focus vs Amazon's bundled offering",
+          "Clearer brand identity for content",
+          "Faster decision-making (no retail/tech politics)",
+          "Better international distribution",
+          "More consistent content strategy"
+        ],
+        "amazon_advantages": [
+          "Larger overall budget (willing to overpay for tentpoles)",
+          "Theatrical releases (MGM integration)",
+          "More flexible deal structures",
+          "Sports rights integration"
+        ],
+        "when_to_choose_netflix": "Pure streaming play, international focus, consistent strategy, faster decisions"
+      },
+      "vs_hbo_max": {
+        "netflix_advantages": [
+          "Larger subscriber base (260M vs 100M)",
+          "Global platform (HBO Max limited internationally)",
+          "Higher volume of content (more shots on goal)",
+          "Binge-release creates immediate buzz",
+          "Better international marketing"
+        ],
+        "hbo_advantages": [
+          "Prestige brand (Emmy track record)",
+          "Higher per-project quality bar",
+          "More patient with slow-burn shows",
+          "Theatrical releases for films"
+        ],
+        "when_to_choose_netflix": "Global reach, volume strategy, binge appeal, faster cultural impact"
+      }
+    },
+    "netflix_unique_value_props": [
+      "Global day-and-date release in 190+ countries",
+      "Data-driven marketing and personalization",
+      "Binge-release model for immediate cultural conversation",
+      "Largest streaming subscriber base (260M+)",
+      "Proven track record of creating global hits from any region",
+      "Strong international co-production capabilities",
+      "Fast greenlight-to-release timeline",
+      "Willingness to take risks on new voices and formats"
+    ]
+  },
+  "timeline_intelligence": {
+    "by_project_type": {
+      "limited_series": {
+        "pitch_to_greenlight": "8-12 weeks (with full package)",
+        "greenlight_to_production": "6-12 months",
+        "production_to_release": "6-9 months",
+        "total_timeline": "18-24 months from pitch to release",
+        "success_factors": "Full script, A-list talent attached, awards potential, tight episode count (6-8)"
+      },
+      "drama_series_new": {
+        "pitch_to_greenlight": "10-16 weeks",
+        "greenlight_to_production": "9-15 months",
+        "production_to_release": "8-12 months",
+        "total_timeline": "24-36 months from pitch to release",
+        "success_factors": "Pilot script + bible, showrunner with track record, clear 3-season arc, global hook"
+      },
+      "overall_deal": {
+        "initial_conversation_to_deal": "12-24 weeks",
+        "deal_structure": "Typically 2-4 year term, $10M-$100M+ depending on talent",
+        "first_project_greenlight": "Additional 8-16 weeks after deal signed",
+        "success_factors": "Proven track record, multiple project ideas, strategic fit with Netflix priorities"
+      },
+      "international_co_production": {
+        "pitch_to_greenlight": "12-20 weeks (longer due to multi-territory coordination)",
+        "greenlight_to_production": "12-18 months",
+        "production_to_release": "8-12 months",
+        "total_timeline": "30-42 months from pitch to release",
+        "success_factors": "Strong local partner, global appeal, cost-sharing structure, regional authenticity"
+      }
+    },
+    "seasonal_patterns": {
+      "q1_jan_mar": "Post-holidays: Focus on awards season results, planning summer/fall releases",
+      "q2_apr_jun": "Upfronts season: Major greenlight activity, overall deal announcements",
+      "q3_jul_sep": "Emmy season: Prestige focus, fall release planning",
+      "q4_oct_dec": "Holiday releases, year-end tentpoles, next-year planning"
+    }
+  }
+}
+
