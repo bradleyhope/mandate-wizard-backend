@@ -7,6 +7,7 @@ sentence-transformers==2.2.2
 openai==1.12.0
 flask==3.0.0
 flask-cors==4.0.0
+gunicorn==21.2.0  # Production WSGI server
 
 # Data processing
 numpy==1.24.3

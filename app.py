@@ -153,6 +153,35 @@ def test_api():
     """Simple API connection test page"""
     return render_template('test_api.html')
 
+@app.route('/health')
+def health():
+    """Health check endpoint for Railway/load balancers"""
+    try:
+        # Quick health check
+        status = {
+            'status': 'healthy',
+            'timestamp': datetime.utcnow().isoformat(),
+            'service': 'mandate-wizard-backend',
+            'version': '1.0.0'
+        }
+
+        # Optional: Check Neo4j connection
+        if engine and hasattr(engine, 'driver'):
+            try:
+                with engine.driver.session() as session:
+                    session.run("RETURN 1")
+                status['neo4j'] = 'connected'
+            except:
+                status['neo4j'] = 'disconnected'
+
+        return jsonify(status), 200
+    except Exception as e:
+        return jsonify({
+            'status': 'unhealthy',
+            'error': str(e),
+            'timestamp': datetime.utcnow().isoformat()
+        }), 503
+
 @app.route('/auth/check', methods=['POST'])
 def check_auth():
     """Check if user is authenticated and has valid subscription"""
@@ -1092,10 +1121,13 @@ if __name__ == '__main__':
     print(f"✓ Loaded {len(engine.persons)} executives from Neo4j")
     print(f"✓ HybridRAG engine ready")
     print("="*70)
-    print("\n🚀 Starting server on http://0.0.0.0:5000")
+
+    # Use PORT from environment (Railway/Heroku) or default to 5000
+    port = int(os.environ.get('PORT', 5000))
+    print(f"\n🚀 Starting server on http://0.0.0.0:{port}")
     print("\n")
-    
-    app.run(host='0.0.0.0', port=5000, debug=False)
+
+    app.run(host='0.0.0.0', port=port, debug=False)
 
 
 
