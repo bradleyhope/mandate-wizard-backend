@@ -673,13 +673,13 @@ def executive_profile(exec_name):
         if request.accept_mimetypes.best == 'application/json' or request.args.get('format') == 'json':
             # Return JSON for API calls
             profile = deep_dive.generate_profile(exec_name)
-            
+
             if 'error' in profile:
                 return jsonify({
                     'error': profile['error'],
                     'success': False
                 }), 404
-            
+
             return jsonify({
                 'profile': profile,
                 'success': True
@@ -692,6 +692,155 @@ def executive_profile(exec_name):
             'error': str(e),
             'success': False
         }), 500
+
+# ============================================
+# ENHANCED API ENDPOINTS FOR UX IMPROVEMENTS
+# ============================================
+
+@app.route('/api/executives/list', methods=['GET'])
+def api_list_executives():
+    """Enhanced executives list with filtering support"""
+    try:
+        region = request.args.get('region', 'all')
+        content_type = request.args.get('content_type', 'all')
+        level = request.args.get('level', 'all')
+
+        # Get all executives from Neo4j
+        executives = []
+        with engine.driver.session() as session:
+            result = session.run("""
+                MATCH (p:Person)
+                WHERE p.entity_id IS NOT NULL
+                RETURN p.name as name,
+                       p.current_title as title,
+                       p.region as region,
+                       p.level as level,
+                       p.mandate as mandate,
+                       p.budget_authority as budget_authority,
+                       p.primary_genre as primary_genre
+                ORDER BY p.name
+            """)
+
+            for record in result:
+                exec_data = {
+                    'name': record['name'],
+                    'title': record['title'],
+                    'region': record['region'],
+                    'level': record['level'],
+                    'mandate': record['mandate'],
+                    'budget_authority': record['budget_authority'],
+                    'primary_genre': record['primary_genre'],
+                    'greenlights_count': 0  # Could be enhanced with actual count
+                }
+
+                # Apply filters
+                if region != 'all' and exec_data.get('region') != region:
+                    continue
+                if level != 'all' and exec_data.get('level') != level:
+                    continue
+                # Content type filter could check mandate or primary_genre
+                if content_type != 'all' and exec_data.get('primary_genre') and content_type not in exec_data.get('primary_genre', ''):
+                    continue
+
+                executives.append(exec_data)
+
+        return jsonify({
+            'executives': executives,
+            'count': len(executives),
+            'success': True
+        })
+    except Exception as e:
+        print(f"Error in api_list_executives: {e}")
+        return jsonify({
+            'error': str(e),
+            'success': False
+        }), 500
+
+@app.route('/api/executive/<exec_name>/preview', methods=['GET'])
+def executive_preview(exec_name):
+    """Quick preview endpoint for hover tooltips"""
+    try:
+        # Get basic executive info from Neo4j
+        with engine.driver.session() as session:
+            result = session.run("""
+                MATCH (p:Person {name: $name})
+                OPTIONAL MATCH (p)-[:GREENLIT]->(g:Greenlight)
+                WITH p, COUNT(g) as greenlight_count
+                RETURN p.name as name,
+                       p.current_title as title,
+                       p.mandate as mandate,
+                       p.photo_url as photo_url,
+                       greenlight_count
+                LIMIT 1
+            """, name=exec_name)
+
+            record = result.single()
+            if not record:
+                return jsonify({
+                    'error': 'Executive not found',
+                    'success': False
+                }), 404
+
+            return jsonify({
+                'name': record['name'],
+                'title': record['title'],
+                'photo_url': record.get('photo_url'),
+                'mandate_summary': (record['mandate'] or '')[:200],
+                'recent_greenlights_count': record['greenlight_count'],
+                'success': True
+            })
+    except Exception as e:
+        print(f"Error in executive_preview: {e}")
+        return jsonify({
+            'error': str(e),
+            'success': False
+        }), 500
+
+@app.route('/api/project/<path:project_title>/preview', methods=['GET'])
+def project_preview(project_title):
+    """Quick preview endpoint for project hover tooltips"""
+    try:
+        # Search for project in Neo4j
+        with engine.driver.session() as session:
+            result = session.run("""
+                MATCH (g:Greenlight)
+                WHERE g.title = $title OR g.project_title = $title
+                OPTIONAL MATCH (p:Person)-[:GREENLIT]->(g)
+                RETURN g.title as title,
+                       g.project_title as project_title,
+                       g.genre as genre,
+                       g.format as format,
+                       g.greenlight_date as greenlight_date,
+                       p.name as executive
+                LIMIT 1
+            """, title=project_title)
+
+            record = result.single()
+            if not record:
+                return jsonify({
+                    'error': 'Project not found',
+                    'success': False
+                }), 404
+
+            return jsonify({
+                'title': record['title'] or record['project_title'],
+                'genre': record['genre'],
+                'format': record['format'],
+                'greenlight_date': record['greenlight_date'],
+                'executive': record['executive'],
+                'success': True
+            })
+    except Exception as e:
+        print(f"Error in project_preview: {e}")
+        return jsonify({
+            'error': str(e),
+            'success': False
+        }), 500
+
+@app.route('/executives_directory')
+def executives_directory_page():
+    """Render the executives directory page"""
+    return render_template('executives_directory.html')
 
 # ============================================
 # LANGGRAPH PATHWAY ENDPOINT

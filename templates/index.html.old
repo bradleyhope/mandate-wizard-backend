@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mandate Wizard</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #ffffff;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .header {
+            padding: 32px 24px;
+            text-align: center;
+            border-bottom: 1px solid #e5e5e5;
+        }
+        
+        .header h1 {
+            font-size: 32px;
+            font-weight: 300;
+            color: #1a1a1a;
+            letter-spacing: -0.5px;
+        }
+        
+        .chat-container {
+            flex: 1;
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 40px 24px;
+            overflow-y: auto;
+        }
+        
+        .welcome-message {
+            text-align: center;
+            color: #666;
+            margin-bottom: 40px;
+            font-size: 15px;
+            line-height: 1.6;
+        }
+        
+        .examples {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            justify-content: center;
+            margin-bottom: 40px;
+        }
+        
+        .example-question {
+            padding: 10px 18px;
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 20px;
+            font-size: 14px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        .example-question:hover {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+        }
+        
+        .message {
+            margin-bottom: 32px;
+            animation: fadeIn 0.3s ease-in;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .message.user .message-content {
+            background: #f8f8f8;
+            color: #1a1a1a;
+            padding: 16px 20px;
+            border-radius: 20px;
+            display: inline-block;
+            max-width: 80%;
+            font-size: 15px;
+            line-height: 1.5;
+        }
+        
+        .message.user {
+            text-align: right;
+        }
+        
+        .message.assistant .message-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 8px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .message.assistant .message-content {
+            color: #1a1a1a;
+            font-size: 15px;
+            line-height: 1.8;
+            max-width: 100%;
+        }
+        
+        .message-content p {
+            margin-bottom: 16px;
+        }
+        
+        .message-content p:last-child {
+            margin-bottom: 0;
+        }
+        
+        .message-content strong {
+            font-weight: 600;
+            color: #000;
+        }
+        
+        .input-container {
+            position: sticky;
+            bottom: 0;
+            background: white;
+            border-top: 1px solid #e5e5e5;
+            padding: 24px;
+        }
+        
+        .input-wrapper {
+            max-width: 800px;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+        
+        #questionInput {
+            flex: 1;
+            padding: 16px 20px;
+            border: 1px solid #e5e5e5;
+            border-radius: 24px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+        
+        #questionInput:focus {
+            border-color: #1a1a1a;
+            background: white;
+        }
+        
+        #askButton {
+            padding: 16px 32px;
+            background: #1a1a1a;
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        
+        #askButton:hover:not(:disabled) {
+            background: #000;
+            transform: translateY(-1px);
+        }
+        
+        #askButton:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 14px;
+        }
+        
+        .loading.active {
+            display: block;
+        }
+        
+        .status-indicator {
+            display: none;
+            padding: 12px 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 12px;
+            font-size: 13px;
+            margin-bottom: 16px;
+            animation: slideIn 0.3s ease-out;
+            box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
+        }
+        
+        .status-indicator.active {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        .status-indicator .status-icon {
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255, 255, 255, 0.3);
+            border-top-color: white;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+        }
+        
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid #f0f0f0;
+            border-top: 2px solid #1a1a1a;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-right: 8px;
+            vertical-align: middle;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        /* Scrollbar styling */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        
+        ::-webkit-scrollbar-thumb {
+            background: #e5e5e5;
+            border-radius: 4px;
+        }
+        
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ccc;
+        }
+        
+        .followups {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .followup-card {
+            padding: 10px 16px;
+            background: #f8f8f8;
+            border: 1px solid #e5e5e5;
+            border-radius: 18px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        
+        .followup-card:before {
+            content: '→';
+            font-size: 14px;
+        }
+        
+        .followup-card:hover {
+            background: #1a1a1a;
+            color: white;
+            border-color: #1a1a1a;
+            transform: translateX(2px);
+        }
+        
+        .resources {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .resources-label {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 10px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        
+        .resource-link {
+            display: block;
+            padding: 8px 0;
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+        
+        .resource-link:hover {
+            color: #004499;
+            text-decoration: underline;
+        }
+        
+        .resource-link:before {
+            content: '🔗';
+            margin-right: 6px;
+            opacity: 0.6;
+        }
+        
+        /* Dynamic Cards */
+        .dynamic-cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 16px;
+            margin-top: 24px;
+            padding-top: 20px;
+            border-top: 1px solid #f0f0f0;
+        }
+        
+        .card {
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+            border: 1px solid #e5e7eb;
+            border-radius: 16px;
+            padding: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+            border-color: #d1d5db;
+        }
+        
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .card:hover::before {
+            opacity: 1;
+        }
+        
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            color: #6b7280;
+        }
+        
+        .card-icon {
+            font-size: 16px;
+        }
+        
+        .card-content {
+            color: #1a1a1a;
+        }
+        
+        .quote-card .card-content {
+            font-size: 15px;
+            line-height: 1.6;
+            font-style: italic;
+            color: #374151;
+            margin-bottom: 16px;
+        }
+        
+        .quote-card .quote-text {
+            position: relative;
+            padding-left: 16px;
+            border-left: 3px solid #667eea;
+        }
+        
+        .card-footer {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            font-size: 13px;
+            color: #6b7280;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f3f4f6;
+        }
+        
+        .card-footer-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .card-meta {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+        
+        .card-link {
+            color: #667eea;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+        
+        .card-link:hover {
+            color: #764ba2;
+            text-decoration: underline;
+        }
+        
+        .card-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            background: #f3f4f6;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #6b7280;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>Mandate Wizard</h1>
+    </div>
+    
+    <div class="chat-container" id="chatContainer">
+        <div class="welcome-message">
+            <p>Your expert guide to pitching film & TV projects at Netflix</p>
+        </div>
+        
+        <div class="examples" id="examples">
+            <span class="example-question" onclick="askExample(this)">Who do I pitch my dating show to?</span>
+            <span class="example-question" onclick="askExample(this)">What kind of procedural dramas does Netflix want?</span>
+            <span class="example-question" onclick="askExample(this)">What are some recent mandates from Netflix?</span>
+            <span class="example-question" onclick="askExample(this)">Who handles Korean content?</span>
+        </div>
+        
+
+    </div>
+    
+    <div class="input-container">
+        <div class="input-wrapper">
+            <input 
+                type="text" 
+                id="questionInput" 
+                placeholder="Ask me anything about pitching to Netflix..."
+                onkeypress="handleKeyPress(event)"
+            >
+            <button id="askButton" onclick="askQuestion()">Ask</button>
+        </div>
+    </div>
+    
+    <script>
+        // Generate session ID for conversation memory
+        const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
+        
+        function addMessage(content, role, followups = [], resources = []) {
+            const chatContainer = document.getElementById('chatContainer');
+            const examples = document.getElementById('examples');
+            
+            // Hide examples after first question
+            if (examples) {
+                examples.style.display = 'none';
+            }
+            
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${role}`;
+            
+            if (role === 'assistant') {
+                const label = document.createElement('div');
+                label.className = 'message-label';
+                label.textContent = 'Answer';
+                messageDiv.appendChild(label);
+            }
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            
+            // Convert markdown-style formatting to HTML with paragraphs
+            let formattedContent = content
+                .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                .split('\n\n')
+                .map(para => para.trim())
+                .filter(para => para.length > 0)
+                .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+                .join('');
+            
+            contentDiv.innerHTML = formattedContent;
+            messageDiv.appendChild(contentDiv);
+            
+            // Add follow-up suggestions if provided
+            if (role === 'assistant' && followups && followups.length > 0) {
+                const followupsDiv = document.createElement('div');
+                followupsDiv.className = 'followups';
+                
+                followups.forEach(followup => {
+                    const card = document.createElement('span');
+                    card.className = 'followup-card';
+                    card.textContent = followup;
+                    card.onclick = () => {
+                        document.getElementById('questionInput').value = followup;
+                        askQuestion();
+                    };
+                    followupsDiv.appendChild(card);
+                });
+                
+                messageDiv.appendChild(followupsDiv);
+            }
+            
+            // Add resource links if provided
+            if (role === 'assistant' && resources && resources.length > 0) {
+                const resourcesDiv = document.createElement('div');
+                resourcesDiv.className = 'resources';
+                
+                const label = document.createElement('div');
+                label.className = 'resources-label';
+                label.textContent = 'Learn More';
+                resourcesDiv.appendChild(label);
+                
+                resources.forEach(resource => {
+                    const link = document.createElement('a');
+                    link.className = 'resource-link';
+                    link.href = resource.url;
+                    link.target = '_blank';
+                    link.rel = 'noopener noreferrer';
+                    link.textContent = resource.title;
+                    resourcesDiv.appendChild(link);
+                });
+                
+                messageDiv.appendChild(resourcesDiv);
+            }
+            
+            chatContainer.appendChild(messageDiv);
+            
+            // Scroll to bottom smoothly
+            setTimeout(() => {
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 100);
+        }
+        
+        async function askQuestion() {
+            const input = document.getElementById('questionInput');
+            const button = document.getElementById('askButton');
+            const question = input.value.trim();
+            
+            if (!question) return;
+            
+            // Clear previous follow-up bubbles only (keep chat history)
+            const chatContainer = document.getElementById('chatContainer');
+            const followupContainers = chatContainer.querySelectorAll('.followup-container, .resources-container');
+            followupContainers.forEach(container => container.remove());
+            
+            // Add user message
+            addMessage(question, 'user');
+            
+            // Clear input and disable button
+            input.value = '';
+            button.disabled = true;
+            const messageDiv = document.createElement('div');
+            messageDiv.className = 'message assistant';
+            
+            const label = document.createElement('div');
+            label.className = 'message-label';
+            label.textContent = 'Answer';
+            messageDiv.appendChild(label);
+            
+            const contentDiv = document.createElement('div');
+            contentDiv.className = 'message-content';
+            messageDiv.appendChild(contentDiv);
+            
+            // Add status indicator
+            const statusDiv = document.createElement('div');
+            statusDiv.className = 'status-indicator active';
+            statusDiv.innerHTML = '<div class="status-icon"></div><span class="status-text">Initializing...</span>';
+            messageDiv.insertBefore(statusDiv, contentDiv);
+            
+            chatContainer.appendChild(messageDiv);
+            
+            // Scroll to show the new message
+            setTimeout(() => {
+                chatContainer.scrollTo({
+                    top: chatContainer.scrollHeight,
+                    behavior: 'smooth'
+                });
+            }, 100);
+            
+            try {
+                // Use fetch with streaming response
+                const response = await fetch('/ask_stream', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ 
+                        question: question,
+                        session_id: sessionId 
+                    }),
+                });
+                
+                if (!response.ok) {
+                    throw new Error('Network response was not ok');
+                }
+                
+                const reader = response.body.getReader();
+                const decoder = new TextDecoder();
+                let buffer = '';
+                let fullAnswer = '';
+                
+                while (true) {
+                    const {done, value} = await reader.read();
+                    if (done) break;
+                    
+                    buffer += decoder.decode(value, {stream: true});
+                    const lines = buffer.split('\n');
+                    buffer = lines.pop(); // Keep incomplete line in buffer
+                    
+                    for (const line of lines) {
+                        if (line.startsWith('data: ')) {
+                            const data = JSON.parse(line.substring(6));
+                            
+                            if (data.type === 'status') {
+                                // Update status indicator
+                                const statusText = messageDiv.querySelector('.status-text');
+                                if (statusText) {
+                                    statusText.textContent = data.message;
+                                }
+                                console.log('Status:', data.message);
+                            } else if (data.type === 'chunk') {
+                                // Hide status indicator once content starts streaming
+                                const statusIndicator = messageDiv.querySelector('.status-indicator');
+                                if (statusIndicator) {
+                                    statusIndicator.classList.remove('active');
+                                }
+                                
+                                // Append text chunk to the answer
+                                fullAnswer += data.content;
+                                
+                                // Format and display the answer so far
+                                let formattedContent = fullAnswer
+                                    .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+                                    .split('\n\n')
+                                    .map(para => para.trim())
+                                    .filter(para => para.length > 0)
+                                    .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+                                    .join('');
+                                
+                                contentDiv.innerHTML = formattedContent;
+                                
+                                // Auto-scroll as content appears
+                                chatContainer.scrollTo({
+                                    top: chatContainer.scrollHeight,
+                                    behavior: 'smooth'
+                                });
+                            } else if (data.type === 'cards') {
+                                // Add dynamic cards (quotes, etc.)
+                                if (data.data && data.data.length > 0) {
+                                    const cardsContainer = document.createElement('div');
+                                    cardsContainer.className = 'dynamic-cards';
+                                    
+                                    data.data.forEach(card => {
+                                        if (card.type === 'quote') {
+                                            const quoteCard = document.createElement('div');
+                                            quoteCard.className = 'card quote-card';
+                                            
+                                            // Card header
+                                            const header = document.createElement('div');
+                                            header.className = 'card-header';
+                                            header.innerHTML = '<span class="card-icon">💬</span><span>Recent Quote</span>';
+                                            quoteCard.appendChild(header);
+                                            
+                                            // Quote content
+                                            const content = document.createElement('div');
+                                            content.className = 'card-content';
+                                            const quoteText = document.createElement('div');
+                                            quoteText.className = 'quote-text';
+                                            quoteText.textContent = card.quote;
+                                            content.appendChild(quoteText);
+                                            quoteCard.appendChild(content);
+                                            
+                                            // Card footer with metadata
+                                            const footer = document.createElement('div');
+                                            footer.className = 'card-footer';
+                                            
+                                            // Executive and date row
+                                            const metaRow = document.createElement('div');
+                                            metaRow.className = 'card-footer-row';
+                                            metaRow.innerHTML = `
+                                                <span class="card-badge">📅 ${card.date || 'Recent'}</span>
+                                                <span class="card-badge">📰 ${card.source || 'Source'}</span>
+                                            `;
+                                            footer.appendChild(metaRow);
+                                            
+                                            // Link row
+                                            if (card.url) {
+                                                const linkRow = document.createElement('div');
+                                                linkRow.className = 'card-footer-row';
+                                                const link = document.createElement('a');
+                                                link.className = 'card-link';
+                                                link.href = card.url;
+                                                link.target = '_blank';
+                                                link.rel = 'noopener noreferrer';
+                                                link.textContent = 'Read full interview →';
+                                                linkRow.appendChild(link);
+                                                footer.appendChild(linkRow);
+                                            }
+                                            
+                                            quoteCard.appendChild(footer);
+                                            cardsContainer.appendChild(quoteCard);
+                                        }
+                                    });
+                                    
+                                    messageDiv.appendChild(cardsContainer);
+                                }
+                            } else if (data.type === 'followups') {
+                                // Add follow-up suggestions
+                                if (data.data && data.data.length > 0) {
+                                    const followupsDiv = document.createElement('div');
+                                    followupsDiv.className = 'followups';
+                                    
+                                    data.data.forEach(followup => {
+                                        const card = document.createElement('span');
+                                        card.className = 'followup-card';
+                                        card.textContent = followup;
+                                        card.onclick = () => {
+                                            document.getElementById('questionInput').value = followup;
+                                            askQuestion();
+                                        };
+                                        followupsDiv.appendChild(card);
+                                    });
+                                    
+                                    messageDiv.appendChild(followupsDiv);
+                                }
+                            } else if (data.type === 'resources') {
+                                // Add resource links
+                                if (data.data && data.data.length > 0) {
+                                    const resourcesDiv = document.createElement('div');
+                                    resourcesDiv.className = 'resources';
+                                    
+                                    const label = document.createElement('div');
+                                    label.className = 'resources-label';
+                                    label.textContent = 'Learn More';
+                                    resourcesDiv.appendChild(label);
+                                    
+                                    data.data.forEach(resource => {
+                                        const link = document.createElement('a');
+                                        link.className = 'resource-link';
+                                        link.href = resource.url;
+                                        link.target = '_blank';
+                                        link.rel = 'noopener noreferrer';
+                                        link.textContent = resource.title;
+                                        resourcesDiv.appendChild(link);
+                                    });
+                                    
+                                    messageDiv.appendChild(resourcesDiv);
+                                }
+                            } else if (data.type === 'done') {
+                                // Streaming complete
+                                console.log('Streaming complete');
+                            } else if (data.type === 'error') {
+                                // Handle error
+                                contentDiv.innerHTML = `<p style="color: #d32f2f;">Sorry, there was an error: ${data.message}</p>`;
+                            }
+                        }
+                    }
+                }
+                
+            } catch (error) {
+                contentDiv.innerHTML = `<p style="color: #d32f2f;">Sorry, there was an error connecting to the server.</p>`;
+                console.error('Streaming error:', error);
+            } finally {
+                button.disabled = false;
+                input.focus();
+            }
+        }
+        
+        function handleKeyPress(event) {
+            if (event.key === 'Enter') {
+                askQuestion();
+            }
+        }
+        
+        function askExample(element) {
+            const question = element.textContent;
+            document.getElementById('questionInput').value = question;
+            askQuestion();
+        }
+        
+        // Focus input on load
+        document.getElementById('questionInput').focus();
+    </script>
+</body>
+</html>
+

@@ -3,44 +3,303 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mandate Wizard</title>
+    <title>Mandate Wizard - Netflix Pitch Intelligence</title>
     <style>
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
-        
+
+        :root {
+            --netflix-red: #E50914;
+            --netflix-dark: #141414;
+            --netflix-gray: #564d4d;
+            --primary-color: #1a1a1a;
+            --bg-color: #ffffff;
+            --border-color: #e5e5e5;
+            --sidebar-width: 280px;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-            background: #ffffff;
+            background: var(--bg-color);
             min-height: 100vh;
             display: flex;
+            flex-direction: row;
+        }
+
+        /* ============================================
+           SIDEBAR - Conversation History
+           ============================================ */
+        .sidebar {
+            width: var(--sidebar-width);
+            background: #fafafa;
+            border-right: 1px solid var(--border-color);
+            display: flex;
             flex-direction: column;
+            transition: transform 0.3s ease;
+            position: fixed;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            z-index: 100;
         }
-        
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid var(--border-color);
+            background: white;
+        }
+
+        .sidebar-header h2 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .new-chat-btn {
+            width: 100%;
+            padding: 12px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .new-chat-btn:hover {
+            background: #000;
+            transform: translateY(-1px);
+        }
+
+        .conversation-list {
+            flex: 1;
+            overflow-y: auto;
+            padding: 12px;
+        }
+
+        .conversation-item {
+            padding: 12px;
+            margin-bottom: 4px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid transparent;
+        }
+
+        .conversation-item:hover {
+            background: white;
+            border-color: var(--border-color);
+        }
+
+        .conversation-item.active {
+            background: white;
+            border-color: var(--primary-color);
+        }
+
+        .conversation-item .conv-title {
+            font-size: 13px;
+            font-weight: 500;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .conversation-item .conv-time {
+            font-size: 11px;
+            color: #999;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid var(--border-color);
+            background: white;
+        }
+
+        .sidebar-footer a {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 10px;
+            color: #666;
+            text-decoration: none;
+            font-size: 13px;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .sidebar-footer a:hover {
+            background: #f5f5f5;
+        }
+
+        /* Mobile sidebar toggle */
+        .mobile-menu-toggle {
+            display: none;
+            position: fixed;
+            top: 16px;
+            left: 16px;
+            z-index: 101;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 10px 12px;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        /* ============================================
+           MAIN CONTENT AREA
+           ============================================ */
+        .main-content {
+            flex: 1;
+            margin-left: var(--sidebar-width);
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
         .header {
-            padding: 32px 24px;
-            text-align: center;
-            border-bottom: 1px solid #e5e5e5;
+            padding: 24px;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: sticky;
+            top: 0;
+            z-index: 50;
         }
-        
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
         .header h1 {
-            font-size: 32px;
-            font-weight: 300;
-            color: #1a1a1a;
-            letter-spacing: -0.5px;
+            font-size: 24px;
+            font-weight: 600;
+            color: var(--primary-color);
         }
-        
+
+        .header-actions {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .header-btn {
+            padding: 8px 16px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .header-btn:hover {
+            background: #f5f5f5;
+            border-color: var(--primary-color);
+        }
+
+        .header-btn.primary {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .header-btn.primary:hover {
+            background: #000;
+        }
+
+        /* ============================================
+           FILTERS BAR
+           ============================================ */
+        .filters-bar {
+            padding: 16px 24px;
+            background: #fafafa;
+            border-bottom: 1px solid var(--border-color);
+            display: none;
+        }
+
+        .filters-bar.active {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .filter-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            font-size: 13px;
+            color: var(--primary-color);
+        }
+
+        .filter-chip button {
+            background: none;
+            border: none;
+            color: #999;
+            cursor: pointer;
+            padding: 0;
+            font-size: 16px;
+            line-height: 1;
+        }
+
+        .filter-chip button:hover {
+            color: var(--primary-color);
+        }
+
+        .add-filter-btn {
+            padding: 6px 12px;
+            background: white;
+            border: 1px dashed var(--border-color);
+            border-radius: 16px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-filter-btn:hover {
+            border-color: var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        /* ============================================
+           CHAT CONTAINER
+           ============================================ */
         .chat-container {
             flex: 1;
-            max-width: 800px;
+            max-width: 900px;
             width: 100%;
             margin: 0 auto;
-            padding: 40px 24px;
+            padding: 40px 24px 120px 24px;
             overflow-y: auto;
         }
-        
+
         .welcome-message {
             text-align: center;
             color: #666;
@@ -48,7 +307,7 @@
             font-size: 15px;
             line-height: 1.6;
         }
-        
+
         .examples {
             display: flex;
             flex-wrap: wrap;
@@ -56,37 +315,45 @@
             justify-content: center;
             margin-bottom: 40px;
         }
-        
+
         .example-question {
-            padding: 10px 18px;
+            padding: 12px 20px;
             background: #f8f8f8;
-            border: 1px solid #e5e5e5;
+            border: 1px solid var(--border-color);
             border-radius: 20px;
             font-size: 14px;
             color: #666;
             cursor: pointer;
             transition: all 0.2s;
         }
-        
+
         .example-question:hover {
-            background: #1a1a1a;
+            background: var(--primary-color);
             color: white;
-            border-color: #1a1a1a;
+            border-color: var(--primary-color);
+            transform: translateY(-1px);
         }
-        
+
+        /* ============================================
+           MESSAGE STYLES
+           ============================================ */
         .message {
             margin-bottom: 32px;
             animation: fadeIn 0.3s ease-in;
         }
-        
+
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
+
+        .message.user {
+            text-align: right;
+        }
+
         .message.user .message-content {
             background: #f8f8f8;
-            color: #1a1a1a;
+            color: var(--primary-color);
             padding: 16px 20px;
             border-radius: 20px;
             display: inline-block;
@@ -94,11 +361,7 @@
             font-size: 15px;
             line-height: 1.5;
         }
-        
-        .message.user {
-            text-align: right;
-        }
-        
+
         .message.assistant .message-label {
             font-size: 12px;
             color: #999;
@@ -107,97 +370,145 @@
             letter-spacing: 0.5px;
             text-transform: uppercase;
         }
-        
+
         .message.assistant .message-content {
-            color: #1a1a1a;
+            color: var(--primary-color);
             font-size: 15px;
             line-height: 1.8;
             max-width: 100%;
         }
-        
+
         .message-content p {
             margin-bottom: 16px;
         }
-        
+
         .message-content p:last-child {
             margin-bottom: 0;
         }
-        
+
         .message-content strong {
             font-weight: 600;
             color: #000;
         }
-        
-        .input-container {
-            position: sticky;
-            bottom: 0;
-            background: white;
-            border-top: 1px solid #e5e5e5;
-            padding: 24px;
-        }
-        
-        .input-wrapper {
-            max-width: 800px;
-            margin: 0 auto;
-            display: flex;
-            gap: 12px;
-            align-items: center;
-        }
-        
-        #questionInput {
-            flex: 1;
-            padding: 16px 20px;
-            border: 1px solid #e5e5e5;
-            border-radius: 24px;
-            font-size: 15px;
-            outline: none;
+
+        .message-content .entity-link {
+            color: var(--netflix-red);
+            cursor: pointer;
+            text-decoration: underline;
+            text-decoration-color: transparent;
             transition: all 0.2s;
-            background: #fafafa;
         }
-        
-        #questionInput:focus {
-            border-color: #1a1a1a;
-            background: white;
+
+        .message-content .entity-link:hover {
+            text-decoration-color: var(--netflix-red);
         }
-        
-        #askButton {
-            padding: 16px 32px;
-            background: #1a1a1a;
-            color: white;
-            border: none;
-            border-radius: 24px;
-            font-size: 15px;
-            font-weight: 500;
+
+        /* ============================================
+           ANSWER ACTIONS (Copy, Share, etc.)
+           ============================================ */
+        .answer-actions {
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            padding: 6px 12px;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            font-size: 12px;
+            color: #666;
             cursor: pointer;
             transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
-        
-        #askButton:hover:not(:disabled) {
-            background: #000;
-            transform: translateY(-1px);
+
+        .action-btn:hover {
+            background: #f5f5f5;
+            border-color: var(--primary-color);
+            color: var(--primary-color);
         }
-        
-        #askButton:disabled {
-            background: #ccc;
-            cursor: not-allowed;
-            transform: none;
+
+        .action-btn.copied {
+            background: #e8f5e9;
+            border-color: #4caf50;
+            color: #2e7d32;
         }
-        
-        .loading {
+
+        /* ============================================
+           METADATA & CONFIDENCE BADGES
+           ============================================ */
+        .answer-metadata {
+            margin-top: 12px;
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .confidence-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            position: relative;
+        }
+
+        .confidence-badge.high {
+            background: #e8f5e9;
+            color: #2e7d32;
+        }
+
+        .confidence-badge.medium {
+            background: #fff3e0;
+            color: #e65100;
+        }
+
+        .confidence-badge.low {
+            background: #ffebee;
+            color: #c62828;
+        }
+
+        .confidence-badge .tooltip {
             display: none;
-            text-align: center;
-            padding: 20px;
-            color: #999;
-            font-size: 14px;
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            margin-bottom: 8px;
+            padding: 8px 12px;
+            background: #333;
+            color: white;
+            font-size: 11px;
+            border-radius: 6px;
+            white-space: nowrap;
+            z-index: 10;
         }
-        
-        .loading.active {
+
+        .confidence-badge:hover .tooltip {
             display: block;
         }
-        
+
+        .sources-count, .last-updated {
+            font-size: 11px;
+            color: #999;
+        }
+
+        /* ============================================
+           PROGRESS INDICATOR
+           ============================================ */
         .status-indicator {
             display: none;
-            padding: 12px 20px;
+            padding: 14px 18px;
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             color: white;
             border-radius: 12px;
@@ -206,14 +517,19 @@
             animation: slideIn 0.3s ease-out;
             box-shadow: 0 2px 8px rgba(102, 126, 234, 0.2);
         }
-        
+
         .status-indicator.active {
+            display: block;
+        }
+
+        .status-header {
             display: flex;
             align-items: center;
             gap: 10px;
+            margin-bottom: 8px;
         }
-        
-        .status-indicator .status-icon {
+
+        .status-icon {
             width: 16px;
             height: 16px;
             border: 2px solid rgba(255, 255, 255, 0.3);
@@ -221,146 +537,53 @@
             border-radius: 50%;
             animation: spin 0.8s linear infinite;
         }
-        
+
+        .progress-bar {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: white;
+            border-radius: 2px;
+            transition: width 0.3s ease;
+        }
+
         @keyframes slideIn {
             from { opacity: 0; transform: translateY(-10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        
-        .spinner {
-            display: inline-block;
-            width: 16px;
-            height: 16px;
-            border: 2px solid #f0f0f0;
-            border-top: 2px solid #1a1a1a;
-            border-radius: 50%;
-            animation: spin 0.8s linear infinite;
-            margin-right: 8px;
-            vertical-align: middle;
-        }
-        
+
         @keyframes spin {
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
-        
-        /* Scrollbar styling */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        
-        ::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        
-        ::-webkit-scrollbar-thumb {
-            background: #e5e5e5;
-            border-radius: 4px;
-        }
-        
-        ::-webkit-scrollbar-thumb:hover {
-            background: #ccc;
-        }
-        
-        .followups {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .followup-card {
-            padding: 10px 16px;
-            background: #f8f8f8;
-            border: 1px solid #e5e5e5;
-            border-radius: 18px;
-            font-size: 13px;
-            color: #666;
-            cursor: pointer;
-            transition: all 0.2s;
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-        }
-        
-        .followup-card:before {
-            content: '→';
-            font-size: 14px;
-        }
-        
-        .followup-card:hover {
-            background: #1a1a1a;
-            color: white;
-            border-color: #1a1a1a;
-            transform: translateX(2px);
-        }
-        
-        .resources {
-            margin-top: 20px;
-            padding-top: 16px;
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .resources-label {
-            font-size: 11px;
-            color: #999;
-            margin-bottom: 10px;
-            font-weight: 500;
-            letter-spacing: 0.5px;
-            text-transform: uppercase;
-        }
-        
-        .resource-link {
-            display: block;
-            padding: 8px 0;
-            color: #0066cc;
-            text-decoration: none;
-            font-size: 13px;
-            transition: color 0.2s;
-        }
-        
-        .resource-link:hover {
-            color: #004499;
-            text-decoration: underline;
-        }
-        
-        .resource-link:before {
-            content: '🔗';
-            margin-right: 6px;
-            opacity: 0.6;
-        }
-        
-        /* Dynamic Cards */
-        .dynamic-cards {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 16px;
-            margin-top: 24px;
-            padding-top: 20px;
-            border-top: 1px solid #f0f0f0;
-        }
-        
-        .card {
+
+        /* ============================================
+           EXECUTIVE CARDS
+           ============================================ */
+        .executive-card {
             background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
-            border: 1px solid #e5e7eb;
+            border: 1px solid var(--border-color);
             border-radius: 16px;
             padding: 20px;
+            margin: 20px 0;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
             transition: all 0.3s ease;
             cursor: pointer;
-            position: relative;
-            overflow: hidden;
         }
-        
-        .card:hover {
+
+        .executive-card:hover {
             transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
-            border-color: #d1d5db;
+            border-color: var(--primary-color);
         }
-        
-        .card::before {
+
+        .executive-card::before {
             content: '';
             position: absolute;
             top: 0;
@@ -370,82 +593,61 @@
             background: linear-gradient(90deg, #667eea 0%, #764ba2 100%);
             opacity: 0;
             transition: opacity 0.3s ease;
+            border-radius: 16px 16px 0 0;
         }
-        
-        .card:hover::before {
+
+        .executive-card:hover::before {
             opacity: 1;
         }
-        
-        .card-header {
+
+        .exec-header {
             display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 12px;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            color: #6b7280;
-        }
-        
-        .card-icon {
-            font-size: 16px;
-        }
-        
-        .card-content {
-            color: #1a1a1a;
-        }
-        
-        .quote-card .card-content {
-            font-size: 15px;
-            line-height: 1.6;
-            font-style: italic;
-            color: #374151;
+            align-items: flex-start;
+            gap: 16px;
             margin-bottom: 16px;
         }
-        
-        .quote-card .quote-text {
-            position: relative;
-            padding-left: 16px;
-            border-left: 3px solid #667eea;
-        }
-        
-        .card-footer {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-            font-size: 13px;
-            color: #6b7280;
-            margin-top: 12px;
-            padding-top: 12px;
-            border-top: 1px solid #f3f4f6;
-        }
-        
-        .card-footer-row {
+
+        .exec-avatar {
+            width: 64px;
+            height: 64px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             display: flex;
             align-items: center;
-            gap: 8px;
+            justify-content: center;
+            color: white;
+            font-size: 24px;
+            font-weight: 600;
+            flex-shrink: 0;
         }
-        
-        .card-meta {
+
+        .exec-avatar img {
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            object-fit: cover;
+        }
+
+        .exec-info h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .exec-info .exec-title {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .exec-stats {
             display: flex;
-            align-items: center;
-            gap: 4px;
+            gap: 12px;
+            flex-wrap: wrap;
         }
-        
-        .card-link {
-            color: #667eea;
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-        
-        .card-link:hover {
-            color: #764ba2;
-            text-decoration: underline;
-        }
-        
-        .card-badge {
+
+        .stat-badge {
             display: inline-flex;
             align-items: center;
             gap: 4px;
@@ -453,70 +655,789 @@
             background: #f3f4f6;
             border-radius: 12px;
             font-size: 12px;
-            font-weight: 500;
             color: #6b7280;
+        }
+
+        .exec-mandate {
+            margin: 16px 0;
+            padding: 12px;
+            background: #fafafa;
+            border-left: 3px solid var(--netflix-red);
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #374151;
+        }
+
+        .exec-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+        }
+
+        .exec-actions button {
+            flex: 1;
+            padding: 10px 16px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 13px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .exec-actions button:hover {
+            background: #000;
+            transform: translateY(-1px);
+        }
+
+        .exec-actions button.secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--border-color);
+        }
+
+        .exec-actions button.secondary:hover {
+            background: #f5f5f5;
+            border-color: var(--primary-color);
+        }
+
+        /* ============================================
+           PROJECT/GREENLIGHT CARDS
+           ============================================ */
+        .project-card {
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            margin: 12px 0;
+            transition: all 0.2s;
+        }
+
+        .project-card:hover {
+            border-color: var(--primary-color);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+        }
+
+        .project-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 500;
+            margin-bottom: 8px;
+        }
+
+        .project-card h4 {
+            font-size: 16px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 12px;
+        }
+
+        .project-metadata {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin-bottom: 12px;
+        }
+
+        .project-meta-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 12px;
+            color: #666;
+        }
+
+        .project-executive {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .project-executive-avatar {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 10px;
+            font-weight: 600;
+        }
+
+        .project-executive-name {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* ============================================
+           COMPARISON TABLE
+           ============================================ */
+        .comparison-table {
+            width: 100%;
+            margin: 20px 0;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .comparison-table th {
+            background: #f8f9fa;
+            padding: 12px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .comparison-table td {
+            padding: 12px;
+            font-size: 14px;
+            color: var(--primary-color);
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .comparison-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .comparison-table tr:hover {
+            background: #fafafa;
+        }
+
+        /* ============================================
+           FOLLOW-UPS & RESOURCES
+           ============================================ */
+        .followups {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .followup-card {
+            padding: 10px 16px;
+            background: #f8f8f8;
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
+            font-size: 13px;
+            color: #666;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .followup-card:before {
+            content: '→';
+            font-size: 14px;
+        }
+
+        .followup-card:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+            transform: translateX(2px);
+        }
+
+        .resources {
+            margin-top: 20px;
+            padding-top: 16px;
+            border-top: 1px solid #f0f0f0;
+        }
+
+        .resources-label {
+            font-size: 11px;
+            color: #999;
+            margin-bottom: 10px;
+            font-weight: 500;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+
+        .resource-link {
+            display: block;
+            padding: 8px 0;
+            color: #0066cc;
+            text-decoration: none;
+            font-size: 13px;
+            transition: color 0.2s;
+        }
+
+        .resource-link:hover {
+            color: #004499;
+            text-decoration: underline;
+        }
+
+        .resource-link:before {
+            content: '🔗';
+            margin-right: 6px;
+            opacity: 0.6;
+        }
+
+        /* ============================================
+           EMPTY STATE
+           ============================================ */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: #666;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+
+        .empty-state h3 {
+            font-size: 18px;
+            font-weight: 600;
+            color: var(--primary-color);
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            margin-bottom: 24px;
+        }
+
+        .suggestions {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .suggestions p {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 8px;
+        }
+
+        .suggestions button {
+            padding: 12px 20px;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            color: var(--primary-color);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .suggestions button:hover {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        /* ============================================
+           INPUT CONTAINER
+           ============================================ */
+        .input-container {
+            position: fixed;
+            bottom: 0;
+            left: var(--sidebar-width);
+            right: 0;
+            background: white;
+            border-top: 1px solid var(--border-color);
+            padding: 20px 24px;
+            z-index: 40;
+        }
+
+        .input-wrapper {
+            max-width: 900px;
+            margin: 0 auto;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        #questionInput {
+            flex: 1;
+            padding: 16px 20px;
+            border: 1px solid var(--border-color);
+            border-radius: 24px;
+            font-size: 15px;
+            outline: none;
+            transition: all 0.2s;
+            background: #fafafa;
+        }
+
+        #questionInput:focus {
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(26, 26, 26, 0.05);
+        }
+
+        #askButton {
+            padding: 16px 32px;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 24px;
+            font-size: 15px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        #askButton:hover:not(:disabled) {
+            background: #000;
+            transform: translateY(-1px);
+        }
+
+        #askButton:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* ============================================
+           ENTITY PREVIEW TOOLTIP
+           ============================================ */
+        .entity-preview-tooltip {
+            position: absolute;
+            background: white;
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+            z-index: 1000;
+            min-width: 300px;
+            max-width: 400px;
+            display: none;
+        }
+
+        .entity-preview-tooltip.active {
+            display: block;
+        }
+
+        .preview-loading {
+            text-align: center;
+            padding: 20px;
+            color: #999;
+            font-size: 13px;
+        }
+
+        /* ============================================
+           MOBILE RESPONSIVE
+           ============================================ */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .mobile-menu-toggle {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .input-container {
+                left: 0;
+                padding-bottom: env(safe-area-inset-bottom);
+            }
+
+            .header h1 {
+                font-size: 18px;
+            }
+
+            .header-actions {
+                display: none;
+            }
+
+            .chat-container {
+                padding: 20px 16px 120px 16px;
+            }
+
+            .example-question,
+            .followup-card {
+                padding: 12px 18px;
+                font-size: 14px;
+            }
+
+            .executive-card,
+            .project-card {
+                margin: 16px 0;
+            }
+
+            .exec-header {
+                flex-direction: column;
+            }
+
+            .comparison-table {
+                font-size: 12px;
+            }
+
+            .comparison-table th,
+            .comparison-table td {
+                padding: 8px;
+            }
+        }
+
+        /* ============================================
+           SCROLLBAR STYLING
+           ============================================ */
+        ::-webkit-scrollbar {
+            width: 8px;
+            height: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #ccc;
         }
     </style>
 </head>
 <body>
-    <div class="header">
-        <h1>Mandate Wizard</h1>
-    </div>
-    
-    <div class="chat-container" id="chatContainer">
-        <div class="welcome-message">
-            <p>Your expert guide to pitching film & TV projects at Netflix</p>
-        </div>
-        
-        <div class="examples" id="examples">
-            <span class="example-question" onclick="askExample(this)">Who do I pitch my dating show to?</span>
-            <span class="example-question" onclick="askExample(this)">What kind of procedural dramas does Netflix want?</span>
-            <span class="example-question" onclick="askExample(this)">What are some recent mandates from Netflix?</span>
-            <span class="example-question" onclick="askExample(this)">Who handles Korean content?</span>
-        </div>
-        
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-toggle" onclick="toggleSidebar()">
+        ☰
+    </button>
 
-    </div>
-    
-    <div class="input-container">
-        <div class="input-wrapper">
-            <input 
-                type="text" 
-                id="questionInput" 
-                placeholder="Ask me anything about pitching to Netflix..."
-                onkeypress="handleKeyPress(event)"
-            >
-            <button id="askButton" onclick="askQuestion()">Ask</button>
+    <!-- Sidebar - Conversation History -->
+    <div class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Conversations</h2>
+            <button class="new-chat-btn" onclick="newConversation()">
+                <span>+</span> New Chat
+            </button>
+        </div>
+
+        <div class="conversation-list" id="conversationList">
+            <!-- Conversations will be populated by JavaScript -->
+        </div>
+
+        <div class="sidebar-footer">
+            <a href="/executives" class="header-btn">
+                👥 Browse Executives
+            </a>
         </div>
     </div>
-    
+
+    <!-- Main Content -->
+    <div class="main-content">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-left">
+                <h1>Mandate Wizard</h1>
+            </div>
+            <div class="header-actions">
+                <a href="/executives" class="header-btn">
+                    👥 Executives
+                </a>
+                <button class="header-btn" onclick="toggleFilters()">
+                    🔍 Filters
+                </button>
+            </div>
+        </div>
+
+        <!-- Filters Bar -->
+        <div class="filters-bar" id="filtersBar">
+            <!-- Filter chips will be added here dynamically -->
+            <button class="add-filter-btn" onclick="showFilterMenu()">+ Add Filter</button>
+        </div>
+
+        <!-- Chat Container -->
+        <div class="chat-container" id="chatContainer">
+            <div class="welcome-message">
+                <p><strong>Your expert guide to pitching film & TV projects at Netflix</strong></p>
+                <p>Ask me about executives, recent greenlights, pitch strategies, or mandates.</p>
+            </div>
+
+            <div class="examples" id="examples">
+                <span class="example-question" onclick="askExample(this)">Who do I pitch my dating show to?</span>
+                <span class="example-question" onclick="askExample(this)">What procedural dramas does Netflix want?</span>
+                <span class="example-question" onclick="askExample(this)">Recent Netflix greenlights?</span>
+                <span class="example-question" onclick="askExample(this)">Who handles Korean content?</span>
+                <span class="example-question" onclick="askExample(this)">Compare Peter Friedlander vs Jinny Howe</span>
+            </div>
+        </div>
+
+        <!-- Input Container -->
+        <div class="input-container">
+            <div class="input-wrapper">
+                <input
+                    type="text"
+                    id="questionInput"
+                    placeholder="Ask about Netflix executives, mandates, or pitch strategies..."
+                    onkeypress="handleKeyPress(event)"
+                >
+                <button id="askButton" onclick="askQuestion()">Ask</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Entity Preview Tooltip -->
+    <div class="entity-preview-tooltip" id="entityTooltip">
+        <div class="preview-loading">Loading...</div>
+    </div>
+
     <script>
-        // Generate session ID for conversation memory
-        const sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-        
-        function addMessage(content, role, followups = [], resources = []) {
+        // ============================================
+        // CONVERSATION MANAGEMENT
+        // ============================================
+        class ConversationManager {
+            constructor() {
+                this.conversations = JSON.parse(localStorage.getItem('mandate_wizard_conversations') || '[]');
+                if (this.conversations.length === 0) {
+                    this.createNew();
+                }
+                this.currentConversation = this.conversations[0];
+                this.renderList();
+            }
+
+            createNew() {
+                const convo = {
+                    id: 'conv_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    title: 'New Conversation',
+                    messages: [],
+                    created: Date.now(),
+                    updated: Date.now()
+                };
+                this.conversations.unshift(convo);
+                this.currentConversation = convo;
+                this.save();
+                this.renderList();
+
+                // Clear chat and show welcome
+                document.getElementById('chatContainer').innerHTML = `
+                    <div class="welcome-message">
+                        <p><strong>Your expert guide to pitching film & TV projects at Netflix</strong></p>
+                        <p>Ask me about executives, recent greenlights, pitch strategies, or mandates.</p>
+                    </div>
+
+                    <div class="examples" id="examples">
+                        <span class="example-question" onclick="askExample(this)">Who do I pitch my dating show to?</span>
+                        <span class="example-question" onclick="askExample(this)">What procedural dramas does Netflix want?</span>
+                        <span class="example-question" onclick="askExample(this)">Recent Netflix greenlights?</span>
+                        <span class="example-question" onclick="askExample(this)">Who handles Korean content?</span>
+                        <span class="example-question" onclick="askExample(this)">Compare Peter Friedlander vs Jinny Howe</span>
+                    </div>
+                `;
+
+                return convo;
+            }
+
+            saveMessage(question, answer, metadata = {}) {
+                // Auto-generate title from first question
+                if (this.currentConversation.messages.length === 0) {
+                    this.currentConversation.title = question.slice(0, 60) + (question.length > 60 ? '...' : '');
+                }
+
+                this.currentConversation.messages.push({
+                    question,
+                    answer,
+                    metadata,
+                    timestamp: Date.now()
+                });
+                this.currentConversation.updated = Date.now();
+                this.save();
+                this.renderList();
+            }
+
+            switchTo(id) {
+                const convo = this.conversations.find(c => c.id === id);
+                if (!convo) return;
+
+                this.currentConversation = convo;
+                this.renderConversation();
+                this.renderList();
+            }
+
+            renderConversation() {
+                const container = document.getElementById('chatContainer');
+                container.innerHTML = '';
+
+                if (this.currentConversation.messages.length === 0) {
+                    container.innerHTML = `
+                        <div class="welcome-message">
+                            <p><strong>Your expert guide to pitching film & TV projects at Netflix</strong></p>
+                            <p>Ask me about executives, recent greenlights, pitch strategies, or mandates.</p>
+                        </div>
+
+                        <div class="examples" id="examples">
+                            <span class="example-question" onclick="askExample(this)">Who do I pitch my dating show to?</span>
+                            <span class="example-question" onclick="askExample(this)">What procedural dramas does Netflix want?</span>
+                            <span class="example-question" onclick="askExample(this)">Recent Netflix greenlights?</span>
+                            <span class="example-question" onclick="askExample(this)">Who handles Korean content?</span>
+                            <span class="example-question" onclick="askExample(this)">Compare Peter Friedlander vs Jinny Howe</span>
+                        </div>
+                    `;
+                    return;
+                }
+
+                this.currentConversation.messages.forEach(msg => {
+                    addMessage(msg.question, 'user');
+                    addMessage(msg.answer, 'assistant', [], [], msg.metadata);
+                });
+            }
+
+            renderList() {
+                const list = document.getElementById('conversationList');
+                list.innerHTML = '';
+
+                this.conversations.forEach(convo => {
+                    const item = document.createElement('div');
+                    item.className = 'conversation-item' + (convo.id === this.currentConversation.id ? ' active' : '');
+                    item.onclick = () => this.switchTo(convo.id);
+
+                    const timeAgo = this.formatTimeAgo(convo.updated);
+
+                    item.innerHTML = `
+                        <div class="conv-title">${convo.title}</div>
+                        <div class="conv-time">${timeAgo}</div>
+                    `;
+
+                    list.appendChild(item);
+                });
+            }
+
+            formatTimeAgo(timestamp) {
+                const seconds = Math.floor((Date.now() - timestamp) / 1000);
+                if (seconds < 60) return 'Just now';
+                if (seconds < 3600) return Math.floor(seconds / 60) + 'm ago';
+                if (seconds < 86400) return Math.floor(seconds / 3600) + 'h ago';
+                if (seconds < 604800) return Math.floor(seconds / 86400) + 'd ago';
+                return new Date(timestamp).toLocaleDateString();
+            }
+
+            save() {
+                localStorage.setItem('mandate_wizard_conversations', JSON.stringify(this.conversations));
+            }
+        }
+
+        // Initialize conversation manager
+        const convManager = new ConversationManager();
+        const sessionId = convManager.currentConversation.id;
+
+        // ============================================
+        // FILTER MANAGEMENT
+        // ============================================
+        const activeFilters = {
+            region: null,
+            genre: null,
+            format: null,
+            level: null
+        };
+
+        function toggleFilters() {
+            const bar = document.getElementById('filtersBar');
+            bar.classList.toggle('active');
+        }
+
+        function addFilter(type, value) {
+            activeFilters[type] = value;
+            renderFilters();
+        }
+
+        function removeFilter(type) {
+            activeFilters[type] = null;
+            renderFilters();
+        }
+
+        function renderFilters() {
+            const bar = document.getElementById('filtersBar');
+            const chips = Object.entries(activeFilters)
+                .filter(([_, value]) => value !== null)
+                .map(([type, value]) => `
+                    <span class="filter-chip">
+                        ${getFilterIcon(type)} ${type}: ${value}
+                        <button onclick="removeFilter('${type}')">×</button>
+                    </span>
+                `).join('');
+
+            bar.innerHTML = chips + '<button class="add-filter-btn" onclick="showFilterMenu()">+ Add Filter</button>';
+        }
+
+        function getFilterIcon(type) {
+            const icons = {
+                region: '🌍',
+                genre: '🎭',
+                format: '📺',
+                level: '⭐'
+            };
+            return icons[type] || '🔍';
+        }
+
+        function showFilterMenu() {
+            // Simplified - you can enhance this with a modal
+            const region = prompt('Filter by region (e.g., US & Canada, EMEA, APAC, LATAM, Global):');
+            if (region) addFilter('region', region);
+        }
+
+        // ============================================
+        // SIDEBAR TOGGLE (Mobile)
+        // ============================================
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        function newConversation() {
+            convManager.createNew();
+            document.getElementById('questionInput').focus();
+        }
+
+        // ============================================
+        // MESSAGE RENDERING
+        // ============================================
+        function addMessage(content, role, followups = [], resources = [], metadata = {}) {
             const chatContainer = document.getElementById('chatContainer');
             const examples = document.getElementById('examples');
-            
+
             // Hide examples after first question
             if (examples) {
                 examples.style.display = 'none';
             }
-            
+
             const messageDiv = document.createElement('div');
             messageDiv.className = `message ${role}`;
-            
+
             if (role === 'assistant') {
                 const label = document.createElement('div');
                 label.className = 'message-label';
                 label.textContent = 'Answer';
                 messageDiv.appendChild(label);
             }
-            
+
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
-            
-            // Convert markdown-style formatting to HTML with paragraphs
+
+            // Convert markdown and detect entities
             let formattedContent = content
                 .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                 .split('\n\n')
@@ -524,15 +1445,68 @@
                 .filter(para => para.length > 0)
                 .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
                 .join('');
-            
+
+            // Make executive names and project titles clickable
+            formattedContent = makeEntitiesClickable(formattedContent);
+
             contentDiv.innerHTML = formattedContent;
             messageDiv.appendChild(contentDiv);
-            
-            // Add follow-up suggestions if provided
+
+            // Add metadata/confidence badges
+            if (role === 'assistant' && metadata && Object.keys(metadata).length > 0) {
+                const metadataDiv = document.createElement('div');
+                metadataDiv.className = 'answer-metadata';
+
+                if (metadata.confidence) {
+                    const badge = document.createElement('span');
+                    badge.className = `confidence-badge ${metadata.confidence}`;
+                    badge.innerHTML = `
+                        ✓ ${metadata.confidence === 'high' ? 'High' : metadata.confidence === 'medium' ? 'Medium' : 'Low'} Confidence
+                        <span class="tooltip">Based on ${metadata.source_count || 0} verified sources</span>
+                    `;
+                    metadataDiv.appendChild(badge);
+                }
+
+                if (metadata.source_count) {
+                    const sources = document.createElement('span');
+                    sources.className = 'sources-count';
+                    sources.textContent = `📚 ${metadata.source_count} sources`;
+                    metadataDiv.appendChild(sources);
+                }
+
+                if (metadata.last_data_update) {
+                    const updated = document.createElement('span');
+                    updated.className = 'last-updated';
+                    updated.textContent = `🕒 Updated ${formatDate(metadata.last_data_update)}`;
+                    metadataDiv.appendChild(updated);
+                }
+
+                messageDiv.appendChild(metadataDiv);
+            }
+
+            // Add action buttons for answers
+            if (role === 'assistant') {
+                const actionsDiv = document.createElement('div');
+                actionsDiv.className = 'answer-actions';
+                actionsDiv.innerHTML = `
+                    <button class="action-btn" onclick="copyAnswer(this)">
+                        📋 Copy
+                    </button>
+                    <button class="action-btn" onclick="shareAnswer(this)">
+                        🔗 Share
+                    </button>
+                    <button class="action-btn" onclick="regenerateAnswer(this)">
+                        🔄 Regenerate
+                    </button>
+                `;
+                messageDiv.appendChild(actionsDiv);
+            }
+
+            // Add follow-up suggestions
             if (role === 'assistant' && followups && followups.length > 0) {
                 const followupsDiv = document.createElement('div');
                 followupsDiv.className = 'followups';
-                
+
                 followups.forEach(followup => {
                     const card = document.createElement('span');
                     card.className = 'followup-card';
@@ -543,20 +1517,20 @@
                     };
                     followupsDiv.appendChild(card);
                 });
-                
+
                 messageDiv.appendChild(followupsDiv);
             }
-            
-            // Add resource links if provided
+
+            // Add resource links
             if (role === 'assistant' && resources && resources.length > 0) {
                 const resourcesDiv = document.createElement('div');
                 resourcesDiv.className = 'resources';
-                
+
                 const label = document.createElement('div');
                 label.className = 'resources-label';
                 label.textContent = 'Learn More';
                 resourcesDiv.appendChild(label);
-                
+
                 resources.forEach(resource => {
                     const link = document.createElement('a');
                     link.className = 'resource-link';
@@ -566,13 +1540,13 @@
                     link.textContent = resource.title;
                     resourcesDiv.appendChild(link);
                 });
-                
+
                 messageDiv.appendChild(resourcesDiv);
             }
-            
+
             chatContainer.appendChild(messageDiv);
-            
-            // Scroll to bottom smoothly
+
+            // Scroll to bottom
             setTimeout(() => {
                 chatContainer.scrollTo({
                     top: chatContainer.scrollHeight,
@@ -580,53 +1554,173 @@
                 });
             }, 100);
         }
-        
+
+        // ============================================
+        // ENTITY DETECTION & CLICKABLE LINKS
+        // ============================================
+        function makeEntitiesClickable(text) {
+            // Detect executive names (capitalized names)
+            text = text.replace(/\b([A-Z][a-z]+ [A-Z][a-z]+)\b/g, (match) => {
+                return `<span class="entity-link executive" onclick="viewExecutive('${match}')" onmouseenter="showPreview('executive', '${match}', event)" onmouseleave="hidePreview()">${match}</span>`;
+            });
+
+            // Detect project names (quoted text)
+            text = text.replace(/"([^"]+)"/g, (match, project) => {
+                return `"<span class="entity-link project" onclick="viewProject('${project}')" onmouseenter="showPreview('project', '${project}', event)" onmouseleave="hidePreview()">${project}</span>"`;
+            });
+
+            return text;
+        }
+
+        let previewTimeout;
+
+        function showPreview(type, name, event) {
+            clearTimeout(previewTimeout);
+            previewTimeout = setTimeout(async () => {
+                const tooltip = document.getElementById('entityTooltip');
+                tooltip.style.left = event.pageX + 'px';
+                tooltip.style.top = (event.pageY + 20) + 'px';
+                tooltip.innerHTML = '<div class="preview-loading">Loading...</div>';
+                tooltip.classList.add('active');
+
+                try {
+                    const response = await fetch(`/api/${type}/${encodeURIComponent(name)}/preview`);
+                    const data = await response.json();
+
+                    if (type === 'executive') {
+                        tooltip.innerHTML = `
+                            <div class="exec-info">
+                                <h3>${data.name}</h3>
+                                <p class="exec-title">${data.title}</p>
+                                <p>${data.mandate_summary}</p>
+                                <p style="font-size: 11px; color: #999; margin-top: 8px;">
+                                    ${data.recent_greenlights_count} recent greenlights
+                                </p>
+                            </div>
+                        `;
+                    } else {
+                        tooltip.innerHTML = `
+                            <div>
+                                <h4>${data.title}</h4>
+                                <p style="font-size: 12px; color: #666; margin-top: 4px;">
+                                    ${data.genre} • ${data.format}
+                                </p>
+                            </div>
+                        `;
+                    }
+                } catch (error) {
+                    hidePreview();
+                }
+            }, 500);
+        }
+
+        function hidePreview() {
+            clearTimeout(previewTimeout);
+            document.getElementById('entityTooltip').classList.remove('active');
+        }
+
+        // ============================================
+        // ACTION BUTTONS
+        // ============================================
+        function copyAnswer(btn) {
+            const messageDiv = btn.closest('.message');
+            const content = messageDiv.querySelector('.message-content').innerText;
+
+            navigator.clipboard.writeText(content).then(() => {
+                btn.innerHTML = '✓ Copied';
+                btn.classList.add('copied');
+                setTimeout(() => {
+                    btn.innerHTML = '📋 Copy';
+                    btn.classList.remove('copied');
+                }, 2000);
+            });
+        }
+
+        function shareAnswer(btn) {
+            const messageDiv = btn.closest('.message');
+            const content = messageDiv.querySelector('.message-content').innerText;
+            const url = window.location.href;
+
+            if (navigator.share) {
+                navigator.share({
+                    title: 'Mandate Wizard Answer',
+                    text: content,
+                    url: url
+                });
+            } else {
+                // Fallback: copy link
+                const shareUrl = `${url}?share=${encodeURIComponent(content.slice(0, 100))}`;
+                navigator.clipboard.writeText(shareUrl);
+                btn.innerHTML = '✓ Link Copied';
+                setTimeout(() => {
+                    btn.innerHTML = '🔗 Share';
+                }, 2000);
+            }
+        }
+
+        function regenerateAnswer(btn) {
+            const messageDiv = btn.closest('.message');
+            const prevMessage = messageDiv.previousElementSibling;
+            if (prevMessage && prevMessage.classList.contains('user')) {
+                const question = prevMessage.querySelector('.message-content').textContent;
+                document.getElementById('questionInput').value = question;
+                askQuestion();
+            }
+        }
+
+        // ============================================
+        // ASK QUESTION
+        // ============================================
         async function askQuestion() {
             const input = document.getElementById('questionInput');
             const button = document.getElementById('askButton');
             const question = input.value.trim();
-            
+
             if (!question) return;
-            
-            // Clear previous follow-up bubbles only (keep chat history)
-            const chatContainer = document.getElementById('chatContainer');
-            const followupContainers = chatContainer.querySelectorAll('.followup-container, .resources-container');
-            followupContainers.forEach(container => container.remove());
-            
+
             // Add user message
             addMessage(question, 'user');
-            
+
             // Clear input and disable button
             input.value = '';
             button.disabled = true;
+
             const messageDiv = document.createElement('div');
             messageDiv.className = 'message assistant';
-            
+
             const label = document.createElement('div');
             label.className = 'message-label';
             label.textContent = 'Answer';
             messageDiv.appendChild(label);
-            
+
             const contentDiv = document.createElement('div');
             contentDiv.className = 'message-content';
             messageDiv.appendChild(contentDiv);
-            
-            // Add status indicator
+
+            // Add status indicator with progress
             const statusDiv = document.createElement('div');
             statusDiv.className = 'status-indicator active';
-            statusDiv.innerHTML = '<div class="status-icon"></div><span class="status-text">Initializing...</span>';
+            statusDiv.innerHTML = `
+                <div class="status-header">
+                    <div class="status-icon"></div>
+                    <span class="status-text">Analyzing your question...</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 0%"></div>
+                </div>
+            `;
             messageDiv.insertBefore(statusDiv, contentDiv);
-            
-            chatContainer.appendChild(messageDiv);
-            
-            // Scroll to show the new message
+
+            document.getElementById('chatContainer').appendChild(messageDiv);
+
+            // Scroll to show new message
             setTimeout(() => {
-                chatContainer.scrollTo({
-                    top: chatContainer.scrollHeight,
+                document.getElementById('chatContainer').scrollTo({
+                    top: document.getElementById('chatContainer').scrollHeight,
                     behavior: 'smooth'
                 });
             }, 100);
-            
+
             try {
                 // Use fetch with streaming response
                 const response = await fetch('/ask_stream', {
@@ -634,51 +1728,55 @@
                     headers: {
                         'Content-Type': 'application/json',
                     },
-                    body: JSON.stringify({ 
+                    body: JSON.stringify({
                         question: question,
-                        session_id: sessionId 
+                        session_id: sessionId,
+                        filters: activeFilters
                     }),
                 });
-                
+
                 if (!response.ok) {
                     throw new Error('Network response was not ok');
                 }
-                
+
                 const reader = response.body.getReader();
                 const decoder = new TextDecoder();
                 let buffer = '';
                 let fullAnswer = '';
-                
+                let metadata = {};
+
                 while (true) {
                     const {done, value} = await reader.read();
                     if (done) break;
-                    
+
                     buffer += decoder.decode(value, {stream: true});
                     const lines = buffer.split('\n');
-                    buffer = lines.pop(); // Keep incomplete line in buffer
-                    
+                    buffer = lines.pop();
+
                     for (const line of lines) {
                         if (line.startsWith('data: ')) {
                             const data = JSON.parse(line.substring(6));
-                            
+
                             if (data.type === 'status') {
                                 // Update status indicator
                                 const statusText = messageDiv.querySelector('.status-text');
+                                const progressFill = messageDiv.querySelector('.progress-fill');
                                 if (statusText) {
                                     statusText.textContent = data.message;
                                 }
-                                console.log('Status:', data.message);
+                                if (progressFill && data.progress) {
+                                    progressFill.style.width = data.progress + '%';
+                                }
                             } else if (data.type === 'chunk') {
-                                // Hide status indicator once content starts streaming
+                                // Hide status once content starts
                                 const statusIndicator = messageDiv.querySelector('.status-indicator');
                                 if (statusIndicator) {
                                     statusIndicator.classList.remove('active');
                                 }
-                                
-                                // Append text chunk to the answer
+
                                 fullAnswer += data.content;
-                                
-                                // Format and display the answer so far
+
+                                // Format and display
                                 let formattedContent = fullAnswer
                                     .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
                                     .split('\n\n')
@@ -686,127 +1784,45 @@
                                     .filter(para => para.length > 0)
                                     .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
                                     .join('');
-                                
+
+                                formattedContent = makeEntitiesClickable(formattedContent);
                                 contentDiv.innerHTML = formattedContent;
-                                
-                                // Auto-scroll as content appears
-                                chatContainer.scrollTo({
-                                    top: chatContainer.scrollHeight,
+
+                                // Auto-scroll
+                                document.getElementById('chatContainer').scrollTo({
+                                    top: document.getElementById('chatContainer').scrollHeight,
                                     behavior: 'smooth'
                                 });
-                            } else if (data.type === 'cards') {
-                                // Add dynamic cards (quotes, etc.)
-                                if (data.data && data.data.length > 0) {
-                                    const cardsContainer = document.createElement('div');
-                                    cardsContainer.className = 'dynamic-cards';
-                                    
-                                    data.data.forEach(card => {
-                                        if (card.type === 'quote') {
-                                            const quoteCard = document.createElement('div');
-                                            quoteCard.className = 'card quote-card';
-                                            
-                                            // Card header
-                                            const header = document.createElement('div');
-                                            header.className = 'card-header';
-                                            header.innerHTML = '<span class="card-icon">💬</span><span>Recent Quote</span>';
-                                            quoteCard.appendChild(header);
-                                            
-                                            // Quote content
-                                            const content = document.createElement('div');
-                                            content.className = 'card-content';
-                                            const quoteText = document.createElement('div');
-                                            quoteText.className = 'quote-text';
-                                            quoteText.textContent = card.quote;
-                                            content.appendChild(quoteText);
-                                            quoteCard.appendChild(content);
-                                            
-                                            // Card footer with metadata
-                                            const footer = document.createElement('div');
-                                            footer.className = 'card-footer';
-                                            
-                                            // Executive and date row
-                                            const metaRow = document.createElement('div');
-                                            metaRow.className = 'card-footer-row';
-                                            metaRow.innerHTML = `
-                                                <span class="card-badge">📅 ${card.date || 'Recent'}</span>
-                                                <span class="card-badge">📰 ${card.source || 'Source'}</span>
-                                            `;
-                                            footer.appendChild(metaRow);
-                                            
-                                            // Link row
-                                            if (card.url) {
-                                                const linkRow = document.createElement('div');
-                                                linkRow.className = 'card-footer-row';
-                                                const link = document.createElement('a');
-                                                link.className = 'card-link';
-                                                link.href = card.url;
-                                                link.target = '_blank';
-                                                link.rel = 'noopener noreferrer';
-                                                link.textContent = 'Read full interview →';
-                                                linkRow.appendChild(link);
-                                                footer.appendChild(linkRow);
-                                            }
-                                            
-                                            quoteCard.appendChild(footer);
-                                            cardsContainer.appendChild(quoteCard);
-                                        }
-                                    });
-                                    
-                                    messageDiv.appendChild(cardsContainer);
-                                }
+                            } else if (data.type === 'metadata') {
+                                metadata = data.data;
+                            } else if (data.type === 'executive_card') {
+                                // Add executive card
+                                const card = createExecutiveCard(data.data);
+                                messageDiv.appendChild(card);
+                            } else if (data.type === 'project_card') {
+                                // Add project card
+                                const card = createProjectCard(data.data);
+                                messageDiv.appendChild(card);
+                            } else if (data.type === 'comparison_table') {
+                                // Add comparison table
+                                const table = createComparisonTable(data.data);
+                                messageDiv.appendChild(table);
                             } else if (data.type === 'followups') {
-                                // Add follow-up suggestions
-                                if (data.data && data.data.length > 0) {
-                                    const followupsDiv = document.createElement('div');
-                                    followupsDiv.className = 'followups';
-                                    
-                                    data.data.forEach(followup => {
-                                        const card = document.createElement('span');
-                                        card.className = 'followup-card';
-                                        card.textContent = followup;
-                                        card.onclick = () => {
-                                            document.getElementById('questionInput').value = followup;
-                                            askQuestion();
-                                        };
-                                        followupsDiv.appendChild(card);
-                                    });
-                                    
-                                    messageDiv.appendChild(followupsDiv);
-                                }
+                                // Add follow-ups (handled in addMessage later)
                             } else if (data.type === 'resources') {
-                                // Add resource links
-                                if (data.data && data.data.length > 0) {
-                                    const resourcesDiv = document.createElement('div');
-                                    resourcesDiv.className = 'resources';
-                                    
-                                    const label = document.createElement('div');
-                                    label.className = 'resources-label';
-                                    label.textContent = 'Learn More';
-                                    resourcesDiv.appendChild(label);
-                                    
-                                    data.data.forEach(resource => {
-                                        const link = document.createElement('a');
-                                        link.className = 'resource-link';
-                                        link.href = resource.url;
-                                        link.target = '_blank';
-                                        link.rel = 'noopener noreferrer';
-                                        link.textContent = resource.title;
-                                        resourcesDiv.appendChild(link);
-                                    });
-                                    
-                                    messageDiv.appendChild(resourcesDiv);
-                                }
+                                // Add resources (handled in addMessage later)
                             } else if (data.type === 'done') {
-                                // Streaming complete
                                 console.log('Streaming complete');
                             } else if (data.type === 'error') {
-                                // Handle error
                                 contentDiv.innerHTML = `<p style="color: #d32f2f;">Sorry, there was an error: ${data.message}</p>`;
                             }
                         }
                     }
                 }
-                
+
+                // Save to conversation history
+                convManager.saveMessage(question, fullAnswer, metadata);
+
             } catch (error) {
                 contentDiv.innerHTML = `<p style="color: #d32f2f;">Sorry, there was an error connecting to the server.</p>`;
                 console.error('Streaming error:', error);
@@ -815,22 +1831,156 @@
                 input.focus();
             }
         }
-        
+
+        // ============================================
+        // CARD CREATORS
+        // ============================================
+        function createExecutiveCard(data) {
+            const card = document.createElement('div');
+            card.className = 'executive-card';
+
+            const initials = data.name.split(' ').map(n => n[0]).join('').slice(0, 2);
+
+            card.innerHTML = `
+                <div class="exec-header">
+                    <div class="exec-avatar">${initials}</div>
+                    <div class="exec-info">
+                        <h3>${data.name}</h3>
+                        <p class="exec-title">${data.title}</p>
+                        <div class="exec-stats">
+                            ${data.budget ? `<span class="stat-badge">📊 ${data.budget}</span>` : ''}
+                            ${data.greenlights_count ? `<span class="stat-badge">🎬 ${data.greenlights_count} Greenlights</span>` : ''}
+                            ${data.region ? `<span class="stat-badge">🌍 ${data.region}</span>` : ''}
+                        </div>
+                    </div>
+                </div>
+                ${data.mandate ? `<div class="exec-mandate">${data.mandate}</div>` : ''}
+                <div class="exec-actions">
+                    <button onclick="askAbout('${data.name}')">Ask About ${data.name.split(' ')[0]} →</button>
+                    <button class="secondary" onclick="viewExecutive('${data.name}')">View Full Profile</button>
+                </div>
+            `;
+
+            return card;
+        }
+
+        function createProjectCard(data) {
+            const card = document.createElement('div');
+            card.className = 'project-card';
+
+            card.innerHTML = `
+                <span class="project-badge">Greenlit ${data.date || 'Recently'}</span>
+                <h4>${data.title}</h4>
+                <div class="project-metadata">
+                    ${data.genre ? `<span class="project-meta-item">🎭 ${data.genre}</span>` : ''}
+                    ${data.format ? `<span class="project-meta-item">📺 ${data.format}</span>` : ''}
+                    ${data.budget ? `<span class="project-meta-item">💰 ${data.budget}</span>` : ''}
+                </div>
+                ${data.executive ? `
+                    <div class="project-executive">
+                        <div class="project-executive-avatar">${data.executive.split(' ').map(n => n[0]).join('').slice(0, 2)}</div>
+                        <span class="project-executive-name">${data.executive}</span>
+                    </div>
+                ` : ''}
+            `;
+
+            return card;
+        }
+
+        function createComparisonTable(data) {
+            const table = document.createElement('table');
+            table.className = 'comparison-table';
+
+            // Extract headers and rows
+            const headers = Object.keys(data[0] || {});
+
+            table.innerHTML = `
+                <thead>
+                    <tr>
+                        ${headers.map(h => `<th>${h}</th>`).join('')}
+                    </tr>
+                </thead>
+                <tbody>
+                    ${data.map(row => `
+                        <tr>
+                            ${headers.map(h => `<td>${row[h] || '-'}</td>`).join('')}
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+
+            return table;
+        }
+
+        // ============================================
+        // NAVIGATION FUNCTIONS
+        // ============================================
+        function viewExecutive(name) {
+            window.location.href = `/executive/${encodeURIComponent(name)}`;
+        }
+
+        function viewProject(title) {
+            // Future: Add project detail page
+            console.log('View project:', title);
+        }
+
+        function askAbout(name) {
+            document.getElementById('questionInput').value = `Tell me about ${name}'s mandate and recent greenlights`;
+            askQuestion();
+        }
+
+        // ============================================
+        // KEYBOARD SHORTCUTS
+        // ============================================
+        document.addEventListener('keydown', (e) => {
+            // Cmd/Ctrl + K = Focus search
+            if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+                e.preventDefault();
+                document.getElementById('questionInput').focus();
+            }
+
+            // Cmd/Ctrl + N = New conversation
+            if ((e.metaKey || e.ctrlKey) && e.key === 'n') {
+                e.preventDefault();
+                newConversation();
+            }
+
+            // Escape = Clear input
+            if (e.key === 'Escape') {
+                document.getElementById('questionInput').value = '';
+                document.getElementById('questionInput').blur();
+            }
+        });
+
+        // ============================================
+        // UTILITY FUNCTIONS
+        // ============================================
         function handleKeyPress(event) {
             if (event.key === 'Enter') {
                 askQuestion();
             }
         }
-        
+
         function askExample(element) {
             const question = element.textContent;
             document.getElementById('questionInput').value = question;
             askQuestion();
         }
-        
+
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            const now = new Date();
+            const diffDays = Math.floor((now - date) / (1000 * 60 * 60 * 24));
+
+            if (diffDays === 0) return 'today';
+            if (diffDays === 1) return 'yesterday';
+            if (diffDays < 7) return `${diffDays} days ago`;
+            if (diffDays < 30) return `${Math.floor(diffDays / 7)} weeks ago`;
+            return date.toLocaleDateString();
+        }
+
         // Focus input on load
         document.getElementById('questionInput').focus();
     </script>
 </body>
 </html>
-
