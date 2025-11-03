@@ -22,7 +22,7 @@ class ConversationBufferMemory:
         self.chat_memory.append(HumanMessage(content=inputs[self.input_key]))
         self.chat_memory.append(AIMessage(content=outputs[self.output_key]))
 from langchain_openai import ChatOpenAI
-from gpt5_client import GPT5Client
+from llm_client import TieredLLMClient
 from langchain_core.messages import HumanMessage, SystemMessage, AIMessage
 from langchain_core.output_parsers import PydanticOutputParser, StrOutputParser
 from pydantic import BaseModel, Field
@@ -46,9 +46,9 @@ class LangChainHybrid:
         # Use personal OpenAI API key from manus-secrets
         self.api_key = api_key or os.getenv("OPENAI_API_KEY")
         
-        # Initialize GPT-5 client using Responses API
-        # This uses the correct /v1/responses endpoint with your personal API key
-        self.gpt5_client = GPT5Client(api_key=self.api_key)
+        # Initialize Tiered LLM client for intelligent model selection
+        # Automatically chooses best model (gpt-4o-mini, gpt-4o, gpt-4-turbo) based on intent
+        self.gpt5_client = TieredLLMClient(api_key=self.api_key, default_tier='balanced')
         
         # Keep ChatOpenAI as fallback (but we'll use GPT-5 client instead)
         self.llm = None  # Not used anymore
@@ -233,10 +233,10 @@ Answer based on context and conversation history. Only cite information that app
             print(f"[LANGCHAIN DEBUG] Content preview: {str(msg.content)[:200]}", file=sys.stderr)
         sys.stderr.flush()
         
-        # Generate response using GPT-5 Responses API
+        # Generate response using Tiered LLM (auto-selects model based on intent)
         # Convert LangChain messages to a single prompt string
         prompt_text = "\n\n".join([f"{type(msg).__name__}: {msg.content}" for msg in prompt])
-        answer = self.gpt5_client.create(prompt_text, effort="medium")
+        answer = self.gpt5_client.create(prompt_text, intent=intent, temperature=0.7, max_tokens=2000)
         
         # HALLUCINATION VALIDATOR DISABLED - GPT-5 is reliable enough
         # GPT-5 follows instructions much better than GPT-4 and doesn't hallucinate
@@ -266,8 +266,8 @@ Answer: {answer[:200]}...
 
 Generate 3 short, specific follow-up questions (one per line):"""
             
-            print(f"[DEBUG] Generating follow-ups with GPT-5...", file=sys.stderr)
-            followup_text = self.gpt5_client.create(followup_prompt, effort="low")
+            print(f"[DEBUG] Generating follow-ups with Tiered LLM (fast tier)...", file=sys.stderr)
+            followup_text = self.gpt5_client.create(followup_prompt, intent='CLARIFICATION', temperature=0.5, max_tokens=150)
             print(f"[DEBUG] Follow-up raw response: {followup_text[:200]}", file=sys.stderr)
             
             follow_ups = [line.strip('- ').strip() for line in followup_text.strip().split('\n') if line.strip()][:3]

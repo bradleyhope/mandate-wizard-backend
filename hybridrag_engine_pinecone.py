@@ -66,18 +66,16 @@ class HybridRAGEnginePinecone:
         # Initialize embedding model (same as used for Pinecone)
         self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
         
-        # Initialize GPT-5 Responses API client
-        # Using GPT-5 for maximum capability
-        self.model_name = "gpt-5"
-        
-        # Import GPT-5 client
-        from gpt5_client import GPT5Client
-        
-        # Initialize GPT-5 client
-        # Environment variables set in start_app.sh:
-        # - OPENAI_API_KEY from manus-secrets
-        # - OPENAI_BASE_URL unset (use real OpenAI API)
-        self.llm = GPT5Client()
+        # Initialize Tiered LLM client (supports gpt-4o-mini, gpt-4o, gpt-4-turbo)
+        # Automatically selects best model based on query intent for cost optimization
+        from llm_client import get_llm_client
+
+        # Initialize LLM client with balanced tier as default
+        # - FAST tier (gpt-4o-mini): Simple queries, 90% cheaper
+        # - BALANCED tier (gpt-4o): Most queries, good quality/cost balance
+        # - PREMIUM tier (gpt-4-turbo): Complex strategic queries only
+        self.llm = get_llm_client(default_tier='balanced')
+        print("✓ Tiered LLM client initialized (auto-selects model by intent)")
         
         # Initialize intelligent search system
         self.intelligent_search = IntelligentSearch()
