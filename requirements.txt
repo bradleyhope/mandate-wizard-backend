@@ -1,5 +1,5 @@
 # Netflix Mandate Wizard - Python Dependencies
-# Updated: 2025-11-04 - Fixed pinecone-client version
+# Updated: 2025-11-04 - Fixed for Railway deployment
 
 # Core dependencies
 pinecone-client==5.0.1
@@ -19,6 +19,7 @@ pandas==2.0.3
 
 # Production server
 gunicorn==21.2.0
+gevent==24.2.1
 
 # Optional (for development)
 pytest==7.4.3
