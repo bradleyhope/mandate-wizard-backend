@@ -1,7 +1,7 @@
 # Netflix Mandate Wizard - Python Dependencies
 
 # Core dependencies
-pinecone-client==3.0.0
+pinecone-client==5.0.1
 neo4j==5.14.0
 sentence-transformers==2.2.2
 openai==1.12.0
