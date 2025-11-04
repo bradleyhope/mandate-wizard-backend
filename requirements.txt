@@ -1,4 +1,5 @@
 # Netflix Mandate Wizard - Python Dependencies
+# Updated: 2025-11-04 - Fixed pinecone-client version
 
 # Core dependencies
 pinecone-client==5.0.1
