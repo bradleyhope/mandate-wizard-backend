@@ -1,0 +1,20 @@
+# Docker ignore file for Railway
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+*.egg-info/
+.env
+.env.local
+venv/
+env/
+*.log
+.git/
+.DS_Store
+*.sqlite
+*.db
+query_logs.db
+checkpoint_*.json
+test_results*.json
+*.pyc

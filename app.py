@@ -27,12 +27,22 @@ app = Flask(__name__)
 app.secret_key = secrets.token_hex(32)
 
 # Enable CORS for specific origins only (SECURITY FIX)
+# Get frontend URL from environment variable
+FRONTEND_URL = os.environ.get('FRONTEND_URL', 'http://localhost:3000')
+
 ALLOWED_ORIGINS = [
-    "https://3000-iy1gh94d7s437eutwzpcu-aa64bff1.manusvm.computer",
-    "https://predeploy-*.manus.space",
-    "https://*.manus.space",
-    "http://localhost:3000",  # Development
+    FRONTEND_URL,
+    "http://localhost:3000",  # Local development
+    "http://127.0.0.1:3000",  # Local development alternative
 ]
+
+# Add production domain if specified
+PRODUCTION_DOMAIN = os.environ.get('PRODUCTION_DOMAIN')
+if PRODUCTION_DOMAIN:
+    ALLOWED_ORIGINS.append(f"https://{PRODUCTION_DOMAIN}")
+    ALLOWED_ORIGINS.append(f"https://www.{PRODUCTION_DOMAIN}")
+
+print(f"[CORS] Allowed origins: {ALLOWED_ORIGINS}")
 CORS(app, resources={r"/*": {"origins": ALLOWED_ORIGINS, "supports_credentials": True}})
 
 # Conversation memory: session_id -> list of (question, answer, context)
@@ -76,13 +86,21 @@ def cache_result(cache_key: str, result: dict):
 # Initialize HybridRAG engine
 print("Initializing Mandate Wizard HybridRAG Engine...")
 
-# Database credentials (from starter package)
-PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY', 'pcsk_2kvuLD_NLVH2XehCeitZUi3VCUJVkeH3KaceWniEE59Nh8f7GucxBNJDdg2eedfTaeYiD1')
-PINECONE_INDEX_NAME = 'netflix-mandate-wizard'
+# Database credentials - MUST be set via environment variables
+PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
+PINECONE_INDEX_NAME = os.environ.get('PINECONE_INDEX_NAME', 'netflix-mandate-wizard')
 
-NEO4J_URI = os.environ.get('NEO4J_URI', 'neo4j+s://0dd3462a.databases.neo4j.io')
+NEO4J_URI = os.environ.get('NEO4J_URI')
 NEO4J_USER = os.environ.get('NEO4J_USER', 'neo4j')
-NEO4J_PASSWORD = os.environ.get('NEO4J_PASSWORD', 'cH-Jo3f9mcbbOr9ov-x22V7AQB3kOxxV42JJR55ZbMg')
+NEO4J_PASSWORD = os.environ.get('NEO4J_PASSWORD')
+
+# Validate required environment variables
+if not PINECONE_API_KEY:
+    raise ValueError("PINECONE_API_KEY environment variable is required")
+if not NEO4J_URI:
+    raise ValueError("NEO4J_URI environment variable is required")
+if not NEO4J_PASSWORD:
+    raise ValueError("NEO4J_PASSWORD environment variable is required")
 
 # Initialize engine
 engine = HybridRAGEnginePinecone(
