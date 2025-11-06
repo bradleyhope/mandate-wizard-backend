@@ -26,5 +26,17 @@ pandas==2.0.3
 gunicorn==21.2.0
 gevent==24.2.1
 
+# Caching
+redis==5.0.0
+
+# Additional dependencies
+beautifulsoup4==4.12.2
+psutil==5.9.6
+langchain==0.1.0
+langchain-core==0.1.10
+langchain-openai==0.0.2
+langgraph==0.0.20
+pydantic==2.5.0
+
 # Optional (for development)
 pytest==7.4.3
