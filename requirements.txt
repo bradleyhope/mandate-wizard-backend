@@ -1,6 +1,10 @@
 # Netflix Mandate Wizard - Python Dependencies
 # Updated: 2025-11-06 - Fixed dependency compatibility
 
+# Build dependencies
+setuptools>=65.0.0
+wheel
+
 # Core dependencies - FIXED VERSIONS FOR COMPATIBILITY
 pinecone-client==5.0.1
 neo4j==5.14.0
