@@ -3,7 +3,7 @@ Admin endpoint for viewing query logs
 """
 
 from flask import Blueprint, jsonify, request, send_file, render_template
-from query_logger import QueryLogger
+from query_logger import get_query_logger
 import os
 
 admin_bp = Blueprint('admin', __name__, template_folder='templates')
@@ -12,7 +12,7 @@ admin_bp = Blueprint('admin', __name__, template_folder='templates')
 def admin_dashboard():
     """Render admin dashboard HTML page"""
     return render_template('admin_dashboard.html')
-query_logger = QueryLogger(db_path="/home/ubuntu/mandate_wizard_web_app/query_logs.db")
+query_logger = get_query_logger()
 
 @admin_bp.route('/admin/logs', methods=['GET'])
 def get_logs():
