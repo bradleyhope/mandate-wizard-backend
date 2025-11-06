@@ -221,10 +221,19 @@ class QueryLogger:
 # Global singleton instance
 _query_logger_instance = None
 
-def get_query_logger(db_path="/home/ubuntu/mandate_wizard_web_app/query_logs.db"):
+def get_query_logger(db_path=None):
     """Get the global query logger singleton instance"""
     global _query_logger_instance
     if _query_logger_instance is None:
+        # Use /tmp for Render deployment (read-only filesystem)
+        if db_path is None:
+            import os
+            if os.path.exists('/opt/render'):
+                # Running on Render - use /tmp
+                db_path = "/tmp/query_logs.db"
+            else:
+                # Running locally
+                db_path = "/home/ubuntu/mandate_wizard_web_app/query_logs.db"
         _query_logger_instance = QueryLogger(db_path=db_path)
     return _query_logger_instance
 
