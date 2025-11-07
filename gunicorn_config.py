@@ -11,8 +11,8 @@ port = os.environ.get('PORT', '5000')
 bind = f"0.0.0.0:{port}"
 backlog = 2048
 
-# Worker processes
-workers = multiprocessing.cpu_count() * 2 + 1  # Recommended formula
+# Worker processes - Minimal for cost optimization
+workers = 1  # Single worker to minimize memory usage and costs
 worker_class = "gevent"  # Async worker for better concurrency
 worker_connections = 1000
 timeout = 120  # Increased for GPT-5 calls
@@ -35,6 +35,6 @@ group = None
 tmp_upload_dir = None
 
 # Performance
-preload_app = True  # Load app before forking workers
+preload_app = False  # Disabled to reduce memory usage with ML models
 max_requests = 1000  # Restart workers after N requests (prevent memory leaks)
 max_requests_jitter = 50  # Add randomness to prevent all workers restarting at once

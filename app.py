@@ -178,9 +178,10 @@ def warm_cache():
     
     print(f"✓ Cache warmed! {len(query_cache)} queries cached\n")
 
-# Warm cache on startup (run in background to not block startup)
-import threading
-threading.Thread(target=warm_cache, daemon=True).start()
+# Cache warming disabled to reduce memory usage on startup
+# Uncomment the lines below to enable cache warming:
+# import threading
+# threading.Thread(target=warm_cache, daemon=True).start()
 
 @app.route('/')
 def index():

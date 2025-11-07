@@ -59,8 +59,8 @@ class HybridRAGEnginePinecone:
                 print("  Continuing with Pinecone only...")
                 self.neo4j_driver = None
         
-        # Initialize embedding model (same as used for Pinecone)
-        self.embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+        # Initialize embedding model (lazy loading to save memory)
+        self._embedding_model = None  # Will be loaded on first use
         
         # Initialize GPT-5 Responses API client
         # Using GPT-5 for maximum capability
@@ -104,6 +104,15 @@ class HybridRAGEnginePinecone:
         # Load persons from Neo4j if available
         if self.neo4j_driver:
             self._load_persons_from_neo4j()
+    
+    @property
+    def embedding_model(self):
+        """Lazy load the embedding model only when first needed"""
+        if self._embedding_model is None:
+            print("Loading sentence-transformers model (first use)...")
+            self._embedding_model = SentenceTransformer('all-MiniLM-L6-v2')
+            print("✓ Embedding model loaded")
+        return self._embedding_model
     
     def query_greenlights_from_neo4j(self, genre: str = None, limit: int = 10) -> List[Dict]:
         """Query recent greenlights directly from Neo4j"""
