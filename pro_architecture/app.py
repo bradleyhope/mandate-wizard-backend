@@ -195,7 +195,7 @@ def answer():
     try:
         # Execute query
         eng = get_engine()
-        out = eng.answer(q)
+        out = eng.answer(q, user_email=user_email)
         
         # Add user context to response
         out['user'] = {

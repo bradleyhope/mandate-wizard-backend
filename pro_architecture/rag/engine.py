@@ -60,13 +60,24 @@ class Engine:
 
     def synthesize(self, question: str, docs: List[Dict[str, Any]], entities: List[Dict[str, Any]]) -> Dict[str, Any]:
         from openai import OpenAI
-        client = OpenAI(api_key=S.OPENAI_API_KEY)
-        # Keep snippets small to preserve tokens
+        client = OpenAI(
+            api_key=S.OPENAI_API_KEY,
+            base_url='https://api.openai.com/v1'
+        )
+        # Keep snippets small to preserve tokens, but include dates and URLs
         rows = []
         citations = []
         for d in docs:
             meta = d.get("metadata", {})
-            rows.append({"id": d.get("id"), "text": meta.get("text", "")[:1200], "source": meta.get("source", ""), "score": d.get("score", 0)})
+            snippet = {
+                "id": d.get("id"),
+                "text": meta.get("text", "")[:1200],
+                "source": meta.get("source", ""),
+                "score": d.get("score", 0),
+                "updated": meta.get("updated", meta.get("source_date", meta.get("extraction_date", ""))),
+                "source_publication": meta.get("source_publication", "")
+            }
+            rows.append(snippet)
             citations.append({"type": "doc", "id": d.get("id")})
         for e in entities:
             citations.append({"type": "neo4j", "id": e.get("entity_id")})
@@ -82,13 +93,19 @@ class Engine:
             data = json.loads(txt)
         except Exception:
             # fallback wrapper
-            data = {"final_answer": txt, "citations": citations, "entities": [], "confidence": 0.6}
-        # ensure citations are present
+            data = {"final_answer": txt, "citations": citations, "entities": [], "sources": [], "last_updated": None}
+        # ensure required fields
         if not data.get("citations"):
             data["citations"] = citations
+        if not data.get("sources"):
+            data["sources"] = []
+        if not data.get("last_updated"):
+            data["last_updated"] = None
+        if not data.get("data_freshness"):
+            data["data_freshness"] = "unknown"
         return data
 
-    def answer(self, question: str) -> Dict[str, Any]:
+    def answer(self, question: str, user_email: str = None) -> Dict[str, Any]:
         t0 = time.time()
         intent = classify(question)
         docs = self.retrieve(question)
@@ -106,10 +123,20 @@ class Engine:
         if "follow_up_questions" not in out:
             out["follow_up_questions"] = []
         
+        # Track demand signals (what users ask for that we don't have)
+        from demand_signals import DemandSignalTracker
+        tracker = DemandSignalTracker()
+        tracker.log_demand(question, out, user_email)
+        
+        # Web search fallback for low-quality results
+        from web_search_fallback import WebSearchFallback
+        fallback = WebSearchFallback()
+        if fallback.should_trigger(out):
+            out = fallback.search_and_supplement(question, out)
+        
         # Track potentially poor answers
-        confidence = out.get("confidence", 0)
         answer_length = len(out.get("final_answer", ""))
-        if confidence < 0.7 or answer_length < 50 or len(entities) == 0:
+        if answer_length < 50 or len(entities) == 0:
             self._log_poor_answer(question, out, docs)
         
         return out
