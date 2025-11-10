@@ -60,6 +60,12 @@ Return JSON with these exact keys:
   "entities": [
     {{"name": "Person/Company Name", "role": "Their Role", "relevance": "Why they matter"}}
   ],
+  
+  IMPORTANT - Entity Extraction:
+  - ALWAYS extract people and company names mentioned in your answer
+  - Include executives, producers, companies, and platforms
+  - Even for process/strategy questions, extract any names you mention
+  - Format: {{"name": "Full Name", "role": "Title/Role", "relevance": "Brief context"}}
   "sources": [
     {{"url": "https://...", "title": "Article Title", "date": "2025-10-25"}}
   ],
