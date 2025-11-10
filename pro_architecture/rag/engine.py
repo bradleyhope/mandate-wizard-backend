@@ -94,9 +94,52 @@ class Engine:
         docs = self.retrieve(question)
         entities = self.enrich_entities(docs)
         out = self.synthesize(question, docs, entities)
+        
+        # Add metadata
         out["meta"] = {
             "intent": intent,
             "latency_ms": int((time.time() - t0)*1000),
             "retrieved": len(docs),
         }
+        
+        # Ensure follow_up_questions key exists
+        if "follow_up_questions" not in out:
+            out["follow_up_questions"] = []
+        
+        # Track potentially poor answers
+        confidence = out.get("confidence", 0)
+        answer_length = len(out.get("final_answer", ""))
+        if confidence < 0.7 or answer_length < 50 or len(entities) == 0:
+            self._log_poor_answer(question, out, docs)
+        
         return out
+    
+    def _log_poor_answer(self, question: str, response: Dict[str, Any], docs: List[Dict[str, Any]]):
+        """Log questions that may have poor answers for later review."""
+        import json
+        from pathlib import Path
+        from datetime import datetime
+        
+        log_dir = Path("/tmp/mandate_wizard_logs")
+        log_dir.mkdir(parents=True, exist_ok=True)
+        log_file = log_dir / "poor_answers.jsonl"
+        
+        entry = {
+            "timestamp": datetime.utcnow().isoformat(),
+            "question": question,
+            "confidence": response.get("confidence", 0),
+            "answer_length": len(response.get("final_answer", "")),
+            "entities_count": len(response.get("entities", [])),
+            "docs_retrieved": len(docs),
+            "reason": []
+        }
+        
+        if response.get("confidence", 0) < 0.7:
+            entry["reason"].append("low_confidence")
+        if len(response.get("final_answer", "")) < 50:
+            entry["reason"].append("short_answer")
+        if len(response.get("entities", [])) == 0:
+            entry["reason"].append("no_entities")
+        
+        with open(log_file, "a") as f:
+            f.write(json.dumps(entry) + "\n")
