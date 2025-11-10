@@ -268,5 +268,98 @@ def admin_query_logs():
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route("/api/recent-cards", methods=["GET"])
+def recent_cards():
+    """Get recent mandate/news cards for homepage."""
+    from rag.retrievers.pinecone_retriever import PineconeRetriever
+    from datetime import datetime, timedelta
+    
+    try:
+        limit = int(request.args.get('limit', 10))
+        retriever = PineconeRetriever()
+        
+        # Query for recent content
+        # Use a broad query to get diverse results
+        results = retriever.retrieve("recent mandate news executive", top_k=50)
+        
+        # Filter and score cards
+        cards = []
+        for doc in results:
+            meta = doc.get('metadata', {})
+            
+            # Skip if no name or wrong type
+            if not meta.get('name') or len(meta.get('name', '')) < 5:
+                continue
+            
+            # Skip migration-only dates
+            updated = meta.get('updated') or meta.get('source_date')
+            if not updated or updated.startswith('2025-11-10 07:14'):
+                continue
+            
+            # Only include certain types
+            entity_type = meta.get('entity_type') or meta.get('category')
+            if entity_type not in ['mandate', 'person', 'news', 'executive_moves']:
+                continue
+            
+            cards.append({
+                'id': doc.get('id'),
+                'name': meta.get('name'),
+                'type': entity_type,
+                'streamer': meta.get('streamer'),
+                'updated': updated,
+                'text': meta.get('text', '')[:200] + '...' if meta.get('text') else ''
+            })
+        
+        # Sort by date (most recent first)
+        cards.sort(key=lambda x: x.get('updated', ''), reverse=True)
+        
+        return jsonify({"cards": cards[:limit]}), 200
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/api/entity/<entity_id>", methods=["GET"])
+def get_entity(entity_id):
+    """Get full entity details from both Pinecone and Neo4j."""
+    from rag.retrievers.pinecone_retriever import PineconeRetriever
+    from rag.graph.dao import DAO
+    
+    try:
+        retriever = PineconeRetriever()
+        dao = DAO()
+        
+        # Get from Pinecone
+        pinecone_data = retriever.index.fetch(ids=[entity_id])
+        
+        entity_info = {}
+        if pinecone_data and 'vectors' in pinecone_data and entity_id in pinecone_data['vectors']:
+            meta = pinecone_data['vectors'][entity_id].get('metadata', {})
+            entity_info = {
+                'id': entity_id,
+                'name': meta.get('name'),
+                'title': meta.get('title'),
+                'bio': meta.get('bio'),
+                'mandate': meta.get('mandate'),
+                'streamer': meta.get('streamer'),
+                'region': meta.get('region'),
+                'formats': meta.get('formats'),
+                'genres': meta.get('genres'),
+                'updated': meta.get('updated'),
+                'text': meta.get('text')
+            }
+        
+        # Get from Neo4j if it's a person
+        neo4j_data = None
+        if entity_id.startswith('person_'):
+            neo4j_data = dao.get_person(entity_id)
+        
+        return jsonify({
+            'entity': entity_info,
+            'neo4j': neo4j_data
+        }), 200
+        
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")), debug=False)
