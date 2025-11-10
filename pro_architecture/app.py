@@ -37,6 +37,45 @@ def metrics():
     }, 200
 
 # Authentication endpoints
+@app.route("/auth/login", methods=["POST"])
+def login():
+    """Direct login - check subscription and return JWT immediately (no email)."""
+    data = request.get_json(force=True) or {}
+    email = (data.get("email") or "").strip().lower()
+    
+    if not email:
+        return jsonify({"error": "Email is required"}), 400
+    
+    try:
+        # Check if email is whitelisted
+        is_whitelisted = auth_manager._is_whitelisted(email)
+        
+        if not is_whitelisted:
+            # Check if user has active subscription
+            if not auth_manager.ghost_client.has_active_subscription(email):
+                return jsonify({
+                    "error": "No active Hollywood Signal subscription found for this email."
+                }), 403
+        
+        # Get member info
+        member = auth_manager.ghost_client.get_member_by_email(email)
+        name = member.get('name') if member else None
+        
+        # Generate JWT token
+        jwt_token = auth_manager.generate_jwt_token(email, name)
+        
+        return jsonify({
+            "success": True,
+            "token": jwt_token,
+            "email": email,
+            "name": name,
+            "whitelisted": is_whitelisted
+        }), 200
+        
+    except Exception as e:
+        print(f"Error during login: {e}")
+        return jsonify({"error": "Internal server error"}), 500
+
 @app.route("/auth/send-magic-link", methods=["POST"])
 def send_magic_link():
     """Send magic link to user's email for authentication."""
@@ -59,7 +98,7 @@ def send_magic_link():
             }), 200
         else:
             return jsonify({
-                "error": "Failed to send magic link. Please ensure you have an active Hollywood Signal subscription."
+                "error": "Failed to send magic link. Please ensure you have an active Hollywood Signal subscription and that Mailgun DNS is configured."
             }), 403
             
     except Exception as e:
