@@ -21,6 +21,10 @@ class AuthManager:
         self.ghost_client = GhostClient()
         self.email_service = EmailService()
         
+        # Whitelisted email domains (bypass subscription check)
+        self.whitelisted_domains = os.environ.get("WHITELISTED_DOMAINS", "projectbrazen.com").split(",")
+        self.whitelisted_domains = [d.strip().lower() for d in self.whitelisted_domains]
+        
         # In-memory store for magic link tokens (in production, use Redis)
         self._magic_tokens: Dict[str, Dict[str, Any]] = {}
     
@@ -111,6 +115,11 @@ class AuthManager:
             print(f"Invalid JWT token: {e}")
             return None
     
+    def _is_whitelisted(self, email: str) -> bool:
+        """Check if email domain is whitelisted."""
+        domain = email.split('@')[-1].lower()
+        return domain in self.whitelisted_domains
+    
     def send_magic_link(self, email: str, frontend_url: str) -> bool:
         """
         Generate and send magic link to user's email.
@@ -122,10 +131,14 @@ class AuthManager:
         Returns:
             True if email sent successfully, False otherwise
         """
-        # First check if user has active subscription
-        if not self.ghost_client.has_active_subscription(email):
-            print(f"User {email} does not have active subscription")
-            return False
+        # Check if email is whitelisted (bypass subscription check)
+        is_whitelisted = self._is_whitelisted(email)
+        
+        if not is_whitelisted:
+            # Check if user has active subscription
+            if not self.ghost_client.has_active_subscription(email):
+                print(f"User {email} does not have active subscription")
+                return False
         
         # Get member info for personalization
         member = self.ghost_client.get_member_by_email(email)
@@ -157,10 +170,14 @@ class AuthManager:
             print("Invalid or expired magic token")
             return None
         
-        # Verify subscription is still active
-        if not self.ghost_client.has_active_subscription(email):
-            print(f"User {email} subscription is no longer active")
-            return None
+        # Check if whitelisted or has active subscription
+        is_whitelisted = self._is_whitelisted(email)
+        
+        if not is_whitelisted:
+            # Verify subscription is still active
+            if not self.ghost_client.has_active_subscription(email):
+                print(f"User {email} subscription is no longer active")
+                return None
         
         # Get member info
         member = self.ghost_client.get_member_by_email(email)
@@ -201,10 +218,13 @@ class AuthManager:
             if not payload:
                 return jsonify({'error': 'Invalid or expired token'}), 401
             
-            # Check if subscription is still active
+            # Check if whitelisted or subscription is still active
             email = payload.get('email')
-            if not self.ghost_client.has_active_subscription(email):
-                return jsonify({'error': 'Subscription is no longer active'}), 403
+            is_whitelisted = self._is_whitelisted(email)
+            
+            if not is_whitelisted:
+                if not self.ghost_client.has_active_subscription(email):
+                    return jsonify({'error': 'Subscription is no longer active'}), 403
             
             # Add user info to request context
             request.user = payload
