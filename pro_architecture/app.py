@@ -3,14 +3,16 @@ from flask_cors import CORS
 from rag.engine import Engine
 from auth.auth_manager import AuthManager
 from auth.ghost_client import GhostClient
+from logging_service import get_logger
 from config import S
 import os, psutil, time
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins":"*","supports_credentials":True}})
 
-# Initialize authentication
+# Initialize authentication and logging
 auth_manager = AuthManager()
+query_logger = get_logger()
 
 _engine = None
 def get_engine():
@@ -53,6 +55,13 @@ def login():
         if not is_whitelisted:
             # Check if user has active subscription
             if not auth_manager.ghost_client.has_active_subscription(email):
+                # Log failed authentication
+                query_logger.log_authentication(
+                    email=email,
+                    success=False,
+                    method="direct_login",
+                    reason="No active subscription"
+                )
                 return jsonify({
                     "error": "No active Hollywood Signal subscription found for this email."
                 }), 403
@@ -64,6 +73,13 @@ def login():
         # Generate JWT token
         jwt_token = auth_manager.generate_jwt_token(email, name)
         
+        # Log successful authentication
+        query_logger.log_authentication(
+            email=email,
+            success=True,
+            method="direct_login"
+        )
+        
         return jsonify({
             "success": True,
             "token": jwt_token,
@@ -73,6 +89,13 @@ def login():
         }), 200
         
     except Exception as e:
+        # Log failed authentication
+        query_logger.log_authentication(
+            email=email,
+            success=False,
+            method="direct_login",
+            reason=str(e)
+        )
         print(f"Error during login: {e}")
         return jsonify({"error": "Internal server error"}), 500
 
@@ -165,16 +188,85 @@ def answer():
     if not q:
         return jsonify({"error":"question is required"}), 400
     
-    eng = get_engine()
-    out = eng.answer(q)
+    # Get user info
+    user_email = request.user.get('email')
+    user_name = request.user.get('name')
     
-    # Add user context to response
-    out['user'] = {
-        'email': request.user.get('email'),
-        'name': request.user.get('name')
-    }
+    try:
+        # Execute query
+        eng = get_engine()
+        out = eng.answer(q)
+        
+        # Add user context to response
+        out['user'] = {
+            'email': user_email,
+            'name': user_name
+        }
+        
+        # Log the query and response
+        metadata = {
+            'ip': request.remote_addr,
+            'user_agent': request.headers.get('User-Agent', ''),
+            'endpoint': '/api/answer'
+        }
+        
+        query_logger.log_query(
+            user_email=user_email,
+            user_name=user_name,
+            question=q,
+            response=out,
+            metadata=metadata
+        )
+        
+        return jsonify(out), 200
+        
+    except Exception as e:
+        # Log the error
+        query_logger.log_error(
+            user_email=user_email,
+            error_type=type(e).__name__,
+            error_message=str(e),
+            context={'question': q}
+        )
+        raise
+
+# Admin/Stats endpoints
+@app.route("/admin/stats", methods=["GET"])
+def admin_stats():
+    """Get query statistics."""
+    hours = int(request.args.get('hours', 24))
     
-    return jsonify(out), 200
+    try:
+        stats = query_logger.get_query_stats(hours=hours)
+        return jsonify(stats), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
+
+@app.route("/admin/logs/queries", methods=["GET"])
+def admin_query_logs():
+    """Get recent query logs."""
+    import json
+    limit = int(request.args.get('limit', 100))
+    
+    try:
+        log_file = query_logger.json_log_file
+        
+        if not log_file.exists():
+            return jsonify({"queries": []}), 200
+        
+        # Read last N lines
+        queries = []
+        with open(log_file, 'r') as f:
+            lines = f.readlines()
+            for line in lines[-limit:]:
+                try:
+                    queries.append(json.loads(line))
+                except:
+                    continue
+        
+        return jsonify({"queries": queries, "count": len(queries)}), 200
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")), debug=False)
