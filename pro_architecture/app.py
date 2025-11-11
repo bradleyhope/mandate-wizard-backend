@@ -7,6 +7,14 @@ from logging_service import get_logger
 from config import S
 import os, psutil, time
 
+# Import migration endpoint
+try:
+    from database.migrate_endpoint import create_migration_endpoint
+    MIGRATION_AVAILABLE = True
+except ImportError:
+    MIGRATION_AVAILABLE = False
+    print("⚠️ Migration endpoint not available")
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins":"*","supports_credentials":True}})
 
@@ -360,6 +368,11 @@ def get_entity(entity_id):
         
     except Exception as e:
         return jsonify({"error": str(e)}), 500
+
+# Register migration endpoint if available
+if MIGRATION_AVAILABLE:
+    create_migration_endpoint(app)
+    print("✅ Migration endpoint registered at /api/admin/migrate")
 
 if __name__ == "__main__":
     app.run(host="0.0.0.0", port=int(os.environ.get("PORT", "5000")), debug=False)
