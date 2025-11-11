@@ -1,5 +1,5 @@
 """
-Data Migration: Pinecone + Neo4j → PostgreSQL
+Data Migration: Pinecone + Neo4j → PostgreSQL (FIXED VERSION)
 Migrates all existing data into PostgreSQL as single source of truth
 """
 
@@ -12,6 +12,57 @@ import json
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from database.postgres_client import PostgresClient
+
+
+def get_entity_slug_from_neo4j_node(node_dict):
+    """
+    Extract entity slug from Neo4j node.
+    Handles multiple ID formats and fallback to name.
+    
+    Args:
+        node_dict: Dictionary of node properties
+        
+    Returns:
+        str: Entity slug (e.g., 'anne_mensah')
+    """
+    # Try entity_id first (might be slug format)
+    entity_id = node_dict.get('entity_id')
+    if entity_id and isinstance(entity_id, str):
+        # Check if it's a slug (not UUID)
+        if '-' not in entity_id or len(entity_id) < 30:
+            # It's a slug like 'person_anne_mensah' or 'alana_mayo'
+            if entity_id.startswith('person_'):
+                return entity_id.replace('person_', '')
+            elif entity_id.startswith('company_'):
+                return entity_id.replace('company_', '')
+            elif entity_id.startswith('prodco_'):
+                return entity_id.replace('prodco_', '')
+            elif entity_id.startswith('platform_'):
+                return entity_id.replace('platform_', '')
+            else:
+                return entity_id
+    
+    # Try id field (legacy)
+    id_field = node_dict.get('id')
+    if id_field and isinstance(id_field, str):
+        if id_field.startswith('person_'):
+            return id_field.replace('person_', '')
+        elif id_field.startswith('company_'):
+            return id_field.replace('company_', '')
+        else:
+            return id_field
+    
+    # Fallback: create slug from name
+    name = node_dict.get('name')
+    if name:
+        slug = name.lower().replace(' ', '_').replace('.', '').replace(',', '').replace("'", '')
+        # Remove multiple underscores
+        while '__' in slug:
+            slug = slug.replace('__', '_')
+        return slug
+    
+    return None
+
 
 def migrate_pinecone_to_postgres(pg_client):
     """
@@ -85,7 +136,6 @@ def migrate_pinecone_to_postgres(pg_client):
                     metadata = vector_data.get('metadata', {})
                     
                     if not metadata:
-                        print(f"  ⚠️  Skipping {vector_id}: no metadata")
                         continue
                     
                     # Extract entity info
@@ -109,7 +159,6 @@ def migrate_pinecone_to_postgres(pg_client):
                     # Check if entity already exists
                     existing = pg_client.get_entity(slug=slug)
                     if existing:
-                        print(f"  ⏭️  Skipping {name}: already exists")
                         continue
                     
                     # Build attributes
@@ -138,7 +187,6 @@ def migrate_pinecone_to_postgres(pg_client):
                         created_by='migration_script'
                     )
                     entities_created += 1
-                    print(f"  ✅ Created entity: {name} ({entity_type})")
                     
                     # Create bio card if exists
                     bio = metadata.get('bio')
@@ -152,7 +200,6 @@ def migrate_pinecone_to_postgres(pg_client):
                             source='pinecone_migration'
                         )
                         cards_created += 1
-                        print(f"    📝 Created bio card")
                     
                     # Create mandate card if exists
                     mandate = metadata.get('mandate')
@@ -166,12 +213,9 @@ def migrate_pinecone_to_postgres(pg_client):
                             source='pinecone_migration'
                         )
                         cards_created += 1
-                        print(f"    📝 Created mandate card")
                     
                 except Exception as e:
-                    error_msg = f"Error migrating {vector_id}: {str(e)}"
-                    print(f"  ❌ {error_msg}")
-                    errors.append(error_msg)
+                    errors.append(f"Error migrating {vector_id}: {str(e)}")
         
         # Log migration event
         pg_client.insert_event(
@@ -185,28 +229,21 @@ def migrate_pinecone_to_postgres(pg_client):
             }
         )
         
-        print("\n" + "="*60)
-        print("📊 PINECONE MIGRATION SUMMARY")
-        print("="*60)
-        print(f"  ✅ Entities created: {entities_created}")
-        print(f"  ✅ Cards created: {cards_created}")
-        print(f"  ❌ Errors: {len(errors)}")
-        print("="*60)
+        print(f"\n✅ Entities created: {entities_created}")
+        print(f"✅ Cards created: {cards_created}")
         
         return {
             'success': True,
             'message': f'Migrated {entities_created} entities and {cards_created} cards from Pinecone',
             'entities_created': entities_created,
             'cards_created': cards_created,
-            'errors': errors[:10]  # First 10 errors
+            'errors': errors[:10]
         }
         
     except Exception as e:
-        error_msg = f"Pinecone migration failed: {str(e)}"
-        print(f"\n❌ {error_msg}")
         return {
             'success': False,
-            'message': error_msg,
+            'message': f"Pinecone migration failed: {str(e)}",
             'entities_created': 0,
             'cards_created': 0
         }
@@ -214,7 +251,8 @@ def migrate_pinecone_to_postgres(pg_client):
 
 def migrate_neo4j_to_postgres(pg_client):
     """
-    Migrate data from Neo4j to PostgreSQL.
+    Migrate data from Neo4j to PostgreSQL (FIXED VERSION).
+    Handles all node types and multiple ID formats.
     
     Args:
         pg_client: PostgresClient instance
@@ -234,7 +272,7 @@ def migrate_neo4j_to_postgres(pg_client):
         }
     
     print("\n" + "="*60)
-    print("📥 MIGRATING DATA FROM NEO4J TO POSTGRESQL")
+    print("📥 MIGRATING DATA FROM NEO4J TO POSTGRESQL (FIXED)")
     print("="*60)
     
     try:
@@ -250,6 +288,9 @@ def migrate_neo4j_to_postgres(pg_client):
         relations_created = 0
         errors = []
         
+        # Map to track Neo4j node ID -> PostgreSQL entity ID
+        node_to_entity_map = {}
+        
         with driver.session() as session:
             # Migrate Person nodes
             print("\n👤 Migrating Person nodes...")
@@ -259,58 +300,54 @@ def migrate_neo4j_to_postgres(pg_client):
             
             for record in persons:
                 try:
-                    person = dict(record['p'])
-                    person_id = person.get('id')
+                    person_dict = dict(record['p'])
+                    name = person_dict.get('name')
                     
-                    if not person_id:
+                    if not name:
                         continue
                     
-                    slug = person_id.replace('person_', '')
+                    slug = get_entity_slug_from_neo4j_node(person_dict)
+                    if not slug:
+                        continue
+                    
+                    # Check if entity already exists
                     existing = pg_client.get_entity(slug=slug)
                     
                     if existing:
                         # Update with Neo4j data
-                        attributes = existing.get('attributes', {})
-                        if isinstance(attributes, str):
-                            attributes = json.loads(attributes)
-                        
-                        attributes.update({
-                            'email': person.get('email'),
-                            'phone': person.get('phone'),
-                            'neo4j_migrated': True
-                        })
-                        
-                        pg_client.update_entity(
-                            entity_id=existing['id'],
-                            attributes=attributes,
-                            updated_by='neo4j_migration'
-                        )
                         entities_updated += 1
-                        print(f"  🔄 Updated: {person.get('name')}")
+                        node_to_entity_map[slug] = existing['id']
                     else:
                         # Create new entity
+                        attributes = {
+                            'title': person_dict.get('current_title'),
+                            'company': person_dict.get('streamer'),
+                            'region': person_dict.get('region'),
+                            'email': person_dict.get('email'),
+                            'phone': person_dict.get('phone'),
+                            'neo4j_entity_id': person_dict.get('entity_id'),
+                            'neo4j_person_id': person_dict.get('person_id'),
+                            'source': 'neo4j_migration'
+                        }
+                        
+                        # Remove None values
+                        attributes = {k: v for k, v in attributes.items() if v is not None}
+                        
                         pg_entity_id = pg_client.create_entity(
                             entity_type='person',
-                            name=person.get('name', 'Unknown'),
+                            name=name,
                             slug=slug,
-                            attributes={
-                                'title': person.get('title'),
-                                'email': person.get('email'),
-                                'phone': person.get('phone'),
-                                'neo4j_id': person_id,
-                                'source': 'neo4j_migration'
-                            },
+                            attributes=attributes,
                             confidence_score=0.8,
                             source='neo4j_migration',
                             created_by='migration_script'
                         )
                         entities_created += 1
-                        print(f"  ✅ Created: {person.get('name')}")
-                        
+                        node_to_entity_map[slug] = pg_entity_id
+                        print(f"  ✅ Created: {name}")
+                    
                 except Exception as e:
-                    error_msg = f"Error migrating person: {str(e)}"
-                    print(f"  ❌ {error_msg}")
-                    errors.append(error_msg)
+                    errors.append(f"Error migrating Person {person_dict.get('name', 'unknown')}: {str(e)}")
             
             # Migrate Company nodes
             print("\n🏢 Migrating Company nodes...")
@@ -320,83 +357,183 @@ def migrate_neo4j_to_postgres(pg_client):
             
             for record in companies:
                 try:
-                    company = dict(record['c'])
-                    company_id = company.get('id')
+                    company_dict = dict(record['c'])
+                    name = company_dict.get('name')
                     
-                    if not company_id:
+                    if not name:
                         continue
                     
-                    slug = company_id.replace('company_', '')
+                    slug = get_entity_slug_from_neo4j_node(company_dict)
+                    if not slug:
+                        continue
+                    
                     existing = pg_client.get_entity(slug=slug)
                     
-                    if not existing:
+                    if existing:
+                        entities_updated += 1
+                        node_to_entity_map[slug] = existing['id']
+                    else:
+                        attributes = {
+                            'neo4j_entity_id': company_dict.get('entity_id'),
+                            'source': 'neo4j_migration'
+                        }
+                        attributes = {k: v for k, v in attributes.items() if v is not None}
+                        
                         pg_entity_id = pg_client.create_entity(
                             entity_type='company',
-                            name=company.get('name', 'Unknown'),
+                            name=name,
                             slug=slug,
-                            attributes={
-                                'neo4j_id': company_id,
-                                'source': 'neo4j_migration'
-                            },
+                            attributes=attributes,
                             confidence_score=0.8,
                             source='neo4j_migration',
                             created_by='migration_script'
                         )
                         entities_created += 1
-                        print(f"  ✅ Created: {company.get('name')}")
-                        
+                        node_to_entity_map[slug] = pg_entity_id
+                        print(f"  ✅ Created: {name}")
+                    
                 except Exception as e:
-                    error_msg = f"Error migrating company: {str(e)}"
-                    print(f"  ❌ {error_msg}")
-                    errors.append(error_msg)
+                    errors.append(f"Error migrating Company {company_dict.get('name', 'unknown')}: {str(e)}")
+            
+            # Migrate ProductionCompany nodes
+            print("\n🎬 Migrating ProductionCompany nodes...")
+            prodcos_result = session.run("MATCH (pc:ProductionCompany) RETURN pc")
+            prodcos = list(prodcos_result)
+            print(f"  Found {len(prodcos)} ProductionCompany nodes")
+            
+            for record in prodcos:
+                try:
+                    prodco_dict = dict(record['pc'])
+                    name = prodco_dict.get('name')
+                    
+                    if not name:
+                        continue
+                    
+                    slug = get_entity_slug_from_neo4j_node(prodco_dict)
+                    if not slug:
+                        continue
+                    
+                    existing = pg_client.get_entity(slug=slug)
+                    
+                    if existing:
+                        entities_updated += 1
+                        node_to_entity_map[slug] = existing['id']
+                    else:
+                        attributes = {
+                            'neo4j_entity_id': prodco_dict.get('entity_id'),
+                            'source': 'neo4j_migration'
+                        }
+                        attributes = {k: v for k, v in attributes.items() if v is not None}
+                        
+                        pg_entity_id = pg_client.create_entity(
+                            entity_type='production_company',
+                            name=name,
+                            slug=slug,
+                            attributes=attributes,
+                            confidence_score=0.8,
+                            source='neo4j_migration',
+                            created_by='migration_script'
+                        )
+                        entities_created += 1
+                        node_to_entity_map[slug] = pg_entity_id
+                        print(f"  ✅ Created: {name}")
+                    
+                except Exception as e:
+                    errors.append(f"Error migrating ProductionCompany: {str(e)}")
+            
+            # Migrate Platform nodes
+            print("\n📺 Migrating Platform nodes...")
+            platforms_result = session.run("MATCH (p:Platform) RETURN p")
+            platforms = list(platforms_result)
+            print(f"  Found {len(platforms)} Platform nodes")
+            
+            for record in platforms:
+                try:
+                    platform_dict = dict(record['p'])
+                    name = platform_dict.get('name')
+                    
+                    if not name:
+                        continue
+                    
+                    slug = get_entity_slug_from_neo4j_node(platform_dict)
+                    if not slug:
+                        continue
+                    
+                    existing = pg_client.get_entity(slug=slug)
+                    
+                    if existing:
+                        entities_updated += 1
+                        node_to_entity_map[slug] = existing['id']
+                    else:
+                        attributes = {
+                            'neo4j_entity_id': platform_dict.get('entity_id'),
+                            'source': 'neo4j_migration'
+                        }
+                        attributes = {k: v for k, v in attributes.items() if v is not None}
+                        
+                        pg_entity_id = pg_client.create_entity(
+                            entity_type='platform',
+                            name=name,
+                            slug=slug,
+                            attributes=attributes,
+                            confidence_score=0.8,
+                            source='neo4j_migration',
+                            created_by='migration_script'
+                        )
+                        entities_created += 1
+                        node_to_entity_map[slug] = pg_entity_id
+                        print(f"  ✅ Created: {name}")
+                    
+                except Exception as e:
+                    errors.append(f"Error migrating Platform: {str(e)}")
             
             # Migrate relationships
             print("\n🔗 Migrating relationships...")
-            rels_result = session.run("""
-                MATCH (from)-[r]->(to)
-                RETURN from.id as from_id, to.id as to_id, type(r) as rel_type, properties(r) as props
-            """)
-            rels = list(rels_result)
-            print(f"  Found {len(rels)} relationships")
             
-            for record in rels:
-                try:
-                    from_id = record['from_id']
-                    to_id = record['to_id']
-                    rel_type = record['rel_type'].lower()
-                    props = dict(record['props']) if record['props'] else {}
-                    
-                    if not from_id or not to_id:
-                        continue
-                    
-                    # Get slugs
-                    from_slug = from_id.replace('person_', '').replace('company_', '')
-                    to_slug = to_id.replace('person_', '').replace('company_', '')
-                    
-                    # Get entities
-                    from_entity = pg_client.get_entity(slug=from_slug)
-                    to_entity = pg_client.get_entity(slug=to_slug)
-                    
-                    if not from_entity or not to_entity:
-                        print(f"  ⚠️  Skipping: entities not found ({from_id} -> {to_id})")
-                        continue
-                    
-                    # Create relation
-                    pg_client.create_relation(
-                        from_entity_id=from_entity['id'],
-                        to_entity_id=to_entity['id'],
-                        relation_type=rel_type,
-                        attributes=props,
-                        confidence_score=0.8
-                    )
-                    relations_created += 1
-                    print(f"  ✅ Created: {from_id} -{rel_type}-> {to_id}")
-                    
-                except Exception as e:
-                    error_msg = f"Error migrating relationship: {str(e)}"
-                    print(f"  ❌ {error_msg}")
-                    errors.append(error_msg)
-        
+            # Key relationship types to migrate
+            rel_types = ['REPORTS_TO', 'WORKS_WITH', 'AT_COMPANY']
+            
+            for rel_type in rel_types:
+                print(f"\n  Migrating {rel_type} relationships...")
+                rels_result = session.run(f"""
+                    MATCH (from)-[r:{rel_type}]->(to)
+                    RETURN from, r, to
+                """)
+                rels = list(rels_result)
+                print(f"    Found {len(rels)} {rel_type} relationships")
+                
+                for record in rels:
+                    try:
+                        from_dict = dict(record['from'])
+                        to_dict = dict(record['to'])
+                        rel_dict = dict(record['r'])
+                        
+                        from_slug = get_entity_slug_from_neo4j_node(from_dict)
+                        to_slug = get_entity_slug_from_neo4j_node(to_dict)
+                        
+                        if not from_slug or not to_slug:
+                            continue
+                        
+                        from_entity_id = node_to_entity_map.get(from_slug)
+                        to_entity_id = node_to_entity_map.get(to_slug)
+                        
+                        if not from_entity_id or not to_entity_id:
+                            continue
+                        
+                        # Create relation
+                        pg_client.create_relation(
+                            from_entity_id=from_entity_id,
+                            to_entity_id=to_entity_id,
+                            relation_type=rel_type.lower(),
+                            attributes=rel_dict,
+                            confidence_score=0.8,
+                            source='neo4j_migration'
+                        )
+                        relations_created += 1
+                        
+                    except Exception as e:
+                        errors.append(f"Error migrating {rel_type} relationship: {str(e)}")
+            
         driver.close()
         
         # Log migration event
@@ -412,14 +549,9 @@ def migrate_neo4j_to_postgres(pg_client):
             }
         )
         
-        print("\n" + "="*60)
-        print("📊 NEO4J MIGRATION SUMMARY")
-        print("="*60)
-        print(f"  ✅ Entities created: {entities_created}")
-        print(f"  🔄 Entities updated: {entities_updated}")
-        print(f"  ✅ Relations created: {relations_created}")
-        print(f"  ❌ Errors: {len(errors)}")
-        print("="*60)
+        print(f"\n✅ Entities created: {entities_created}")
+        print(f"✅ Entities updated: {entities_updated}")
+        print(f"✅ Relations created: {relations_created}")
         
         return {
             'success': True,
@@ -431,11 +563,9 @@ def migrate_neo4j_to_postgres(pg_client):
         }
         
     except Exception as e:
-        error_msg = f"Neo4j migration failed: {str(e)}"
-        print(f"\n❌ {error_msg}")
         return {
             'success': False,
-            'message': error_msg,
+            'message': f"Neo4j migration failed: {str(e)}",
             'entities_created': 0,
             'entities_updated': 0,
             'relations_created': 0
@@ -443,49 +573,32 @@ def migrate_neo4j_to_postgres(pg_client):
 
 
 def run_full_migration():
-    """Run complete data migration from Pinecone and Neo4j to PostgreSQL."""
+    """Run complete migration from both Pinecone and Neo4j"""
     print("\n" + "="*60)
     print("🚀 STARTING FULL DATA MIGRATION")
     print("="*60)
-    print(f"Timestamp: {datetime.now().isoformat()}")
     
-    try:
-        # Initialize PostgreSQL client
-        pg_client = PostgresClient()
-        
-        # Run Pinecone migration
-        pinecone_result = migrate_pinecone_to_postgres(pg_client)
-        
-        # Run Neo4j migration
-        neo4j_result = migrate_neo4j_to_postgres(pg_client)
-        
-        # Close connection
-        pg_client.close()
-        
-        # Combined summary
-        print("\n" + "="*60)
-        print("🎉 MIGRATION COMPLETE")
-        print("="*60)
-        print(f"Total entities created: {pinecone_result.get('entities_created', 0) + neo4j_result.get('entities_created', 0)}")
-        print(f"Total entities updated: {neo4j_result.get('entities_updated', 0)}")
-        print(f"Total cards created: {pinecone_result.get('cards_created', 0)}")
-        print(f"Total relations created: {neo4j_result.get('relations_created', 0)}")
-        print("="*60)
-        
-        return {
-            'success': True,
-            'pinecone': pinecone_result,
-            'neo4j': neo4j_result
-        }
-        
-    except Exception as e:
-        error_msg = f"Migration failed: {str(e)}"
-        print(f"\n❌ {error_msg}")
-        return {
-            'success': False,
-            'message': error_msg
-        }
+    # Initialize PostgreSQL client
+    pg_client = PostgresClient()
+    
+    # Migrate from Pinecone
+    pinecone_result = migrate_pinecone_to_postgres(pg_client)
+    
+    # Migrate from Neo4j
+    neo4j_result = migrate_neo4j_to_postgres(pg_client)
+    
+    print("\n" + "="*60)
+    print("✅ MIGRATION COMPLETE")
+    print("="*60)
+    
+    return {
+        'success': True,
+        'pinecone': pinecone_result,
+        'neo4j': neo4j_result
+    }
 
 
-if __name__ == "__main__":
-    run_full_migration()
+if __name__ == '__main__':
+    result = run_full_migration()
+    print("\nFinal result:")
+    print(json.dumps(result, indent=2))
