@@ -11,6 +11,7 @@ This module provides intelligent caching for:
 import redis
 import json
 import hashlib
+import os
 from typing import Any, Optional, Dict
 from datetime import timedelta
 
@@ -18,22 +19,31 @@ from datetime import timedelta
 class CacheManager:
     """Manages Redis caching for Mandate Wizard."""
     
-    def __init__(self, host: str = 'localhost', port: int = 6379, db: int = 0):
+    def __init__(self, host: str = None, port: int = None, db: int = None, password: str = None):
         """
         Initialize Redis cache manager.
         
         Args:
-            host: Redis server host
-            port: Redis server port
-            db: Redis database number
+            host: Redis server host (defaults to REDIS_HOST env var)
+            port: Redis server port (defaults to REDIS_PORT env var)
+            db: Redis database number (defaults to REDIS_DB env var)
+            password: Redis password (defaults to REDIS_PASSWORD env var)
         """
+        # Read from environment variables if not provided
+        host = host or os.getenv('REDIS_HOST', 'localhost')
+        port = port or int(os.getenv('REDIS_PORT', '6379'))
+        db = db or int(os.getenv('REDIS_DB', '0'))
+        password = password or os.getenv('REDIS_PASSWORD')
+        
         try:
             self.redis = redis.Redis(
                 host=host,
                 port=port,
                 db=db,
+                password=password,
                 decode_responses=True,
-                socket_connect_timeout=2
+                socket_connect_timeout=5,
+                socket_timeout=5
             )
             # Test connection
             self.redis.ping()
