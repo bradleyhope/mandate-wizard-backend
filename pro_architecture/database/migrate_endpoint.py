@@ -120,7 +120,8 @@ def create_migration_endpoint(app):
         # Run all migrations in order
         migration_files = [
             '001_initial_schema.sql',
-            '002_add_entity_types.sql'
+            '002_add_entity_types.sql',
+            '003_remove_entity_type_constraint.sql'
         ]
         
         results = []
