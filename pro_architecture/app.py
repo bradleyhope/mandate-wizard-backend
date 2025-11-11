@@ -15,6 +15,15 @@ except ImportError:
     MIGRATION_AVAILABLE = False
     print("⚠️ Migration endpoints not available")
 
+# Import Redis Streams client
+try:
+    from streams import get_streams_client
+    from streams.events_endpoint import create_events_endpoint
+    STREAMS_AVAILABLE = True
+except ImportError:
+    STREAMS_AVAILABLE = False
+    print("⚠️ Redis Streams not available")
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins":"*","supports_credentials":True}})
 
@@ -226,6 +235,27 @@ def answer():
             metadata=metadata
         )
         
+        # Publish QuerySignal events for entities in the response
+        if STREAMS_AVAILABLE:
+            try:
+                streams_client = get_streams_client()
+                entities = out.get('entities', [])
+                
+                for entity in entities:
+                    entity_id = entity.get('id')
+                    entity_type = entity.get('type', 'unknown')
+                    
+                    if entity_id:
+                        streams_client.publish_query_signal(
+                            entity_id=entity_id,
+                            entity_type=entity_type,
+                            query=q,
+                            user_id=user_email
+                        )
+            except Exception as stream_error:
+                # Don't fail the request if event publishing fails
+                print(f"⚠️ Failed to publish query signals: {stream_error}")
+        
         return jsonify(out), 200
         
     except Exception as e:
@@ -376,6 +406,14 @@ if MIGRATION_AVAILABLE:
     print("✅ Migration endpoints registered:")
     print("   - /api/admin/migrate (schema migration)")
     print("   - /api/admin/migrate-data (data migration)")
+
+# Register events endpoints if available
+if STREAMS_AVAILABLE:
+    events_bp = create_events_endpoint()
+    app.register_blueprint(events_bp)
+    print("✅ Redis Streams endpoints registered:")
+    print("   - /api/events/update-request (publish update events)")
+    print("   - /api/events/streams/info (stream information)")
     print("   - /api/admin/db-status (database status)")
 
 if __name__ == "__main__":
