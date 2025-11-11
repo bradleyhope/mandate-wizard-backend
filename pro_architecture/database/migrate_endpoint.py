@@ -55,6 +55,36 @@ def run_migration(database_url: str, migration_file: str):
             'migration_file': migration_file
         }
 
+def create_data_migration_endpoint(app):
+    """
+    Add data migration endpoint to Flask app.
+    
+    Args:
+        app: Flask application instance
+    """
+    
+    @app.route('/api/admin/migrate-data', methods=['GET', 'POST'])
+    def migrate_data():
+        """
+        Migrate all data from Pinecone and Neo4j to PostgreSQL.
+        
+        GET /api/admin/migrate-data
+        
+        Returns:
+            JSON response with migration summary
+        """
+        from database.migrate_data import run_full_migration
+        
+        try:
+            result = run_full_migration()
+            status_code = 200 if result.get('success') else 500
+            return jsonify(result), status_code
+        except Exception as e:
+            return jsonify({
+                'success': False,
+                'message': f'Migration failed: {str(e)}'
+            }), 500
+
 def create_migration_endpoint(app):
     """
     Add migration endpoint to Flask app.
