@@ -111,21 +111,35 @@ def create_migration_endpoint(app):
                 'message': 'DATABASE_URL environment variable not set'
             }), 500
         
-        # Path to migration file
-        migration_file = os.path.join(
+        # Path to migrations directory
+        migrations_dir = os.path.join(
             os.path.dirname(__file__),
-            'migrations',
-            '001_initial_schema.sql'
+            'migrations'
         )
         
-        if not os.path.exists(migration_file):
-            return jsonify({
-                'success': False,
-                'message': f'Migration file not found: {migration_file}'
-            }), 500
+        # Run all migrations in order
+        migration_files = [
+            '001_initial_schema.sql',
+            '002_add_entity_types.sql'
+        ]
         
-        # Run migration
-        result = run_migration(database_url, migration_file)
+        results = []
+        for migration_file in migration_files:
+            file_path = os.path.join(migrations_dir, migration_file)
+            if os.path.exists(file_path):
+                result = run_migration(database_url, file_path)
+                results.append(result)
+                if not result['success']:
+                    # Stop on first failure
+                    break
+        
+        # Aggregate results
+        all_success = all(r['success'] for r in results)
+        result = {
+            'success': all_success,
+            'message': f'Ran {len(results)} migrations. All successful.' if all_success else 'Some migrations failed.',
+            'migrations': results
+        }
         
         status_code = 200 if result['success'] else 500
         return jsonify(result), status_code
