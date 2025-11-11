@@ -347,7 +347,10 @@ def migrate_neo4j_to_postgres(pg_client):
                         print(f"  ✅ Created: {name}")
                     
                 except Exception as e:
-                    errors.append(f"Error migrating Person {person_dict.get('name', 'unknown')}: {str(e)}")
+                    error_msg = f"Error migrating Person {person_dict.get('name', 'unknown')}: {str(e)}"
+                    print(f"  ❌ {error_msg}")
+                    errors.append(error_msg)
+                    # Continue to next entity
             
             # Migrate Company nodes
             print("\n🏢 Migrating Company nodes...")
@@ -563,12 +566,18 @@ def migrate_neo4j_to_postgres(pg_client):
         }
         
     except Exception as e:
+        import traceback
+        error_details = traceback.format_exc()
+        print(f"\n❌ NEO4J MIGRATION FAILED:")
+        print(f"Error: {str(e)}")
+        print(f"\nFull traceback:\n{error_details}")
         return {
             'success': False,
             'message': f"Neo4j migration failed: {str(e)}",
-            'entities_created': 0,
-            'entities_updated': 0,
-            'relations_created': 0
+            'entities_created': entities_created,
+            'entities_updated': entities_updated,
+            'relations_created': relations_created,
+            'errors': errors[:20]
         }
 
 

@@ -41,12 +41,20 @@ class PostgresClient:
     
     def execute(self, query: str, params: tuple = None, fetch=True) -> List[Dict]:
         """Execute query and return results."""
-        with self.conn.cursor() as cur:
-            cur.execute(query, params)
-            if fetch and cur.description:
-                return [dict(row) for row in cur.fetchall()]
-            self.conn.commit()
-            return []
+        try:
+            with self.conn.cursor() as cur:
+                cur.execute(query, params)
+                if fetch and cur.description:
+                    result = [dict(row) for row in cur.fetchall()]
+                    self.conn.commit()
+                    return result
+                self.conn.commit()
+                return []
+        except Exception as e:
+            # Rollback transaction on error
+            self.conn.rollback()
+            # Re-raise the exception
+            raise
     
     # Entity operations
     
