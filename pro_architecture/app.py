@@ -24,6 +24,14 @@ except ImportError:
     STREAMS_AVAILABLE = False
     print("⚠️ Redis Streams not available")
 
+# Import Analytics endpoints
+try:
+    from analytics.demand_endpoints import demand_bp
+    ANALYTICS_AVAILABLE = True
+except ImportError:
+    ANALYTICS_AVAILABLE = False
+    print("⚠️ Analytics endpoints not available")
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins":"*","supports_credentials":True}})
 
@@ -414,6 +422,16 @@ if STREAMS_AVAILABLE:
     print("✅ Redis Streams endpoints registered:")
     print("   - /api/events/update-request (publish update events)")
     print("   - /api/events/streams/info (stream information)")
+
+# Register analytics endpoints if available
+if ANALYTICS_AVAILABLE:
+    app.register_blueprint(demand_bp)
+    print("✅ Analytics endpoints registered:")
+    print("   - /api/analytics/demand/top (top demand entities)")
+    print("   - /api/analytics/demand/entity/:id (entity demand details)")
+    print("   - /api/analytics/demand/stats (demand statistics)")
+    print("   - /api/analytics/demand/trending (trending entities)")
+    print("   - /api/analytics/demand/stale (stale high-demand entities)")
     print("   - /api/admin/db-status (database status)")
 
 if __name__ == "__main__":
