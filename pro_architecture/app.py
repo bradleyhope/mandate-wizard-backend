@@ -32,6 +32,14 @@ except ImportError:
     ANALYTICS_AVAILABLE = False
     print("⚠️ Analytics endpoints not available")
 
+# Import Prioritization endpoints
+try:
+    from prioritization.priority_endpoints import priority_bp
+    PRIORITIZATION_AVAILABLE = True
+except ImportError:
+    PRIORITIZATION_AVAILABLE = False
+    print("⚠️ Prioritization endpoints not available")
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins":"*","supports_credentials":True}})
 
@@ -428,6 +436,15 @@ if ANALYTICS_AVAILABLE:
     app.register_blueprint(demand_bp)
     print("✅ Analytics endpoints registered:")
     print("   - /api/analytics/demand/top (top demand entities)")
+
+# Register prioritization endpoints if available
+if PRIORITIZATION_AVAILABLE:
+    app.register_blueprint(priority_bp)
+    print("✅ Prioritization endpoints registered:")
+    print("   - /api/priority/batch (get update batch)")
+    print("   - /api/priority/critical (critical entities)")
+    print("   - /api/priority/schedule (update schedule)")
+    print("   - /api/priority/statistics (priority stats)")
     print("   - /api/analytics/demand/entity/:id (entity demand details)")
     print("   - /api/analytics/demand/stats (demand statistics)")
     print("   - /api/analytics/demand/trending (trending entities)")
