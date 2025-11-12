@@ -74,7 +74,7 @@ def get_update_batch():
         query += " ORDER BY demand_score DESC, last_updated_at ASC"
         
         # Execute query
-        entities = get_pg_client().execute_query(query, tuple(params) if params else None)
+        entities = get_pg_client().execute(query, tuple(params) if params else None)
         
         if not entities:
             return jsonify({
@@ -121,7 +121,7 @@ def get_critical_entities():
             ORDER BY demand_score DESC
         """
         
-        entities = get_pg_client().execute_query(query)
+        entities = get_pg_client().execute(query)
         
         if not entities:
             return jsonify({
@@ -176,7 +176,7 @@ def get_update_schedule():
             params.append(entity_type)
         
         # Execute query
-        entities = get_pg_client().execute_query(query, tuple(params) if params else None)
+        entities = get_pg_client().execute(query, tuple(params) if params else None)
         
         if not entities:
             return jsonify({
@@ -237,7 +237,7 @@ def get_priority_statistics():
             params.append(entity_type)
         
         # Execute query
-        entities = get_pg_client().execute_query(query, tuple(params) if params else None)
+        entities = get_pg_client().execute(query, tuple(params) if params else None)
         
         if not entities:
             return jsonify({
@@ -279,7 +279,7 @@ def get_entity_priority(entity_id):
             WHERE id = %s
         """
         
-        entities = get_pg_client().execute_query(query, (entity_id,))
+        entities = get_pg_client().execute(query, (entity_id,))
         
         if not entities:
             return jsonify({'error': 'Entity not found'}), 404
