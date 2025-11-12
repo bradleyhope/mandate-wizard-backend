@@ -1,0 +1,36 @@
+services:
+  # Flask Backend (Web Service)
+  - type: web
+    name: mandate-wizard-backend
+    env: python
+    region: oregon
+    plan: starter
+    branch: pro-architecture
+    buildCommand: "pip install -r pro_architecture/requirements-pro.txt"
+    startCommand: "cd pro_architecture && gunicorn app:app"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: PORT
+        value: 5000
+      # All other env vars should be set in Render dashboard
+      # (REDIS_*, DATABASE_URL, NEO4J_*, PINECONE_*, etc.)
+  
+  # Background Worker (Background Worker Service)
+  - type: worker
+    name: mandate-wizard-worker
+    env: python
+    region: oregon
+    plan: starter
+    branch: pro-architecture
+    buildCommand: "pip install -r pro_architecture/requirements-pro.txt"
+    startCommand: "cd pro_architecture && python3 worker/main.py"
+    envVars:
+      - key: PYTHON_VERSION
+        value: 3.11.0
+      - key: WORKER_CONSUMER_GROUP
+        value: mandate-wizard-workers
+      - key: WORKER_CONSUMER_NAME
+        value: worker-1
+      # All other env vars should be set in Render dashboard
+      # (REDIS_*, DATABASE_URL, etc.)
