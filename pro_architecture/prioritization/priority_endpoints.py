@@ -71,7 +71,7 @@ def get_update_batch():
             query += " WHERE entity_type = %s"
             params.append(entity_type)
         
-        query += " ORDER BY demand_score DESC, last_updated_at ASC"
+        query += " ORDER BY demand_score DESC, updated_at ASC"
         
         # Execute query
         entities = get_pg_client().execute(query, tuple(params) if params else None)
