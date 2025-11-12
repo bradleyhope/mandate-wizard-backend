@@ -6,13 +6,15 @@ REST API for accessing entity update priorities and schedules.
 
 from flask import Blueprint, jsonify, request
 from .priority_engine import PriorityEngine, UpdatePriority
-from ..database.postgres_client import PostgresClient
+try:
+    from database.postgres_client import PostgresClient
+except ImportError:
+    from ..database.postgres_client import PostgresClient
 
 # Create blueprint
 priority_bp = Blueprint('priority', __name__, url_prefix='/api/priority')
 
-# Initialize clients
-pg_client = PostgresClient()
+# Initialize priority engine (singleton)
 priority_engine = PriorityEngine(
     demand_weight=0.5,
     freshness_weight=0.3,
@@ -20,6 +22,10 @@ priority_engine = PriorityEngine(
     stale_threshold_days=30,
     critical_demand_threshold=10
 )
+
+def get_pg_client():
+    """Get PostgreSQL client instance"""
+    return PostgresClient()
 
 
 @priority_bp.route('/batch', methods=['GET'])
@@ -68,7 +74,7 @@ def get_update_batch():
         query += " ORDER BY demand_score DESC, last_updated_at ASC"
         
         # Execute query
-        entities = pg_client.execute_query(query, tuple(params) if params else None)
+        entities = get_pg_client().execute_query(query, tuple(params) if params else None)
         
         if not entities:
             return jsonify({
@@ -115,7 +121,7 @@ def get_critical_entities():
             ORDER BY demand_score DESC
         """
         
-        entities = pg_client.execute_query(query)
+        entities = get_pg_client().execute_query(query)
         
         if not entities:
             return jsonify({
@@ -170,7 +176,7 @@ def get_update_schedule():
             params.append(entity_type)
         
         # Execute query
-        entities = pg_client.execute_query(query, tuple(params) if params else None)
+        entities = get_pg_client().execute_query(query, tuple(params) if params else None)
         
         if not entities:
             return jsonify({
@@ -231,7 +237,7 @@ def get_priority_statistics():
             params.append(entity_type)
         
         # Execute query
-        entities = pg_client.execute_query(query, tuple(params) if params else None)
+        entities = get_pg_client().execute_query(query, tuple(params) if params else None)
         
         if not entities:
             return jsonify({
@@ -273,7 +279,7 @@ def get_entity_priority(entity_id):
             WHERE id = %s
         """
         
-        entities = pg_client.execute_query(query, (entity_id,))
+        entities = get_pg_client().execute_query(query, (entity_id,))
         
         if not entities:
             return jsonify({'error': 'Entity not found'}), 404
