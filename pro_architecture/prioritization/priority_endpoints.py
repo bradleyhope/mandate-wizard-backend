@@ -61,7 +61,7 @@ def get_update_batch():
         # Build query
         query = """
             SELECT id, name, entity_type, demand_score, query_count,
-                   last_queried_at, last_updated_at, created_at
+                   last_queried_at, updated_at, created_at
             FROM entities
         """
         
@@ -115,7 +115,7 @@ def get_critical_entities():
         # Query entities with demand
         query = """
             SELECT id, name, entity_type, demand_score, query_count,
-                   last_queried_at, last_updated_at, created_at
+                   last_queried_at, updated_at, created_at
             FROM entities
             WHERE demand_score > 0
             ORDER BY demand_score DESC
@@ -165,7 +165,7 @@ def get_update_schedule():
         # Build query
         query = """
             SELECT id, name, entity_type, demand_score, query_count,
-                   last_queried_at, last_updated_at, created_at
+                   last_queried_at, updated_at, created_at
             FROM entities
         """
         
@@ -226,7 +226,7 @@ def get_priority_statistics():
         # Build query
         query = """
             SELECT id, name, entity_type, demand_score, query_count,
-                   last_queried_at, last_updated_at, created_at
+                   last_queried_at, updated_at, created_at
             FROM entities
         """
         
@@ -274,7 +274,7 @@ def get_entity_priority(entity_id):
         # Query entity
         query = """
             SELECT id, name, entity_type, demand_score, query_count,
-                   last_queried_at, last_updated_at, created_at
+                   last_queried_at, updated_at, created_at
             FROM entities
             WHERE id = %s
         """
