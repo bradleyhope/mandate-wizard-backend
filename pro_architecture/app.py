@@ -40,6 +40,14 @@ except ImportError:
     PRIORITIZATION_AVAILABLE = False
     print("⚠️ Prioritization endpoints not available")
 
+# Import Conversational RAG endpoints
+try:
+    from conversational_rag.api_endpoints import conversational_bp
+    CONVERSATIONAL_RAG_AVAILABLE = True
+except ImportError:
+    CONVERSATIONAL_RAG_AVAILABLE = False
+    print("⚠️ Conversational RAG endpoints not available")
+
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins":"*","supports_credentials":True}})
 
@@ -442,6 +450,14 @@ if PRIORITIZATION_AVAILABLE:
     app.register_blueprint(priority_bp)
     print("✅ Prioritization endpoints registered:")
     print("   - /api/priority/batch (get update batch)")
+
+# Register conversational RAG endpoints if available
+if CONVERSATIONAL_RAG_AVAILABLE:
+    app.register_blueprint(conversational_bp)
+    print("✅ Conversational RAG endpoints registered:")
+    print("   - /api/conversational/start (start conversation)")
+    print("   - /api/conversational/query (process query)")
+    print("   - /api/conversational/feedback (add feedback)")
     print("   - /api/priority/critical (critical entities)")
     print("   - /api/priority/schedule (update schedule)")
     print("   - /api/priority/statistics (priority stats)")
