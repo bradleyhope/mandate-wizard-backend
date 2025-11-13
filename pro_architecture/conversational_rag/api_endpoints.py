@@ -7,9 +7,9 @@ from flask import Blueprint, request, jsonify
 from functools import wraps
 import os
 
-from ..database.postgres_client import get_pg_client
-from ..rag.engine import get_rag_engine
-from .conversational_rag import ConversationalRAG
+from database.postgres_client import get_pg_client
+from rag.engine import get_rag_engine
+from conversational_rag.conversational_rag import ConversationalRAG
 
 
 # Create blueprint
@@ -27,7 +27,9 @@ def get_conversational_rag():
         rag_engine = get_rag_engine()
         
         # LLM client (use existing from app)
-        from ..app import llm_client
+        # Get LLM client from app context
+        from flask import current_app
+        llm_client = current_app.config.get('llm_client')
         
         # Embedding client (use OpenAI)
         from openai import OpenAI
