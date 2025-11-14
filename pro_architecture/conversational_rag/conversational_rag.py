@@ -69,17 +69,23 @@ class ConversationalRAG:
         # Generate answer
         answer, quality, repetition_score = self.engine.generate_answer(context)
         
+        # Return format matching frontend expectations
+        quality_dict = quality.to_dict()
         return {
             'answer': answer,
             'turn_number': context.turn_number,
-            'quality': quality.to_dict(),
+            'quality_score': quality_dict.get('overall_score', 0.0),
             'repetition_score': repetition_score,
+            'entities_mentioned': context.entities_to_include or [],
+            'followups': [],  # TODO: Generate follow-up questions
+            'sources': [],  # TODO: Include sources from documents
             'metadata': {
                 'question_type': context.question_type.value,
                 'response_strategy': context.response_strategy.value,
                 'rewritten_query': context.rewritten_query,
                 'entities_excluded': context.entities_to_exclude,
-                'entities_included': context.entities_to_include
+                'entities_included': context.entities_to_include,
+                'quality_details': quality_dict
             }
         }
     
