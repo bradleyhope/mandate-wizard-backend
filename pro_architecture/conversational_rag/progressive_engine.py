@@ -189,23 +189,26 @@ class ProgressiveEngine:
         documents = self.rag.retrieve(query)
         
         # Enrich with Neo4j entity data (person profiles, relationships, etc.)
-        entities = self.rag.enrich_entities(documents)
-        
-        # Add entity data as additional documents for context
-        if entities:
-            print(f"✅ Enriched with {len(entities)} entities from Neo4j")
-            for entity in entities:
-                # Convert Neo4j entity to document format
-                entity_doc = {
-                    'metadata': {
-                        'text': self._format_entity_as_text(entity),
-                        'source': 'neo4j',
-                        'entity_id': entity.get('entity_id'),
-                        'entity_type': entity.get('type')
-                    },
-                    'score': 0.9  # High score for entity enrichment
-                }
-                documents.append(entity_doc)
+        try:
+            entities = self.rag.enrich_entities(documents)
+            if entities:
+                print(f"✅ Enriched with {len(entities)} entities from Neo4j")
+                for entity in entities:
+                    # Convert Neo4j entity to document format
+                    entity_doc = {
+                        'metadata': {
+                            'text': self._format_entity_as_text(entity),
+                            'source': 'neo4j',
+                            'entity_id': entity.get('entity_id'),
+                            'entity_type': entity.get('type')
+                        },
+                        'score': 0.9  # High score for entity enrichment
+                    }
+                    documents.append(entity_doc)
+            else:
+                print("⚠️ Neo4j enrichment returned 0 entities")
+        except Exception as e:
+            print(f"⚠️ Neo4j enrichment failed: {e}")
         
         # Check if web search is needed
         if self._should_trigger_web_search(context, documents):
@@ -217,21 +220,16 @@ class ProgressiveEngine:
     def _should_trigger_web_search(self, context: TurnContext, documents: List[Dict]) -> bool:
         """Determine if web search should be triggered"""
         
-        # Trigger if very few documents retrieved
-        if len(documents) < 3:
-            return True
-        
-        # Trigger if asking for recent/current information
+        # Only trigger for explicit recency queries to minimize latency
         query_lower = context.user_query.lower()
-        recency_keywords = ['current', 'recent', 'latest', 'now', 'today', '2025', '2024']
-        if any(keyword in query_lower for keyword in recency_keywords):
-            return True
+        recency_keywords = ['current', 'recent', 'latest', 'now', 'today', '2025', '2024', 'this year']
         
-        # Trigger if deep into conversation and asking for new info
-        if context.turn_number > 5 and context.question_type.value == 'explore_more':
-            return True
+        # Must have recency keyword AND few documents
+        has_recency = any(keyword in query_lower for keyword in recency_keywords)
+        few_docs = len(documents) < 5
         
-        return False
+        # Only trigger if both conditions met (more restrictive)
+        return has_recency and few_docs
     
     def _web_search(self, query: str) -> List[Dict]:
         """Perform web search using Perplexity API for fresh information"""
@@ -268,7 +266,7 @@ class ProgressiveEngine:
                     'temperature': 0.2,
                     'return_citations': True
                 },
-                timeout=10
+                timeout=5  # Reduced from 10s for faster response
             )
             
             if response.status_code == 200:
