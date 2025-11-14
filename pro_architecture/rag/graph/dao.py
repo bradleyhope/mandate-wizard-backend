@@ -53,3 +53,32 @@ class Neo4jDAO:
         with self.driver.session() as session:
             result = session.run(query, platform_name=platform_name)
             return [dict(record) for record in result]
+
+    def search_person_by_name(self, name: str) -> Optional[Dict[str, Any]]:
+        """Search for a person by name (case-insensitive, partial match)."""
+        query = """
+        MATCH (p:Person)
+        WHERE toLower(p.name) CONTAINS toLower($name)
+        RETURN p.name AS name, 
+               p.title AS title, 
+               p.current_title AS current_title,
+               p.streamer AS streamer,
+               p.mandate AS mandate,
+               p.bio AS bio,
+               p.genres AS genres,
+               p.formats AS formats,
+               p.pitch_pathway AS pitch_pathway,
+               p.pitch_requirements AS pitch_requirements,
+               p.reports_to AS reports_to,
+               p.region AS region,
+               p.person_id AS person_id,
+               p.entity_id AS entity_id
+        ORDER BY size(p.name) ASC
+        LIMIT 1
+        """
+        with self.driver.session() as session:
+            result = session.run(query, name=name)
+            record = result.single()
+            if record:
+                return dict(record)
+        return None

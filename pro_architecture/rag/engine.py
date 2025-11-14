@@ -48,15 +48,55 @@ class Engine:
         return merged[: S.RERANK_RETURN]
 
     def enrich_entities(self, docs: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+        """Enrich documents with Neo4j entity data by searching for names in document text"""
+        import re
+        
         out = []
+        seen_entities = set()
+        
+        # First try ID-based enrichment (if available)
         for d in docs[:5]:
             meta = d.get("metadata") or {}
             pid = meta.get("person_entity_id")
-            if pid:
+            if pid and pid not in seen_entities:
                 p = self.graph.get_person_by_id(pid)
                 if p:
                     out.append({"type": "neo4j_person", "entity_id": pid, "data": p})
-        return out
+                    seen_entities.add(pid)
+        
+        # Then try name-based enrichment by extracting names from document text
+        for d in docs[:10]:  # Check more docs for names
+            meta = d.get("metadata") or {}
+            text = meta.get("text", "")
+            
+            # Extract potential person names (2-3 capitalized words)
+            # Pattern: Firstname Lastname or Firstname Middle Lastname
+            name_pattern = r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\b'
+            potential_names = re.findall(name_pattern, text)
+            
+            # Search Neo4j for each potential name
+            for name in potential_names[:5]:  # Limit to avoid too many queries
+                if name in seen_entities:
+                    continue
+                    
+                # Search Neo4j for person by name
+                try:
+                    person = self.graph.search_person_by_name(name)
+                    if person:
+                        entity_id = person.get('person_id') or person.get('entity_id') or name
+                        if entity_id not in seen_entities:
+                            out.append({
+                                "type": "neo4j_person",
+                                "entity_id": entity_id,
+                                "data": person
+                            })
+                            seen_entities.add(entity_id)
+                            seen_entities.add(name)
+                except Exception as e:
+                    # Skip if search fails
+                    continue
+        
+        return out[:10]  # Limit total entities to avoid context overflow
 
     def synthesize(self, question: str, docs: List[Dict[str, Any]], entities: List[Dict[str, Any]]) -> Dict[str, Any]:
         from openai import OpenAI
