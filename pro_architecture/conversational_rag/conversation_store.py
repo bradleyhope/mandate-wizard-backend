@@ -182,7 +182,7 @@ class ConversationStore:
             turn.response_time_ms
         ))
         
-        return result[0][0]
+        return result[0]['id']
     
     def get_recent_turns(self, conversation_id: str, limit: int = 5) -> List[ConversationTurn]:
         """Get recent turns for context"""
