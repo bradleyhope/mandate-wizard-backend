@@ -72,7 +72,7 @@ class ConversationStore:
             RETURNING id::text
         """
         result = self.pg.execute(query, (user_id, session_id, user_goal))
-        conversation_id = result[0][0]
+        conversation_id = result[0]['id']
         
         # Initialize conversation state
         self._initialize_state(conversation_id)
