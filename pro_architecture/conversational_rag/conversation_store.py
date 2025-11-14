@@ -266,13 +266,13 @@ class ConversationStore:
         
         row = result[0]
         return ConversationState(
-            working_memory=row[0] or {},
-            short_term_memory=row[1] or [],
-            long_term_memory=row[2] or {},
-            covered_entities=row[3] or [],
-            covered_topics=row[4] or [],
-            entity_graph=row[5] or {},
-            current_depth=row[6] or 1
+            working_memory=row['working_memory'] or {},
+            short_term_memory=row['short_term_memory'] or [],
+            long_term_memory=row['long_term_memory'] or {},
+            covered_entities=row['covered_entities'] or [],
+            covered_topics=row['covered_topics'] or [],
+            entity_graph=row['entity_graph'] or {},
+            current_depth=row['current_depth'] or 1
         )
     
     def update_state(self, conversation_id: str, state: ConversationState):

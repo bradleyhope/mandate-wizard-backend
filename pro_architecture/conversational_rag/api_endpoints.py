@@ -154,7 +154,7 @@ def process_query():
             
             try:
                 # Use regular RAG engine as fallback (from existing conversational RAG instance)
-                fallback_result = rag.rag_engine.query(query)
+                fallback_result = rag.rag_engine.answer(query)
                 
                 # Format response to match conversational format
                 response = {
@@ -452,7 +452,7 @@ def debug_query():
             })
             
             try:
-                fallback_result = rag.rag_engine.query(query)
+                fallback_result = rag.rag_engine.answer(query)
                 debug_info['steps'].append({'step': 'fallback_rag', 'status': 'success'})
                 debug_info['fallback_result'] = fallback_result
                 return jsonify(debug_info), 200
