@@ -404,3 +404,75 @@ def health_check():
             'status': 'unhealthy',
             'error': str(e)
         }), 500
+
+
+@conversational_bp.route('/debug/query', methods=['POST'])
+@require_auth
+def debug_query():
+    """
+    DEBUG endpoint - returns full error details
+    
+    POST /api/conversational/debug/query
+    {
+        "conversation_id": "uuid",
+        "query": "user question"
+    }
+    
+    Returns full error stack traces for debugging
+    """
+    import traceback
+    
+    data = request.get_json()
+    conversation_id = data.get('conversation_id')
+    query = data.get('query')
+    
+    debug_info = {
+        'conversation_id': conversation_id,
+        'query': query,
+        'steps': []
+    }
+    
+    try:
+        rag = get_conversational_rag()
+        debug_info['steps'].append({'step': 'get_conversational_rag', 'status': 'success'})
+        
+        try:
+            result = rag.process_query(conversation_id, query)
+            debug_info['steps'].append({'step': 'process_query', 'status': 'success'})
+            debug_info['result'] = result
+            return jsonify(debug_info), 200
+            
+        except Exception as conv_error:
+            debug_info['steps'].append({
+                'step': 'process_query',
+                'status': 'failed',
+                'error': str(conv_error),
+                'error_type': type(conv_error).__name__,
+                'traceback': traceback.format_exc()
+            })
+            
+            try:
+                fallback_result = rag.rag_engine.query(query)
+                debug_info['steps'].append({'step': 'fallback_rag', 'status': 'success'})
+                debug_info['fallback_result'] = fallback_result
+                return jsonify(debug_info), 200
+                
+            except Exception as fallback_error:
+                debug_info['steps'].append({
+                    'step': 'fallback_rag',
+                    'status': 'failed',
+                    'error': str(fallback_error),
+                    'error_type': type(fallback_error).__name__,
+                    'traceback': traceback.format_exc()
+                })
+                return jsonify(debug_info), 200
+                
+    except Exception as e:
+        debug_info['steps'].append({
+            'step': 'initialization',
+            'status': 'failed',
+            'error': str(e),
+            'error_type': type(e).__name__,
+            'traceback': traceback.format_exc()
+        })
+        return jsonify(debug_info), 200
