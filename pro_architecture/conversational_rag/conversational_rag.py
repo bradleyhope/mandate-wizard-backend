@@ -22,6 +22,7 @@ class ConversationalRAG:
             llm_client: LLM client for generation
             embedding_client: Embedding client for semantic similarity
         """
+        self.rag_engine = rag_engine  # Store for fallback access
         self.store = ConversationStore(pg_client)
         self.manager = ConversationManager(self.store, llm_client)
         self.engine = ProgressiveEngine(self.store, rag_engine, llm_client, embedding_client)
