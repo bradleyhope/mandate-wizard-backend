@@ -186,8 +186,14 @@ def process_query():
                     'entities_mentioned': [],
                     'followups': [],
                     'sources': [],
-                    'fallback_mode': True,
-                    'error_occurred': True
+                    'metadata': {
+                        'fallback_mode': True,
+                        'error_occurred': True,
+                        'documents_retrieved': 0,
+                        'entities_enriched': 0,
+                        'web_search_triggered': False,
+                        'error_message': str(fallback_error)[:200]  # Include error for debugging
+                    }
                 }), 200  # Return 200 with helpful message, not 500
     
     except Exception as e:

@@ -186,7 +186,14 @@ class ProgressiveEngine:
         
         # Retrieve from RAG (Pinecone vector search)
         # Note: Engine.retrieve() only accepts 'question' parameter, not 'query', 'top_k', or 'filters'
-        documents = self.rag.retrieve(query)
+        try:
+            documents = self.rag.retrieve(query)
+            print(f"✅ Retrieved {len(documents)} documents from Pinecone")
+        except Exception as e:
+            print(f"❌ Retrieval failed: {e}")
+            import traceback
+            traceback.print_exc()
+            documents = []  # Return empty list to allow graceful degradation
         
         # Enrich with Neo4j entity data (person profiles, relationships, etc.)
         try:
