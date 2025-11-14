@@ -7,8 +7,8 @@ from flask import Blueprint, request, jsonify
 from functools import wraps
 import os
 
-from database.postgres_client import get_pg_client
-from rag.engine import get_rag_engine
+from database.postgres_client import PostgresClient
+from rag.engine import Engine
 from conversational_rag.conversational_rag import ConversationalRAG
 
 
@@ -23,8 +23,8 @@ conversational_bp = Blueprint('conversational', __name__, url_prefix='/api/conve
 def get_conversational_rag():
     """Get or create ConversationalRAG instance"""
     if not hasattr(get_conversational_rag, 'instance'):
-        pg_client = get_pg_client()
-        rag_engine = get_rag_engine()
+        pg_client = PostgresClient()
+        rag_engine = Engine()
         
         # LLM client (use existing from app)
         # Get LLM client from app context
