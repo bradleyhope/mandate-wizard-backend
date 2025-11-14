@@ -1,0 +1,42 @@
+# Netflix Mandate Wizard - MEMORY-OPTIMIZED Dependencies
+# Updated: 2025-11-09 - Optimized for Railway/Render deployment (512MB-2GB RAM)
+
+# Build dependencies
+setuptools>=65.0.0
+wheel
+
+# Core dependencies - LIGHTWEIGHT VERSIONS
+pinecone-client==5.0.1
+neo4j==5.14.0
+
+# ❌ REMOVED: sentence-transformers (saves ~500MB)
+# ❌ REMOVED: PyTorch (saves ~1GB)
+# ✅ ALTERNATIVE: Use OpenAI embeddings API instead
+
+openai>=1.30.0
+flask==3.0.0
+flask-cors==4.0.0
+
+# Authentication & Security
+PyJWT==2.8.0
+requests==2.31.0
+
+# ❌ REMOVED: numpy, pandas (saves ~150MB)
+# ✅ ALTERNATIVE: Use Python standard library for data processing
+
+# Production server
+gunicorn==21.2.0
+gevent==24.2.1
+
+# ❌ REMOVED: redis (saves ~20MB)
+# ✅ ALTERNATIVE: Use in-memory dict with size limits
+
+# ❌ REMOVED: langchain, langgraph (saves ~100MB)
+# ✅ ALTERNATIVE: Direct OpenAI API calls
+
+# Minimal additional dependencies
+beautifulsoup4==4.12.2
+psutil==5.9.6
+
+# Optional (for development only - DO NOT install in production)
+# pytest==7.4.3

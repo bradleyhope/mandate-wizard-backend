@@ -69,10 +69,14 @@ class Engine:
             meta = d.get("metadata") or {}
             text = meta.get("text", "")
             
-            # Extract potential person names (2-3 capitalized words)
-            # Pattern: Firstname Lastname or Firstname Middle Lastname
-            name_pattern = r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\b'
-            potential_names = re.findall(name_pattern, text)
+            # If text is empty, try using the name field directly
+            if not text and meta.get("name"):
+                potential_names = [meta.get("name")]
+            else:
+                # Extract potential person names (2-3 capitalized words)
+                # Pattern: Firstname Lastname or Firstname Middle Lastname
+                name_pattern = r'\b([A-Z][a-z]+(?:\s+[A-Z][a-z]+){1,2})\b'
+                potential_names = re.findall(name_pattern, text)
             
             # Search Neo4j for each potential name
             for name in potential_names[:5]:  # Limit to avoid too many queries

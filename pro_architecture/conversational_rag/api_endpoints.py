@@ -142,6 +142,7 @@ def process_query():
         
         try:
             # Try conversational RAG first
+            # Note: Render has 30s timeout, so operations must complete quickly
             result = rag.process_query(conversation_id, query)
             return jsonify(result), 200
         
