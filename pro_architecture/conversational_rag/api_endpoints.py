@@ -95,7 +95,15 @@ def start_conversation():
         }), 201
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        error_msg = str(e)
+        traceback_str = traceback.format_exc()
+        print(f"❌ Error in endpoint: {error_msg}")
+        print(f"Traceback:\n{traceback_str}")
+        return jsonify({
+            'error': error_msg if error_msg else 'Unknown error',
+            'type': type(e).__name__
+        }), 500
 
 
 @conversational_bp.route('/query', methods=['POST'])
@@ -136,7 +144,15 @@ def process_query():
         return jsonify(result), 200
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        error_msg = str(e)
+        traceback_str = traceback.format_exc()
+        print(f"❌ Error in endpoint: {error_msg}")
+        print(f"Traceback:\n{traceback_str}")
+        return jsonify({
+            'error': error_msg if error_msg else 'Unknown error',
+            'type': type(e).__name__
+        }), 500
 
 
 @conversational_bp.route('/feedback', methods=['POST'])
@@ -188,7 +204,15 @@ def add_feedback():
         return jsonify({'message': 'Feedback recorded successfully'}), 200
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        error_msg = str(e)
+        traceback_str = traceback.format_exc()
+        print(f"❌ Error in endpoint: {error_msg}")
+        print(f"Traceback:\n{traceback_str}")
+        return jsonify({
+            'error': error_msg if error_msg else 'Unknown error',
+            'type': type(e).__name__
+        }), 500
 
 
 @conversational_bp.route('/conversation/<conversation_id>', methods=['GET'])
@@ -219,7 +243,15 @@ def get_conversation(conversation_id):
         return jsonify(conversation), 200
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        error_msg = str(e)
+        traceback_str = traceback.format_exc()
+        print(f"❌ Error in endpoint: {error_msg}")
+        print(f"Traceback:\n{traceback_str}")
+        return jsonify({
+            'error': error_msg if error_msg else 'Unknown error',
+            'type': type(e).__name__
+        }), 500
 
 
 @conversational_bp.route('/conversation/<conversation_id>/stats', methods=['GET'])
@@ -250,7 +282,15 @@ def get_conversation_stats(conversation_id):
         return jsonify(stats), 200
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        error_msg = str(e)
+        traceback_str = traceback.format_exc()
+        print(f"❌ Error in endpoint: {error_msg}")
+        print(f"Traceback:\n{traceback_str}")
+        return jsonify({
+            'error': error_msg if error_msg else 'Unknown error',
+            'type': type(e).__name__
+        }), 500
 
 
 @conversational_bp.route('/conversation/<conversation_id>/end', methods=['POST'])
@@ -279,7 +319,15 @@ def end_conversation(conversation_id):
         return jsonify({'message': 'Conversation ended successfully'}), 200
     
     except Exception as e:
-        return jsonify({'error': str(e)}), 500
+        import traceback
+        error_msg = str(e)
+        traceback_str = traceback.format_exc()
+        print(f"❌ Error in endpoint: {error_msg}")
+        print(f"Traceback:\n{traceback_str}")
+        return jsonify({
+            'error': error_msg if error_msg else 'Unknown error',
+            'type': type(e).__name__
+        }), 500
 
 
 # ============================================================================
