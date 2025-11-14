@@ -25,7 +25,12 @@ def get_reranker():
     global _reranker
     if _reranker is None:
         if S.RERANKER == "cohere":
-            _reranker = CohereReranker()
+            # Check if API key is available
+            if not S.COHERE_API_KEY or S.COHERE_API_KEY.strip() == "":
+                print("⚠️ Cohere API key not set, skipping reranking")
+                _reranker = None
+            else:
+                _reranker = CohereReranker()
         elif S.RERANKER == "none":
             _reranker = None
         else:
