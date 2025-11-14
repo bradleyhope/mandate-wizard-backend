@@ -153,9 +153,8 @@ def process_query():
             print(f"Traceback:\n{traceback.format_exc()}")
             
             try:
-                # Use regular RAG engine as fallback
-                rag_engine = Engine()
-                fallback_result = rag_engine.query(query)
+                # Use regular RAG engine as fallback (from existing conversational RAG instance)
+                fallback_result = rag.rag_engine.query(query)
                 
                 # Format response to match conversational format
                 response = {
