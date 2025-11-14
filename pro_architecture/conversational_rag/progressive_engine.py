@@ -215,9 +215,66 @@ class ProgressiveEngine:
         return False
     
     def _web_search(self, query: str) -> List[Dict]:
-        """Perform web search (placeholder for Phase 1)"""
-        # TODO: Integrate actual web search in Phase 1
-        # For now, return empty list
+        """Perform web search using Perplexity API for fresh information"""
+        import os
+        import requests
+        
+        api_key = os.getenv('SONAR_API_KEY')
+        if not api_key:
+            print("⚠️ SONAR_API_KEY not found, skipping web search")
+            return []
+        
+        try:
+            print(f"🌐 Triggering web search for: {query}")
+            
+            response = requests.post(
+                'https://api.perplexity.ai/chat/completions',
+                headers={
+                    'Authorization': f'Bearer {api_key}',
+                    'Content-Type': 'application/json'
+                },
+                json={
+                    'model': 'sonar-pro',
+                    'messages': [
+                        {
+                            'role': 'system',
+                            'content': 'You are a research assistant. Provide factual, up-to-date information with sources.'
+                        },
+                        {
+                            'role': 'user',
+                            'content': query
+                        }
+                    ],
+                    'max_tokens': 500,
+                    'temperature': 0.2,
+                    'return_citations': True
+                },
+                timeout=10
+            )
+            
+            if response.status_code == 200:
+                data = response.json()
+                content = data.get('choices', [{}])[0].get('message', {}).get('content', '')
+                citations = data.get('citations', [])
+                
+                if content:
+                    print(f"✅ Web search returned {len(content)} chars, {len(citations)} citations")
+                    # Format as a document for the RAG system
+                    return [{
+                        'text': content,
+                        'metadata': {
+                            'source': 'web_search',
+                            'citations': citations,
+                            'query': query,
+                            'timestamp': 'real-time'
+                        }
+                    }]
+            else:
+                print(f"⚠️ Web search failed: {response.status_code}")
+                
+        except Exception as e:
+            print(f"⚠️ Web search error: {e}")
+        
         return []
     
     # ========================================================================
@@ -240,7 +297,17 @@ class ProgressiveEngine:
         response = self.llm.chat.completions.create(
             model="gpt-4o-mini",
             messages=[
-                {"role": "system", "content": "You are a helpful assistant that provides detailed, accurate answers based on the provided context."},
+                {"role": "system", "content": """You are a helpful assistant for entertainment industry professionals.
+
+Formatting rules:
+- Use **bold** for names, titles, and key terms
+- Use bullet points (-) for lists
+- Use numbered lists (1., 2., 3.) for steps or rankings
+- Keep paragraphs concise (2-3 sentences max)
+- Use clear section breaks
+- Be direct and actionable
+
+Provide detailed, accurate answers based on the provided context."""},
                 {"role": "user", "content": prompt}
             ],
             max_tokens=800,
