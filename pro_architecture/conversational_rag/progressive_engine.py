@@ -224,13 +224,18 @@ class ProgressiveEngine:
         # Build prompt based on strategy
         prompt = self._build_prompt(context, documents, emphasize_novelty, previous_answer)
         
-        # Generate
-        answer = self.llm.generate(
-            prompt,
+        # Generate using OpenAI chat completions API
+        response = self.llm.chat.completions.create(
+            model="gpt-4o-mini",
+            messages=[
+                {"role": "system", "content": "You are a helpful assistant that provides detailed, accurate answers based on the provided context."},
+                {"role": "user", "content": prompt}
+            ],
             max_tokens=800,
             temperature=0.7
         )
         
+        answer = response.choices[0].message.content
         return answer.strip()
     
     def _build_prompt(

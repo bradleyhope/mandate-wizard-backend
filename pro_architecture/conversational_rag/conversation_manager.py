@@ -357,7 +357,16 @@ Keep it concise (1-2 sentences max).
 Rewritten question:"""
         
         try:
-            rewritten = self.llm.generate(prompt, max_tokens=100, temperature=0.3)
+            response = self.llm.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "You are a query rewriting assistant. Rewrite queries to be clearer and more specific based on conversation context."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=100,
+                temperature=0.3
+            )
+            rewritten = response.choices[0].message.content
             return rewritten.strip()
         except Exception as e:
             # If rewriting fails, return original
@@ -393,7 +402,16 @@ Conversation:
 User's goal:"""
         
         try:
-            inferred_goal = self.llm.generate(prompt, max_tokens=100, temperature=0.3)
+            response = self.llm.chat.completions.create(
+                model="gpt-4o-mini",
+                messages=[
+                    {"role": "system", "content": "You are a goal inference assistant. Infer the user's overall goal from their conversation history."},
+                    {"role": "user", "content": prompt}
+                ],
+                max_tokens=100,
+                temperature=0.3
+            )
+            inferred_goal = response.choices[0].message.content
             self.store.update_conversation_goal(
                 conversation_id,
                 inferred_goal.strip(),
