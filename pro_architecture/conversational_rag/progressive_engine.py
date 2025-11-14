@@ -184,9 +184,28 @@ class ProgressiveEngine:
             # For exploration: exclude docs primarily about these entities
             filter_criteria['exclude_entity_names'] = context.entities_to_exclude
         
-        # Retrieve from RAG
+        # Retrieve from RAG (Pinecone vector search)
         # Note: Engine.retrieve() only accepts 'question' parameter, not 'query', 'top_k', or 'filters'
         documents = self.rag.retrieve(query)
+        
+        # Enrich with Neo4j entity data (person profiles, relationships, etc.)
+        entities = self.rag.enrich_entities(documents)
+        
+        # Add entity data as additional documents for context
+        if entities:
+            print(f"✅ Enriched with {len(entities)} entities from Neo4j")
+            for entity in entities:
+                # Convert Neo4j entity to document format
+                entity_doc = {
+                    'metadata': {
+                        'text': self._format_entity_as_text(entity),
+                        'source': 'neo4j',
+                        'entity_id': entity.get('entity_id'),
+                        'entity_type': entity.get('type')
+                    },
+                    'score': 0.9  # High score for entity enrichment
+                }
+                documents.append(entity_doc)
         
         # Check if web search is needed
         if self._should_trigger_web_search(context, documents):
@@ -575,3 +594,40 @@ Be specific about WHO to contact, WHAT to prepare, WHEN to act, HOW to approach.
         unique_entities = list(dict.fromkeys(entities))
         
         return unique_entities[:20]  # Limit to top 20
+
+    def _format_entity_as_text(self, entity: Dict) -> str:
+        """Format Neo4j entity data as readable text for LLM context"""
+        entity_type = entity.get('type', 'unknown')
+        data = entity.get('data', {})
+        
+        if entity_type == 'person':
+            # Format person entity
+            name = data.get('name', 'Unknown')
+            title = data.get('title', '')
+            company = data.get('company', '')
+            bio = data.get('bio', '')
+            
+            text_parts = [f"{name}"]
+            if title:
+                text_parts.append(f"Title: {title}")
+            if company:
+                text_parts.append(f"Company: {company}")
+            if bio:
+                text_parts.append(f"Bio: {bio}")
+            
+            return " | ".join(text_parts)
+            
+        elif entity_type == 'company':
+            # Format company entity
+            name = data.get('name', 'Unknown')
+            description = data.get('description', '')
+            
+            text_parts = [f"{name}"]
+            if description:
+                text_parts.append(f"Description: {description}")
+            
+            return " | ".join(text_parts)
+            
+        else:
+            # Generic format
+            return json.dumps(data)
