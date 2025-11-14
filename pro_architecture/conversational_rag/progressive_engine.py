@@ -62,8 +62,12 @@ class ProgressiveEngine:
         # Generate answer
         answer = self._generate_with_strategy(context, documents)
         
-        # Get embedding for semantic similarity
-        answer_embedding = self.embeddings.embed(answer)
+        # Get embedding for semantic similarity using OpenAI embeddings API
+        embedding_response = self.embeddings.embeddings.create(
+            model="text-embedding-3-small",
+            input=answer
+        )
+        answer_embedding = embedding_response.data[0].embedding
         
         # Check semantic repetition
         previous_embeddings = self.store.get_previous_answer_embeddings(
@@ -90,7 +94,11 @@ class ProgressiveEngine:
                 previous_answer=answer
             )
             
-            answer_embedding = self.embeddings.embed(answer)
+            embedding_response = self.embeddings.embeddings.create(
+                model="text-embedding-3-small",
+                input=answer
+            )
+            answer_embedding = embedding_response.data[0].embedding
             repetition_score = self.store.calculate_semantic_repetition(
                 answer_embedding,
                 previous_embeddings
@@ -121,7 +129,11 @@ class ProgressiveEngine:
         )
         
         # Get query embedding
-        query_embedding = self.embeddings.embed(context.rewritten_query)
+        embedding_response = self.embeddings.embeddings.create(
+            model="text-embedding-3-small",
+            input=context.rewritten_query
+        )
+        query_embedding = embedding_response.data[0].embedding
         
         self.store.add_turn(
             context.conversation_id,
