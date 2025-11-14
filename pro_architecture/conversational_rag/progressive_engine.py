@@ -173,11 +173,8 @@ class ProgressiveEngine:
             filter_criteria['exclude_entity_names'] = context.entities_to_exclude
         
         # Retrieve from RAG
-        documents = self.rag.retrieve(
-            query=query,
-            top_k=10,
-            filters=filter_criteria
-        )
+        # Note: Engine.retrieve() only accepts 'question' parameter, not 'query', 'top_k', or 'filters'
+        documents = self.rag.retrieve(query)
         
         # Check if web search is needed
         if self._should_trigger_web_search(context, documents):
