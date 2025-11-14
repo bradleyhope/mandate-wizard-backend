@@ -26,14 +26,12 @@ def get_conversational_rag():
         pg_client = PostgresClient()
         rag_engine = Engine()
         
-        # LLM client (use existing from app)
-        # Get LLM client from app context
-        from flask import current_app
-        llm_client = current_app.config.get('llm_client')
-        
-        # Embedding client (use OpenAI)
+        # LLM client (create OpenAI client directly)
         from openai import OpenAI
-        embedding_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        llm_client = OpenAI(api_key=os.getenv('OPENAI_API_KEY'))
+        
+        # Embedding client (same as LLM client)
+        embedding_client = llm_client
         
         get_conversational_rag.instance = ConversationalRAG(
             pg_client,
