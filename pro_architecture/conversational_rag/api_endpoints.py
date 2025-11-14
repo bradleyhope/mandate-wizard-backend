@@ -139,20 +139,76 @@ def process_query():
             return jsonify({'error': 'conversation_id and query are required'}), 400
         
         rag = get_conversational_rag()
-        result = rag.process_query(conversation_id, query)
         
-        return jsonify(result), 200
+        try:
+            # Try conversational RAG first
+            result = rag.process_query(conversation_id, query)
+            return jsonify(result), 200
+        
+        except Exception as conv_error:
+            # If conversational RAG fails, fallback to regular RAG
+            import traceback
+            print(f"⚠️ Conversational RAG failed, falling back to regular RAG")
+            print(f"Error: {str(conv_error)}")
+            print(f"Traceback:\n{traceback.format_exc()}")
+            
+            try:
+                # Use regular RAG engine as fallback
+                rag_engine = Engine()
+                fallback_result = rag_engine.query(query)
+                
+                # Format response to match conversational format
+                response = {
+                    'answer': fallback_result.get('final_answer', fallback_result.get('answer', 'Unable to process query')),
+                    'turn_number': 0,  # Indicate fallback mode
+                    'quality_score': None,
+                    'repetition_score': None,
+                    'entities_mentioned': [],
+                    'followups': fallback_result.get('follow_up_questions', []),
+                    'sources': fallback_result.get('sources', []),
+                    'fallback_mode': True,
+                    'fallback_reason': str(conv_error)
+                }
+                
+                return jsonify(response), 200
+            
+            except Exception as fallback_error:
+                # Even fallback failed - return a helpful message
+                print(f"❌ Fallback RAG also failed: {str(fallback_error)}")
+                print(f"Traceback:\n{traceback.format_exc()}")
+                
+                # Return a user-friendly response instead of error
+                return jsonify({
+                    'answer': "I'm having trouble processing your question right now. Could you try rephrasing it or asking a different question?",
+                    'turn_number': 0,
+                    'quality_score': None,
+                    'repetition_score': None,
+                    'entities_mentioned': [],
+                    'followups': [],
+                    'sources': [],
+                    'fallback_mode': True,
+                    'error_occurred': True
+                }), 200  # Return 200 with helpful message, not 500
     
     except Exception as e:
+        # Outer exception handler - should rarely be hit
         import traceback
         error_msg = str(e)
         traceback_str = traceback.format_exc()
-        print(f"❌ Error in endpoint: {error_msg}")
+        print(f"❌ Critical error in endpoint: {error_msg}")
         print(f"Traceback:\n{traceback_str}")
+        
+        # Still return a helpful message, not a raw error
         return jsonify({
-            'error': error_msg if error_msg else 'Unknown error',
-            'type': type(e).__name__
-        }), 500
+            'answer': "I'm experiencing technical difficulties. Please try again in a moment.",
+            'turn_number': 0,
+            'quality_score': None,
+            'repetition_score': None,
+            'entities_mentioned': [],
+            'followups': [],
+            'sources': [],
+            'error_occurred': True
+        }), 200  # Return 200 with message, not 500
 
 
 @conversational_bp.route('/feedback', methods=['POST'])
