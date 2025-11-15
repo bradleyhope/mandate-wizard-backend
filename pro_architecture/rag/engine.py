@@ -25,6 +25,68 @@ class Engine:
         if S.M_Q_EXPANSIONS >= 2:
             variants.append(q.replace("mandate", "commissioning mandate"))
         return list(dict.fromkeys(variants))[: 1 + S.M_Q_EXPANSIONS]
+    
+    def _apply_boosting(self, docs: List[Dict[str, Any]], question: str) -> List[Dict[str, Any]]:
+        """Apply priority-based boosting to document scores."""
+        import re
+        from datetime import datetime, timedelta
+        
+        # Detect query region (simple heuristic)
+        query_region = None
+        if re.search(r'\b(US|USA|United States|American)\b', question, re.IGNORECASE):
+            query_region = 'US'
+        elif re.search(r'\b(UK|United Kingdom|British)\b', question, re.IGNORECASE):
+            query_region = 'UK'
+        
+        boosted_docs = []
+        for doc in docs:
+            meta = doc.get('metadata', {})
+            base_score = doc.get('score', 0.5)
+            
+            # Start with base score
+            boosted_score = base_score
+            
+            # 1. Scope-based boosting
+            scope = meta.get('scope', 'local')
+            if scope == 'global':
+                boosted_score *= 1.5
+            elif scope == 'regional':
+                boosted_score *= 1.2
+            
+            # 2. Region match boosting
+            if query_region and meta.get('region') == query_region:
+                boosted_score *= 1.3
+            
+            # 3. Priority score boosting (normalized to 1.0-1.5x)
+            priority_score = meta.get('priority_score', 50)
+            priority_multiplier = 1.0 + (priority_score / 200.0)  # 0->1.0x, 100->1.5x
+            boosted_score *= priority_multiplier
+            
+            # 4. Recency boosting (if last_embedded is recent)
+            last_embedded = meta.get('last_embedded')
+            if last_embedded:
+                try:
+                    if isinstance(last_embedded, str):
+                        last_embedded_dt = datetime.fromisoformat(last_embedded.replace('Z', '+00:00'))
+                    else:
+                        last_embedded_dt = last_embedded
+                    
+                    days_old = (datetime.utcnow() - last_embedded_dt.replace(tzinfo=None)).days
+                    if days_old < 30:  # Updated in last 30 days
+                        boosted_score *= 1.1
+                except:
+                    pass
+            
+            # Create boosted document
+            boosted_doc = doc.copy()
+            boosted_doc['score'] = boosted_score
+            boosted_doc['original_score'] = base_score
+            boosted_docs.append(boosted_doc)
+        
+        # Re-sort by boosted score
+        boosted_docs.sort(key=lambda x: x.get('score', 0), reverse=True)
+        
+        return boosted_docs
 
     def retrieve(self, question: str) -> List[Dict[str, Any]]:
         qs = self._multi_query(question)
@@ -33,6 +95,9 @@ class Engine:
             hits = self.retriever.query(subq, top_k=S.TOP_K_VECTOR)
             all_hits.extend(hits)
         merged = dedup_keep_best(all_hits, key="id")
+        
+        # Apply priority-based boosting
+        merged = self._apply_boosting(merged, question)
 
         # Rerank
         if self.reranker and merged:
