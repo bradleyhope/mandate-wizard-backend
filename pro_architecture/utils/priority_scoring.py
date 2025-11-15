@@ -13,7 +13,9 @@ def determine_seniority(entity: dict) -> str:
     Returns:
         str: 'c-suite', 'vp', 'director', 'manager', or 'unknown'
     """
-    title = entity.get('attributes', {}).get('title', '').lower()
+    attributes = entity.get('attributes') or {}
+    title = attributes.get('title') or ''
+    title = title.lower() if title else ''
     
     if not title:
         return 'unknown'
@@ -53,9 +55,11 @@ def determine_scope(entity: dict) -> str:
     Returns:
         str: 'global', 'regional', or 'local'
     """
-    attributes = entity.get('attributes', {})
-    title = attributes.get('title', '').lower()
-    region = attributes.get('region', '').lower()
+    attributes = entity.get('attributes', {}) or {}
+    title = attributes.get('title') or ''
+    title = title.lower() if title else ''
+    region = attributes.get('region') or ''
+    region = region.lower() if region else ''
     seniority = determine_seniority(entity)
     
     # C-suite is always global
