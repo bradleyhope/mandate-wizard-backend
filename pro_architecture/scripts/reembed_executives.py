@@ -13,7 +13,7 @@ sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from database.postgres_client import PostgresClient
 from utils.rich_text_builder import build_rich_text
-from rag.embedders.openai_embedder import OpenAIEmbedder
+from rag.embedder import get_embedder
 from pinecone import Pinecone
 
 def reembed_executives(batch_size: int = 50, entity_type: str = 'person'):
@@ -31,7 +31,7 @@ def reembed_executives(batch_size: int = 50, entity_type: str = 'person'):
     
     # Initialize clients
     pg = PostgresClient()
-    embedder = OpenAIEmbedder()
+    embedder = get_embedder()
     pc = Pinecone(api_key=os.environ['PINECONE_API_KEY'])
     index = pc.Index(os.environ['PINECONE_INDEX_NAME'])
     
@@ -85,7 +85,7 @@ def reembed_executives(batch_size: int = 50, entity_type: str = 'person'):
                     continue
                 
                 # Generate embedding
-                embedding = embedder.embed(rich_text)
+                embedding = embedder.embed_one(rich_text)
                 
                 # Prepare metadata
                 metadata = {
